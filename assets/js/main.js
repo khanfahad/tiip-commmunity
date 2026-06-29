@@ -23,35 +23,49 @@
     }
   });
 
-  /* ---- Psyche diagram (model page) ---- */
+  /* ---- Psyche diagram (model page) — the six elements of the TIIP ontological model ---- */
   var psycheData = {
     qalb: {
-      title: "Qalb — The Spiritual Heart",
-      body: "The qalb is the seat of perception, faith, and moral cognition — the spiritual center where guidance and disease both take root. In TIIP, much of the therapeutic work aims to restore the heart’s clarity (ṣafāʾ al-qalb) and remove spiritual veils that distort thought and behavior."
+      label: "The metaphysical heart",
+      title: "Qalb (قلب) — The Heart",
+      body: "The homeostatic center of the entire model — a container of both health and pathology. Its condition rises and falls with the ʾaql, nafs, iḥsās, and rūḥ that feed into it. The ultimate aim of treatment is <em>qalb salīm</em>: a sound, balanced heart, reached through <em>ittiḥād</em> (integrative unity)."
+    },
+    fitrah: {
+      label: "Primordial essence",
+      title: "Fiṭrah (فطرة) — Primordial Essence",
+      body: "Every human is “born upon the fiṭrah” — a primordially endowed faculty to recognize good and evil and distinguish truth from falsehood. Contemporary research on infant moral cognition echoes this idea of an innate moral compass."
     },
     aql: {
-      title: "ʿAql — The Intellect",
-      body: "The ʿaql is the faculty of reason and discernment that distinguishes benefit from harm. Strengthening the intellect’s authority over impulse is central to cognitive and behavioral change within the model."
+      label: "Cognition",
+      title: "ʾAql (عقل) — Cognition",
+      body: "The rational faculty behind sound reasoning, knowledge, appreciation of consequences, and the regulation of emotion. It is “the mind behind the brain”: the brain is the necessary instrument, but the ʾaql is the executive that wills, intends, and reasons."
     },
     ruh: {
-      title: "Rūḥ — The Spirit",
-      body: "The rūḥ is the divine breath animating the human being and its connection to the transcendent. Nurturing the rūḥ through worship, remembrance, and meaning is a core pathway to psychological well-being."
+      label: "Spirit",
+      title: "Rūḥ (روح) — Spirit",
+      body: "Operates through <em>rūḥ ʿulwī samāwī</em> (a longing for the sacred) and <em>rūḥ ḥayawānī</em> (the animating life force). It is nourished chiefly through <em>dhikr</em> — remembrance of God — which research links to measurable shifts in glucose metabolism, prefrontal activation, and parasympathetic calm."
     },
     nafs: {
-      title: "Nafs — The Self / Ego",
-      body: "The nafs encompasses the appetitive drives and lower impulses that, unregulated, pull a person toward harm. TIIP frames healing partly as the disciplining and refinement of the nafs — from the commanding self toward the tranquil self (al-nafs al-muṭmaʾinnah)."
+      label: "Behavioral inclination",
+      title: "Nafs (نفس) — Inclination",
+      body: "Houses the appetitive (<em>shahwah</em>) and aggressive/survival (<em>ghaḍab</em>) drives, moving through three states: <em>ammārah</em> (commanding toward overindulgence), <em>lawwāmah</em> (self-regulating), and <em>muṭmaʾinnah</em> (the tranquil self, no longer shackled by carnal desire)."
+    },
+    ihsas: {
+      label: "Basic emotions",
+      title: "Iḥsās (إحساس) — Emotion",
+      body: "The visible byproduct of the interplay between ʾaql and nafs. TIIP treats emotion as a spectrum to be regulated rather than suppressed — the goal is balance across the full range of emotional intensity."
     }
   };
   var detail = document.getElementById("psyche-detail");
   if (detail) {
-    document.querySelectorAll(".psyche-node").forEach(function (node) {
+    var nodes = document.querySelectorAll(".psyche-node, .psyche-core[data-key]");
+    nodes.forEach(function (node) {
       node.addEventListener("click", function () {
-        document.querySelectorAll(".psyche-node").forEach(function (n) { n.classList.remove("active"); });
+        nodes.forEach(function (n) { n.classList.remove("active"); });
         node.classList.add("active");
-        var key = node.getAttribute("data-key");
-        var d = psycheData[key];
+        var d = psycheData[node.getAttribute("data-key")];
         if (d) {
-          detail.innerHTML = "<span class='tag teal'>Faculty of the soul</span><h3>" + d.title + "</h3><p>" + d.body + "</p>";
+          detail.innerHTML = "<span class='tag teal'>" + d.label + "</span><h3>" + d.title + "</h3><p>" + d.body + "</p>";
         }
       });
     });

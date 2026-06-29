@@ -383,7 +383,7 @@ section { padding: clamp(70px, 9vw, 110px) 0; position: relative; }
 .page-head {
   position: relative; isolation: isolate;
   background: var(--grad-hero); color: #eafaf8;
-  padding: clamp(72px,9vw,108px) 0 clamp(64px,8vw,92px); overflow: hidden;
+  padding: clamp(72px,9vw,108px) 0 clamp(104px,11vw,140px); overflow: hidden;
 }
 .page-head::before { content:""; position:absolute; inset:-20%; z-index:-2;
   background: radial-gradient(560px 380px at 88% 0%, rgba(216,165,65,.28), transparent 60%), radial-gradient(520px 460px at 0% 100%, rgba(78,194,184,.26), transparent 60%); }
@@ -393,6 +393,24 @@ section { padding: clamp(70px, 9vw, 110px) 0; position: relative; }
 .page-head .lead { color: rgba(234,250,248,.84); max-width: 62ch; }
 .breadcrumb { font-size: .85rem; opacity: .78; margin-bottom: 18px; letter-spacing:.02em; }
 .breadcrumb a { color: #eafaf8; }
+.page-head .container { position: relative; z-index: 2; }
+.page-head .lead { position: relative; z-index: 2; }
+.page-head-eyebrow {
+  display: inline-flex; align-items: center; gap: .6em;
+  text-transform: uppercase; letter-spacing: .22em; font-size: .74rem; font-weight: 700;
+  color: var(--gold-300); margin-bottom: 16px;
+}
+.page-head-eyebrow::before { content:""; width: 26px; height: 2px; background: linear-gradient(90deg, var(--gold-400), transparent); }
+/* Arabic watermark + geometric motif */
+.page-head .ph-ar {
+  position: absolute; right: 4%; top: 50%; transform: translateY(-50%); z-index: 1;
+  font-family: var(--font-ar); font-size: clamp(4rem, 12vw, 9rem); line-height: 1;
+  color: rgba(255,255,255,.06); pointer-events: none; white-space: nowrap;
+}
+.page-head .girih.deco { width: 300px; height: 300px; top: -70px; right: -50px; opacity: .14; z-index: 1; animation: spin 90s linear infinite; }
+.page-head-wave { position: absolute; bottom: -1px; left: 0; width: 100%; line-height: 0; z-index: 2; }
+.page-head-wave svg { width: 100%; height: 56px; display: block; }
+@media (max-width: 640px){ .page-head .ph-ar { display:none; } }
 
 /* ---- Psyche diagram ---- */
 .psyche { display: grid; grid-template-columns: 1fr 1.05fr; gap: 56px; align-items: center; }
@@ -406,11 +424,14 @@ section { padding: clamp(70px, 9vw, 110px) 0; position: relative; }
 .psyche-diagram::before { content:""; position:absolute; inset:8%; border-radius:50%; border:1px dashed var(--cream-300); }
 .psyche-diagram::after { content:""; position:absolute; inset:-5%; border-radius:50%; border:1px solid rgba(216,165,65,.25); }
 .psyche-core {
-  width: 40%; aspect-ratio: 1; border-radius: 50%;
+  width: 38%; aspect-ratio: 1; border-radius: 50%;
   background: var(--grad-emerald); color: #fff; display: grid; place-items: center; text-align: center;
   box-shadow: var(--shadow-glow), inset 0 2px 12px rgba(255,255,255,.18);
-  font-family: var(--font-head); font-weight: 600; font-size: 1.1rem; z-index: 2;
+  font-family: var(--font-head); font-weight: 600; font-size: 1.05rem; z-index: 4; cursor: pointer;
+  transition: .25s cubic-bezier(.2,.8,.2,1);
 }
+.psyche-core small { font-weight: 400; }
+.psyche-core[data-key]:hover, .psyche-core.active { box-shadow: var(--shadow-gold), 0 0 0 4px rgba(216,165,65,.3); transform: scale(1.04); }
 .psyche-node {
   position: absolute; width: 31%; aspect-ratio: 1; border-radius: 50%;
   background: rgba(255,255,255,.95); border: 1px solid var(--cream-200);
@@ -420,10 +441,12 @@ section { padding: clamp(70px, 9vw, 110px) 0; position: relative; }
 }
 .psyche-node small { display: block; font-size: .6rem; font-weight: 700; color: var(--ink-400); text-transform: uppercase; letter-spacing: .08em; font-family: var(--font-body); margin-top: 2px; }
 .psyche-node:hover, .psyche-node.active { border-color: var(--gold-400); transform: scale(1.1); box-shadow: var(--shadow-gold); color: var(--emerald-900); }
-.psyche-node.n1 { top: 1%; left: 34.5%; }
-.psyche-node.n2 { top: 34.5%; right: -1%; }
-.psyche-node.n3 { bottom: 1%; left: 34.5%; }
-.psyche-node.n4 { top: 34.5%; left: -1%; }
+/* five-point arrangement around the heart */
+.psyche-node.n1 { top: -1.5%; left: 34.5%; }
+.psyche-node.n2 { top: 23.4%; left: 68.7%; }
+.psyche-node.n3 { top: 63.6%; left: 55.7%; }
+.psyche-node.n4 { top: 63.6%; left: 13.3%; }
+.psyche-node.n5 { top: 23.4%; left: 0.3%; }
 .psyche-detail { min-height: 130px; }
 .psyche-detail h3 { color: var(--emerald-800); font-size: 1.7rem; }
 
