@@ -20,6 +20,46 @@ This site serves three audiences and goals:
 | Resources | `resources.html` | Filterable video/training library and downloadable clinical tools |
 | Events | `events.html` | Featured conference, filterable upcoming events, and a host-a-training CTA |
 | Research | `research.html` | Publications, ongoing studies, and ways to collaborate |
+| Member Portal | `portal.html` | Full front-end prototype of the practitioner platform (see below) |
+
+## Member Portal prototype (`portal.html`)
+
+The portal is a complete, clickable front-end prototype of the practitioner
+platform. It runs entirely in the browser (state persists to `localStorage`)
+and includes a **role switcher** to demonstrate role-based access control
+across four permission levels: **Admin, Supervisor/Scholar, Certified
+Practitioner, and Trainee (Levels I–III)**.
+
+| Module | Spec area | What the prototype demonstrates |
+|--------|-----------|--------------------------------|
+| Referral Directory | User architecture | Search + filters for language (Arabic/Urdu/Turkish/English), timezone region, clinical focus, licensure (PSYPACT, US state, Canada, UK/EU, international); live local-time display per practitioner |
+| Level III Tracker | Certification | 200-hour + 10-case progress bars with dynamic percentages, hour-logging form, supervisor approval/decline queue |
+| Compliance Vault | Certification | Dual categories (state CEUs vs. farḍ al-ʿayn), credit totals, expiration status with 60-day reminder badges |
+| Case Sandbox | Clinical | Conceptualization forms mapped to ʿAql/Nafs/Rūḥ/Iḥsās domains, share-with-supervisor flow, supervisor read view |
+| Scholar Desk | Clinical | Threaded consultation tickets with required anonymization confirmation, scholar routing, answered/closed states |
+| Intervention Vault | Research/resources | Search, language/type filters, metadata tags, version badges with history, per-asset downloads |
+| Publication Incubator | Research/resources | Project stages (draft → submission-ready), APA 7 checklist, planned Janeway API/webhook pipeline |
+| Events Calendar | Community | Month calendar, automatic local-timezone conversion (`Intl`), RSVP tracking, join links, real `.ics` export |
+| Tazkiyah Forums | Community | Boards → threads → posts with reply and new-thread forms |
+
+### What requires a real backend before launch
+
+The prototype intentionally stops where a static site must. Production needs:
+
+- **Auth & RBAC enforcement** — real accounts and server-side permission
+  checks (e.g., Supabase/Auth0/Keycloak + Postgres row-level security).
+- **Encrypted clinical data** — the Case Sandbox and Scholar Desk handle
+  PHI-adjacent content; production requires end-to-end encryption, audit
+  logging, BAAs, and HIPAA/GDPR review. **Do not enter real patient data
+  into the demo.**
+- **File storage** — the Compliance and Intervention vaults need encrypted
+  object storage (S3/GCS) with signed URLs and server-side version control.
+- **Notifications** — expiration reminders and approval alerts need a
+  scheduled job + email service (e.g., Postmark/SES).
+- **Video conferencing** — event join links should come from a Zoom/Meet
+  integration rather than static URLs.
+- **Peer-review pipeline** — the Janeway API/webhook integration sketched
+  in the incubator.
 
 ## Tech
 

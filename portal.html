@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Amiri:ital@0;1&display=swap" rel="stylesheet">
+  <title>Member Portal — TIIP Community</title>
+  <meta name="description" content="TIIP Community member portal prototype: referral directory, certification tracking, compliance vault, case conceptualization, scholarly consultation, resource libraries, events, and peer forums." />
+  <meta name="theme-color" content="#050f0e" />
+  <meta name="robots" content="noindex" />
+  <link rel="stylesheet" href="assets/css/portal.css" />
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+</head>
+<body>
+
+<div class="portal-app">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="p-side" id="sidebar">
+    <a class="brand" href="index.html">
+      <span class="mark">ت</span>
+      <span><b>TIIP Portal</b><small>Member area</small></span>
+    </a>
+    <nav class="p-nav" id="p-nav">
+      <button data-view="dashboard" data-roles="all"><span class="ico">◈</span> Dashboard</button>
+
+      <div class="group-label">Network</div>
+      <button data-view="directory" data-roles="all"><span class="ico">🗺</span> Referral Directory</button>
+      <button data-view="events" data-roles="all"><span class="ico">🗓</span> Events &amp; Training</button>
+      <button data-view="forums" data-roles="all"><span class="ico">💬</span> Tazkiyah Forums</button>
+
+      <div class="group-label">Certification &amp; Compliance</div>
+      <button data-view="certification" data-roles="trainee,supervisor,admin"><span class="ico">🎓</span> Level III Tracker</button>
+      <button data-view="vault" data-roles="practitioner,trainee,supervisor,admin"><span class="ico">🗄</span> Compliance Vault</button>
+
+      <div class="group-label">Clinical</div>
+      <button data-view="sandbox" data-roles="trainee,practitioner,supervisor"><span class="ico">🧭</span> Case Sandbox</button>
+      <button data-view="fatwa" data-roles="trainee,practitioner,supervisor,admin"><span class="ico">🕌</span> Scholar Desk</button>
+
+      <div class="group-label">Research &amp; Resources</div>
+      <button data-view="resources" data-roles="all"><span class="ico">📚</span> Intervention Vault</button>
+      <button data-view="incubator" data-roles="practitioner,supervisor,admin"><span class="ico">✍️</span> Publication Incubator</button>
+    </nav>
+    <div class="side-foot">
+      <a href="index.html">← Back to public site</a>
+      <a href="model.html">The TIIP Model</a>
+    </div>
+  </aside>
+  <div class="side-scrim" id="side-scrim"></div>
+
+  <!-- ============ MAIN ============ -->
+  <div class="p-main">
+    <header class="p-top">
+      <button class="p-menu-btn" id="menu-btn" aria-label="Open navigation">☰</button>
+      <h1 id="view-title">Dashboard</h1>
+      <div class="role-switch">
+        <label for="role-select">Viewing as</label>
+        <select id="role-select" aria-label="Switch demo role">
+          <option value="trainee">Trainee (Level III)</option>
+          <option value="practitioner">Certified Practitioner</option>
+          <option value="supervisor">Supervisor / Scholar</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+      <div class="user-chip">
+        <span class="avatar" id="user-avatar">AY</span>
+        <span class="who"><b id="user-name">Amina Yusuf</b><small id="user-role">Trainee · Level III</small></span>
+      </div>
+    </header>
+
+    <div class="p-content">
+      <div class="demo-strip">
+        <b>Demo environment.</b> All data is sample data stored only in your browser (localStorage). Production features — authentication, encrypted storage, HIPAA/GDPR controls — require the backend described in the README.
+        <button class="btn btn-ghost btn-xs" id="reset-demo" style="margin-left:auto;">Reset demo data</button>
+      </div>
+
+      <!-- ==== DASHBOARD ==== -->
+      <section class="view" data-view="dashboard">
+        <p class="view-lead" id="dash-lead"></p>
+        <div class="grid-4" id="dash-stats"></div>
+        <div class="grid-2" style="margin-top:16px;">
+          <div class="card"><h3>📌 Quick actions</h3><div id="dash-actions"></div></div>
+          <div class="card"><h3>🗓 Next events</h3><div class="rows" id="dash-events"></div></div>
+        </div>
+        <div class="card" id="dash-admin-card" style="margin-top:16px; display:none;">
+          <h3>👥 User &amp; role administration <span class="tag gold">Admin only</span></h3>
+          <p class="view-lead" style="margin-bottom:10px;">Role-based access control: four permission levels govern every module. Change a member's role below (demo only).</p>
+          <div class="rows" id="admin-users"></div>
+        </div>
+      </section>
+
+      <!-- ==== DIRECTORY ==== -->
+      <section class="view" data-view="directory">
+        <p class="view-lead">Peer-to-peer networking and patient referrals across the global TIIP network. Filter by language, timezone, clinical focus, and licensing boundaries (PSYPACT and international equivalents).</p>
+        <div class="filters">
+          <div class="field wide"><label>Search</label><input type="search" id="dir-q" placeholder="Name, focus, city…" /></div>
+          <div class="field"><label>Language</label><select id="dir-lang"><option value="">Any</option><option>English</option><option>Arabic</option><option>Urdu</option><option>Turkish</option></select></div>
+          <div class="field"><label>Timezone region</label><select id="dir-tz"><option value="">Any</option><option>Americas</option><option>Europe / Africa</option><option>Middle East</option><option>South Asia</option><option>SE Asia / Pacific</option></select></div>
+          <div class="field"><label>Clinical focus</label><select id="dir-focus"><option value="">Any</option><option>Anxiety &amp; mood</option><option>Marital &amp; family</option><option>Trauma</option><option>OCD / Waswasah</option><option>Youth &amp; identity</option><option>Addictions</option></select></div>
+          <div class="field"><label>Licensure</label><select id="dir-lic"><option value="">Any</option><option>PSYPACT</option><option>US state-specific</option><option>Canada</option><option>UK / EU</option><option>International</option></select></div>
+        </div>
+        <div class="dir-grid" id="dir-grid"></div>
+        <div class="empty" id="dir-empty" style="display:none;">No practitioners match those filters.</div>
+      </section>
+
+      <!-- ==== CERTIFICATION ==== -->
+      <section class="view" data-view="certification">
+        <div id="cert-trainee">
+          <p class="view-lead">Level III certification requires <strong>200 supervised practice hours</strong> and <strong>10 completed cases</strong>. Logged hours are routed to your assigned supervisor for approval.</p>
+          <div class="grid-2">
+            <div class="card">
+              <h3>⏱ Supervised hours</h3>
+              <div class="prog"><div class="prog-head"><b id="hours-label">0 / 200 hours approved</b><span id="hours-pct">0%</span></div><div class="bar"><i id="hours-bar"></i></div></div>
+              <div class="prog"><div class="prog-head"><b id="cases-label">0 / 10 cases completed</b><span id="cases-pct">0%</span></div><div class="bar"><i id="cases-bar"></i></div></div>
+              <p class="view-lead" style="margin:12px 0 0;font-size:.8rem;" id="cert-eta"></p>
+            </div>
+            <div class="card">
+              <h3>➕ Log supervised hours</h3>
+              <form id="hours-form">
+                <div class="field-row">
+                  <div class="field"><label>Date</label><input type="date" id="hf-date" required /></div>
+                  <div class="field"><label>Hours</label><input type="number" id="hf-hours" min="0.5" max="12" step="0.5" required /></div>
+                </div>
+                <div class="field"><label>Activity</label><select id="hf-type"><option>Direct client work</option><option>Live supervision</option><option>Case consultation</option><option>Group supervision</option></select></div>
+                <div class="field"><label>Notes for supervisor</label><input type="text" id="hf-notes" placeholder="e.g., Session 4 — iḥsāsi intervention" /></div>
+                <button class="btn btn-gold" type="submit">Submit for approval</button>
+              </form>
+            </div>
+          </div>
+          <div class="card">
+            <h3>🧾 Logged entries</h3>
+            <div class="rows" id="hours-rows"></div>
+          </div>
+        </div>
+        <div id="cert-supervisor" style="display:none;">
+          <p class="view-lead">Approval queue for your assigned trainees. Approving an entry credits it toward the trainee's 200-hour requirement.</p>
+          <div class="card"><h3>✅ Pending approvals</h3><div class="rows" id="approve-rows"></div></div>
+        </div>
+        <div id="cert-locked" class="locked-note" style="display:none;">The Level III tracker applies to trainees; supervisors see the approval queue; admins see cohort progress. Certified practitioners have completed this pathway. 🎉</div>
+      </section>
+
+      <!-- ==== COMPLIANCE VAULT ==== -->
+      <section class="view" data-view="vault">
+        <p class="view-lead">Dual-compliance tracking: state-mandated <strong>CEUs</strong> and religious education (<strong>farḍ al-ʿayn</strong>) certificates, with automated expiration reminders 60 days out.</p>
+        <div class="grid-2">
+          <div class="card">
+            <h3>📤 Add a certificate</h3>
+            <form id="vault-form">
+              <div class="field"><label>Certificate name</label><input type="text" id="vf-name" required placeholder="e.g., Ethics in Telehealth (3 CE)" /></div>
+              <div class="field-row">
+                <div class="field"><label>Category</label><select id="vf-cat"><option value="ceu">State CEU</option><option value="fard">Farḍ al-ʿAyn</option></select></div>
+                <div class="field"><label>Credits</label><input type="number" id="vf-credits" min="0" step="0.5" value="1" /></div>
+              </div>
+              <div class="field-row">
+                <div class="field"><label>Issued</label><input type="date" id="vf-issued" required /></div>
+                <div class="field"><label>Expires</label><input type="date" id="vf-expires" required /></div>
+              </div>
+              <div class="check"><input type="checkbox" checked disabled /> <span>Email reminder 60 &amp; 14 days before expiry <em>(automated in production)</em></span></div>
+              <button class="btn btn-gold" type="submit">Save to vault</button>
+            </form>
+            <p class="note"><b>Production:</b> files are stored encrypted at rest with per-user access control; this demo stores metadata only.</p>
+          </div>
+          <div>
+            <div class="card"><h3>🏛 State CEUs <span class="tag" id="ceu-sum"></span></h3><div class="rows" id="ceu-rows"></div></div>
+            <div class="card"><h3>🕌 Farḍ al-ʿAyn <span class="tag gold" id="fard-sum"></span></h3><div class="rows" id="fard-rows"></div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==== CASE SANDBOX ==== -->
+      <section class="view" data-view="sandbox">
+        <p class="view-lead">Map cases onto the TIIP ontological framework. Trainee conceptualizations can be shared with an assigned supervisor for structured feedback.</p>
+        <div class="grid-2">
+          <div class="card">
+            <h3>🧭 New conceptualization</h3>
+            <form id="case-form">
+              <div class="field-row">
+                <div class="field"><label>Case alias</label><input type="text" id="cf-alias" required placeholder="e.g., Case H-30 (never use real names)" /></div>
+                <div class="field"><label>Primary domain</label><select id="cf-primary"><option>Iḥsās</option><option>ʾAql</option><option>Nafs</option><option>Rūḥ</option></select></div>
+              </div>
+              <div class="field"><label>Presenting concerns</label><textarea id="cf-presenting" placeholder="Chief complaint, context, relevant history…"></textarea></div>
+              <div class="field"><label>ʿAql — cognition</label><textarea id="cf-aql" placeholder="Appraisals, distortions, reframing capacity…"></textarea></div>
+              <div class="field"><label>Nafs — behavioral inclination</label><textarea id="cf-nafs" placeholder="Drives, avoidance patterns, nafsānī behaviors…"></textarea></div>
+              <div class="field"><label>Rūḥ — spirit</label><textarea id="cf-ruh" placeholder="Spiritual practices, riḍā, dhikr, spiritual struggles…"></textarea></div>
+              <div class="field"><label>Iḥsās — emotion</label><textarea id="cf-ihsas" placeholder="Primary/secondary emotions, regulation, expression…"></textarea></div>
+              <div class="check"><input type="checkbox" id="cf-share" /> <span>Share with my supervisor <em>(end-to-end encrypted in production — HIPAA/GDPR)</em></span></div>
+              <button class="btn btn-gold" type="submit">Save conceptualization</button>
+            </form>
+          </div>
+          <div>
+            <div class="card"><h3 id="case-list-title">📁 My cases</h3><div id="case-list"></div></div>
+            <p class="note"><b>Privacy model:</b> cases are de-identified by alias; admins have no access to clinical content; sharing is scoped to the assigned supervisor only.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==== FATWA DESK ==== -->
+      <section class="view" data-view="fatwa">
+        <p class="view-lead">Consult designated scholars on complex cases — e.g., differentiating clinical OCD from <em>waswasah</em>. Queries are anonymized before routing; patient identifiers are never transmitted.</p>
+        <div class="grid-2">
+          <div class="card" id="fatwa-new-card">
+            <h3>🕌 New consultation</h3>
+            <form id="ticket-form">
+              <div class="field"><label>Subject</label><input type="text" id="tf-subject" required placeholder="Brief, de-identified summary" /></div>
+              <div class="field"><label>Category</label><select id="tf-cat"><option>Waswasah / OCD</option><option>Divorce &amp; family fiqh</option><option>End-of-life care</option><option>Trauma &amp; testimony</option><option>Other</option></select></div>
+              <div class="field"><label>Question</label><textarea id="tf-body" required placeholder="Clinical context and the specific ruling or guidance sought…"></textarea></div>
+              <div class="check"><input type="checkbox" id="tf-anon" required /> <span>I confirm all patient data has been anonymized <em>(required)</em></span></div>
+              <button class="btn btn-gold" type="submit">Submit to scholar queue</button>
+            </form>
+          </div>
+          <div class="card">
+            <h3 id="fatwa-list-title">🎫 Consultations</h3>
+            <div id="ticket-list"></div>
+          </div>
+        </div>
+        <div class="card" id="ticket-detail" style="display:none; margin-top:16px;"></div>
+      </section>
+
+      <!-- ==== INTERVENTION VAULT ==== -->
+      <section class="view" data-view="resources">
+        <p class="view-lead">Clinical worksheets, intake forms, and murāqabah exercises — categorized by language, tagged with metadata, and version-controlled.</p>
+        <div class="filters">
+          <div class="field wide"><label>Search</label><input type="search" id="res-q" placeholder="Title, tag, author…" /></div>
+          <div class="field"><label>Language</label><select id="res-lang"><option value="">Any</option><option>English</option><option>Arabic</option><option>Urdu</option><option>Turkish</option></select></div>
+          <div class="field"><label>Type</label><select id="res-type"><option value="">Any</option><option>Worksheet</option><option>Intake form</option><option>Murāqabah audio script</option><option>Psychoeducation</option></select></div>
+        </div>
+        <div class="card"><div class="rows" id="res-rows"></div><div class="empty" id="res-empty" style="display:none;">No resources match.</div></div>
+        <p class="note" id="res-upload-note"><b>Uploads:</b> new assets are contributed by supervisors/admins with required metadata (language, type, tags, version notes). Every revision is retained in version history.</p>
+      </section>
+
+      <!-- ==== INCUBATOR ==== -->
+      <section class="view" data-view="incubator">
+        <p class="view-lead">A collaborative space for compiling case studies and empirical research, with shared formatting standards and a planned pipeline into external peer-review systems.</p>
+        <div class="grid-2">
+          <div>
+            <div class="card"><h3>🧪 Active projects</h3><div id="pub-rows"></div></div>
+            <div class="card">
+              <h3>➕ Propose a project</h3>
+              <form id="pub-form">
+                <div class="field"><label>Working title</label><input type="text" id="pf-title" required /></div>
+                <div class="field"><label>Type</label><select id="pf-type"><option>Case study</option><option>Empirical study</option><option>Review article</option><option>Measure validation</option></select></div>
+                <button class="btn btn-gold" type="submit">Create workspace</button>
+              </form>
+            </div>
+          </div>
+          <div>
+            <div class="card">
+              <h3>📐 APA 7th formatting checklist</h3>
+              <div class="rows" style="font-size:.85rem;">
+                <div class="row"><span class="grow"><b>Title page &amp; running head</b><small>Bold centered title; author note with ORCID</small></span><span class="tag ok">Template</span></div>
+                <div class="row"><span class="grow"><b>Abstract ≤ 250 words</b><small>With 3–5 keywords, incl. “Islamic psychology”</small></span><span class="tag ok">Template</span></div>
+                <div class="row"><span class="grow"><b>Level 1–3 headings</b><small>TIIP domain terms italicized with diacritics</small></span><span class="tag ok">Template</span></div>
+                <div class="row"><span class="grow"><b>References &amp; DOIs</b><small>Hanging indent, live DOI links</small></span><span class="tag ok">Template</span></div>
+                <div class="row"><span class="grow"><b>De-identification audit</b><small>Case material must pass the anonymization checklist</small></span><span class="tag warn">Required</span></div>
+              </div>
+            </div>
+            <div class="card">
+              <h3>🔌 Peer-review pipeline <span class="tag dim">Planned</span></h3>
+              <p class="view-lead" style="margin-bottom:10px;font-size:.85rem;">API/webhook integration with external submission systems (e.g., <strong>Janeway</strong>) will push formatted manuscripts and sync reviewer status back into each workspace.</p>
+              <div class="field"><label>Janeway endpoint</label><input type="text" value="https://journal.example.org/api/submissions" disabled /></div>
+              <div class="field"><label>Webhook — status updates</label><input type="text" value="POST /hooks/janeway/status" disabled /></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==== EVENTS ==== -->
+      <section class="view" data-view="events">
+        <p class="view-lead">Workshops, webinars, and intensives — all times shown automatically in <strong id="tz-label"></strong>. RSVP to receive the video-conferencing link and calendar file.</p>
+        <div class="grid-2" style="grid-template-columns: 1.2fr 1fr; align-items:start;">
+          <div class="cal">
+            <div class="cal-head"><b id="cal-title"></b><span class="tag" id="cal-count"></span></div>
+            <div class="cal-grid" id="cal-grid"></div>
+          </div>
+          <div class="card" style="margin-top:0;"><h3>📅 Upcoming</h3><div id="event-rows"></div></div>
+        </div>
+      </section>
+
+      <!-- ==== FORUMS ==== -->
+      <section class="view" data-view="forums">
+        <p class="view-lead">Threaded peer spaces for practitioner wellbeing, self-care, and mutual support — because the Rafīq's own heart needs tending too.</p>
+        <div class="grid-2" style="grid-template-columns: 1fr 1.4fr; align-items:start;">
+          <div class="card" style="margin-top:0;">
+            <h3>🗂 Boards</h3>
+            <div id="forum-topics"></div>
+            <form id="thread-form" style="margin-top:14px;">
+              <div class="field"><label>Start a thread</label><input type="text" id="ff-title" required placeholder="Thread title…" /></div>
+              <button class="btn btn-ghost btn-xs" type="submit">Post to selected board</button>
+            </form>
+          </div>
+          <div class="card" style="margin-top:0;" id="forum-thread-card">
+            <h3 id="forum-thread-title">Select a thread</h3>
+            <div id="forum-posts"><div class="empty">Choose a board, then a thread, to read and reply.</div></div>
+            <form id="reply-form" style="display:none; margin-top:12px;">
+              <div class="field"><label>Reply</label><textarea id="rf-body" required placeholder="Write with iḥsān…"></textarea></div>
+              <button class="btn btn-gold btn-xs" type="submit">Post reply</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/portal.js"></script>
+</body>
+</html>
