@@ -3,255 +3,511 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script>document.documentElement.className+=" js";</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Amiri:ital@0;1&display=swap" rel="stylesheet">
   <title>The Model — TIIP Community</title>
-  <meta name="description" content="An interactive guide to the Traditional Islamically Integrated Psychotherapy model: the faculties of the soul, mechanisms of change, and the structured therapeutic process." />
-  <link rel="stylesheet" href="assets/css/style.css" />
+  <meta name="description" content="An immersive, interactive guide to Traditional Islamically Integrated Psychotherapy: its epistemology, the ontological model of the human psyche, the four-stage process of change, and the model in clinical practice." />
+  <meta name="theme-color" content="#050f0e" />
+  <link rel="stylesheet" href="assets/css/model.css" />
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
 </head>
 <body>
+
+  <div class="progress-bar" aria-hidden="true"></div>
+
   <header class="site-header">
     <div class="container nav">
       <a class="brand" href="index.html"><span class="mark">ت</span><span><b>TIIP</b><span>Community</span></span></a>
       <button class="nav-toggle" aria-label="Toggle menu"><span></span></button>
       <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
-        <li><a href="model.html">The Model</a></li>
+        <li><a href="model.html" class="active">The Model</a></li>
         <li><a href="community.html">Community</a></li>
         <li><a href="resources.html">Resources</a></li>
         <li><a href="events.html">Events</a></li>
         <li><a href="research.html">Research</a></li>
-        <li class="nav-cta"><a class="btn btn-primary btn-sm" href="#" data-open-login>Member Login</a></li>
+        <li class="nav-cta"><a class="btn btn-gold btn-sm" href="#" data-open-login>Member Login</a></li>
       </ul>
     </div>
   </header>
 
-  <section class="page-head">
-    <span class="girih deco" aria-hidden="true"></span>
-    <div class="ph-ar" aria-hidden="true">قَلْب سَلِيم</div>
-    <div class="container">
-      <div class="breadcrumb"><a href="index.html">Home</a> / The Model</div>
-      <p class="page-head-eyebrow">The Framework</p>
-      <h1>The TIIP Model</h1>
-      <p class="lead">An interactive exploration of Traditional Islamically Integrated Psychotherapy — its epistemology, its ontological model of the human psyche, and its four-stage process of change. The journey from distress to <em>qalb salīm</em>: the sound, healthy heart.</p>
-    </div>
-    <div class="page-head-wave"><svg viewBox="0 0 1440 56" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,32 C240,60 480,4 720,24 C960,44 1200,60 1440,28 L1440,56 L0,56 Z" fill="#ffffff"></path></svg></div>
-  </section>
+  <nav class="dots-nav" aria-label="Page sections">
+    <a href="#top" class="active"><span>Overview</span></a>
+    <a href="#epistemology"><span>Foundations</span></a>
+    <a href="#psyche"><span>The Psyche</span></a>
+    <a href="#process"><span>Process of Change</span></a>
+    <a href="#rafiq"><span>The Rafīq</span></a>
+    <a href="#case"><span>Case Study</span></a>
+    <a href="#faq"><span>Questions</span></a>
+  </nav>
 
-  <!-- OVERVIEW -->
-  <section class="bg-white">
-    <div class="container">
-      <div class="section-head reveal">
-        <p class="eyebrow">Overview</p>
-        <h2>An ancient framework, applied clinically today</h2>
-        <p class="lead muted">Early Muslim scholars treated care of the psyche — <em>ṭibb al-rūḥānī</em>, “medicine of the soul” — as a subdiscipline of medicine, founding one of the world’s earliest documented hospitals in 9th-century Baghdad. TIIP, developed by Hooman Keshavarzi and Fahad Khan and practiced at the Khalil Center, revives this tradition and formalizes it into a clinical model for the modern therapy room.</p>
-      </div>
-      <div class="grid grid-3">
-        <div class="card reveal"><div class="icon">🕌</div><h3>Tradition-rooted</h3><p>Anchored in classical Islamic scholarship on the soul (<em>nafs</em>), the heart (<em>qalb</em>), and human refinement — not religious advice bolted onto Western therapy.</p></div>
-        <div class="card reveal"><div class="icon">🔬</div><h3>Evidence-informed</h3><p>Integrates contemporary clinical science — cognitive, behavioral, emotional, and experiential methods — graded by the strength of their evidence.</p></div>
-        <div class="card reveal"><div class="icon">❤️‍🩹</div><h3>Wellness, not just absence of illness</h3><p>A person with no diagnosis can still be spiritually unwell — afflicted by <em>ḥasad</em> (corrosive envy) or <em>shuḥḥ</em> (avarice). TIIP treats symptom and spiritual affliction together.</p></div>
-      </div>
-    </div>
-  </section>
+  <main>
 
-  <!-- EPISTEMOLOGY -->
-  <section class="bg-cream has-motif">
-    <span class="girih big" aria-hidden="true"></span>
-    <div class="container">
-      <div class="section-head reveal">
-        <p class="eyebrow">Epistemology</p>
-        <h2>Three sources of knowledge, one science of the soul</h2>
-        <p class="lead muted">Unlike frameworks that draw a hard line between “sacred” and “secular,” TIIP treats empirical, rational, and revealed knowledge as equally legitimate — graded by the strength of their evidence rather than their origin.</p>
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="top">
+      <canvas id="constellation" aria-hidden="true"></canvas>
+      <div class="hero-ar" aria-hidden="true">قلب<br>سليم</div>
+      <div class="container">
+        <div class="hero-kicker reveal"><span class="pulse-dot"></span> The TIIP Framework</div>
+        <h1 class="reveal" style="--d:.08s">A map of the soul,<br><span class="shimmer">built for the therapy room.</span></h1>
+        <p class="lead reveal" style="--d:.16s">Traditional Islamically Integrated Psychotherapy conceptualizes and treats mind, body, and soul as one interwoven whole — reviving a thousand-year clinical tradition, <em>ṭibb al-rūḥānī</em>, and formalizing it into a modern psychotherapeutic model.</p>
+        <div class="hero-actions reveal" style="--d:.24s">
+          <a class="btn btn-gold" href="#psyche">Explore the Psyche</a>
+          <a class="btn btn-ghost" href="#process">The Process of Change</a>
+        </div>
+        <div class="hero-stats reveal" style="--d:.32s">
+          <div class="hstat"><div class="num" data-count="3"></div><div class="lbl">Sources of Knowledge</div></div>
+          <div class="hstat"><div class="num" data-count="6"></div><div class="lbl">Elements of the Psyche</div></div>
+          <div class="hstat"><div class="num" data-count="4"></div><div class="lbl">Stages of Change</div></div>
+          <div class="hstat"><div class="num" data-count="9" data-suffix="th c."></div><div class="lbl">Roots in Baghdad's Hospitals</div></div>
+        </div>
       </div>
-      <div class="grid grid-3">
-        <div class="card reveal"><div class="icon">🔭</div><span class="tag teal">al-ʿilm al-ḥissī</span><h3 class="mt-1">Empirical</h3><p>Knowledge acquired through observation, sensory experience, and clinical study.</p></div>
-        <div class="card reveal"><div class="icon">🧩</div><span class="tag teal">al-ʿilm al-ʿaqlī</span><h3 class="mt-1">Rational</h3><p>Truths reached through human reason — whether self-evident (<em>badīhī</em>) or inferred (<em>istidlālī</em>).</p></div>
-        <div class="card reveal"><div class="icon">📖</div><span class="tag teal">al-naql</span><h3 class="mt-1">Revealed</h3><p>Verified truth from scripture (Qur’ān) and prophetic tradition (Sunnah).</p></div>
-      </div>
-      <p class="text-center muted mt-2" style="max-width:760px;margin-left:auto;margin-right:auto;">Each source is graded as <strong>definitive (<em>qaṭʿī</em>)</strong> or <strong>probabilistic (<em>ẓannī</em>)</strong> — letting TIIP place any piece of knowledge, Western or Eastern, ancient or new, appropriately within a single coherent model of the psyche.</p>
+      <div class="scroll-cue" aria-hidden="true"><div class="wheel"></div>Scroll</div>
+    </section>
 
-      <div class="grid grid-3 mt-3" style="gap:18px;">
-        <div class="resource-row reveal" style="margin:0;"><div class="ricon">🌱</div><div class="rinfo"><b>Fiṭrah</b><span>An innate inclination toward good and the divine.</span></div></div>
-        <div class="resource-row reveal" style="margin:0;"><div class="ricon">🧬</div><div class="rinfo"><b>Multidimensional</b><span>Interwoven layers; no single approach fits all.</span></div></div>
-        <div class="resource-row reveal" style="margin:0;"><div class="ricon">🔗</div><div class="rinfo"><b>Interconnected</b><span>Change one element and the others shift.</span></div></div>
-        <div class="resource-row reveal" style="margin:0;"><div class="ricon">♾️</div><div class="rinfo"><b>Afterlife-aware</b><span>Care considers our origin and final return.</span></div></div>
-        <div class="resource-row reveal" style="margin:0;"><div class="ricon">🤲</div><div class="rinfo"><b>Clinician matters</b><span>The practitioner’s inner state shapes change.</span></div></div>
-        <div class="resource-row reveal" style="margin:0;"><div class="ricon">🧠</div><div class="rinfo"><b>Holistic</b><span>Mind, body, and soul, woven together.</span></div></div>
-      </div>
-      <p class="text-center muted mt-2" style="font-size:.84rem;">Five underlying assumptions of the model.</p>
-    </div>
-  </section>
+    <!-- ============ FOUNDATIONS ============ -->
+    <section id="epistemology">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow">Foundations · Epistemology</p>
+          <h2>Three sources of knowledge.<br>One science of the soul.</h2>
+          <p class="lead">Because Islam accepts reason and empirical evidence alongside scripture, there has never been a dichotomy between sacred and secular knowledge. TIIP treats all three sources — <em>asbāb al-ʿilm</em> — as legitimate, harmonious, and equally valuable.</p>
+        </div>
 
-  <!-- INTERACTIVE PSYCHE -->
-  <section class="bg-white">
-    <div class="container">
-      <div class="section-head reveal">
-        <p class="eyebrow">Interactive · the ontological model</p>
-        <h2>The architecture of the human psyche</h2>
-        <p class="lead muted">TIIP conceptualizes the psyche as interacting elements that all feed into the heart. Tap any element — including the <em>qalb</em> at the center — to learn what it governs and how it is brought back into balance.</p>
-      </div>
-      <div class="psyche">
-        <div class="reveal">
-          <div class="psyche-diagram">
-            <div class="psyche-node n1" data-key="fitrah"><span>Fiṭrah<small>Essence</small></span></div>
-            <div class="psyche-node n2" data-key="aql"><span>ʾAql<small>Cognition</small></span></div>
-            <div class="psyche-node n3" data-key="nafs"><span>Nafs<small>Inclination</small></span></div>
-            <div class="psyche-node n4" data-key="ihsas"><span>Iḥsās<small>Emotion</small></span></div>
-            <div class="psyche-node n5" data-key="ruh"><span>Rūḥ<small>Spirit</small></span></div>
-            <div class="psyche-core active" data-key="qalb">Qalb<br><small>the heart</small></div>
+        <div class="grid-3">
+          <div class="panel epi-card reveal"><span class="glow"></span><span class="idx">I</span>
+            <div class="ar">الحِسّ</div>
+            <h3>Empirical</h3>
+            <div class="trans">al-ḥiss · the senses</div>
+            <p>Knowledge acquired through observation, sensory experience, and empirical study — the ground on which clinical science stands.</p>
+          </div>
+          <div class="panel epi-card reveal" style="--d:.1s"><span class="glow"></span><span class="idx">II</span>
+            <div class="ar">العَقْل</div>
+            <h3>Rational</h3>
+            <div class="trans">al-ʿaql · reason</div>
+            <p>Truths reached through human reason — whether self-evident (<em>badīhī</em>) or acquired through inference (<em>istidlālī</em>) — capable of realizing necessary truths.</p>
+          </div>
+          <div class="panel epi-card reveal" style="--d:.2s"><span class="glow"></span><span class="idx">III</span>
+            <div class="ar">الخَبَر</div>
+            <h3>Verified Report</h3>
+            <div class="trans">al-khabar · transmission</div>
+            <p>Divine revelation — the Qur'ān and prophetic tradition (Sunnah) — plus mass-converging eyewitness testimony of objective reality.</p>
           </div>
         </div>
-        <div class="psyche-detail reveal" id="psyche-detail">
-          <span class="tag teal">The metaphysical heart</span>
-          <h3>Qalb (قلب) — The Heart</h3>
-          <p>The homeostatic center of the entire model — a container of both health and pathology. Its condition rises and falls with the ʾaql, nafs, iḥsās, and rūḥ that feed into it. The ultimate aim of treatment is <em>qalb salīm</em>: a sound, balanced heart, reached through <em>ittiḥād</em> (integrative unity).</p>
-        </div>
-      </div>
-      <div class="chips reveal mt-3" style="justify-content:center;margin-bottom:0;">
-        <span class="muted" style="font-weight:600;">The nafs is pulled by four drives:</span>
-        <span class="chip" style="cursor:default;">😇 Angelic</span>
-        <span class="chip" style="cursor:default;">🍓 Hedonistic</span>
-        <span class="chip" style="cursor:default;">😈 Satanic</span>
-        <span class="chip" style="cursor:default;">⚔️ Aggressive</span>
-      </div>
-    </div>
-  </section>
 
-  <!-- PROCESS OF CHANGE (steps) -->
-  <section class="bg-cream has-motif">
-    <span class="girih big" aria-hidden="true"></span>
-    <div class="container">
-      <div class="section-head reveal">
-        <p class="eyebrow">Process of change</p>
-        <h2>Four stages, two parallel journeys</h2>
-        <p class="lead muted">At every stage, the clinician’s <strong>mechanism of change</strong> is designed to draw out a corresponding <strong>principle of change</strong> in the patient.</p>
-      </div>
-      <div class="steps">
-        <div class="step reveal">
-          <div class="num"></div>
-          <div>
-            <div class="flex gap wrap" style="margin-bottom:8px;"><span class="tag teal">Patient · Compliance (Inqiyād)</span><span class="tag">Clinician · Alliance (Murābaṭah)</span></div>
-            <h3>The groundwork</h3>
-            <p>The clinician builds a strong therapeutic bond while assessing motivation to change, religiosity, and where in the psyche the dysfunction originates. The patient becomes willing to engage with what therapy will ask of them.</p>
+        <div class="grading reveal">
+          <div class="section-head center" style="margin-bottom:0;">
+            <p class="eyebrow">The grading of evidence</p>
+            <h3 style="font-size:clamp(1.3rem,2.4vw,1.7rem);">Every claim is weighed, wherever it comes from</h3>
+            <p class="muted" style="font-size:.95rem;">Knowledge across all three sources is hierarchically arranged — a reconciliatory mechanism that lets TIIP place any piece of information, Western or Eastern, ancient or new, at its appropriate strength within a single coherent model.</p>
+          </div>
+          <div class="grading-scale" aria-hidden="true">
+            <span class="stop qati"></span><span class="stop zanni"></span>
+          </div>
+          <div class="grading-labels">
+            <div><b>Qaṭʿī — definitive</b><span>Certain knowledge that cannot be dismissed.</span></div>
+            <div><b>Ẓannī — probabilistic</b><span>Graded and admissible according to its strength and scope.</span></div>
           </div>
         </div>
-        <div class="step reveal">
-          <div class="num"></div>
-          <div>
-            <div class="flex gap wrap" style="margin-bottom:8px;"><span class="tag teal">Patient · Self-Awareness (Inkishāf)</span><span class="tag">Clinician · Uncovering (Mukāshafah)</span></div>
-            <h3>Introspective self-awareness</h3>
-            <p>The clinician walks the patient through the ontological model itself, co-conceptualizing their struggles in its terms. Acting as a psychospiritual mirror, the <em>Rafīq</em> helps the patient truly notice what is happening within.</p>
-          </div>
-        </div>
-        <div class="step reveal">
-          <div class="num"></div>
-          <div>
-            <div class="flex gap wrap" style="margin-bottom:8px;"><span class="tag teal">Patient · Equilibrium (Iʿtidāl)</span><span class="tag">Clinician · Intervention (Muʿālajah)</span></div>
-            <h3>Psychospiritual equilibrium</h3>
-            <p>The most directive stage. Treatment targets whichever element is the primary source of dysfunction first: contemplation for cognition, expression for emotion, confronting avoidance for behavioral inclination, remembrance for spiritual emptiness.</p>
-          </div>
-        </div>
-        <div class="step reveal">
-          <div class="num"></div>
-          <div>
-            <div class="flex gap wrap" style="margin-bottom:8px;"><span class="tag teal">Patient · Integrative Unity (Ittiḥād)</span><span class="tag">Clinician · Continuity (Muwāṣalah)</span></div>
-            <h3>Integrative unity</h3>
-            <p>Reached only once a bond is formed, awareness is built, and balance is restored. All elements of the psyche now serve the same purpose — fragmentation gives way to a holistic, integrated experience.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
 
-  <!-- THERAPEUTIC RELATIONSHIP -->
-  <section class="bg-white">
-    <div class="container">
-      <div class="psyche">
-        <div class="reveal">
-          <div class="psyche-diagram" style="background:radial-gradient(circle at 50% 42%, #fff, var(--gold-100) 75%);">
-            <div class="psyche-core" style="width:54%;background:var(--grad-gold);color:#2a1c02;box-shadow:var(--shadow-gold);cursor:default;">
-              <div><div style="font-family:var(--font-ar);font-size:2.4rem;">رَفِيق</div><small>Rafīq · intimate friend</small></div>
+        <div class="assumptions reveal">
+          <p class="eyebrow" style="justify-content:center;display:flex;">Underlying assumptions of the model</p>
+          <div class="ticker" aria-label="Underlying assumptions of the TIIP model">
+            <div class="ticker-track">
+              <span class="tick-item"><i>◆</i> All three sources of knowledge are valid — graded by strength of evidence</span>
+              <span class="tick-item"><i>◆</i> Every human is born upon the <em>&nbsp;fiṭrah</em>&nbsp; — inclined toward good</span>
+              <span class="tick-item"><i>◆</i> Health and wellness exist on a continuum, not a diagnosis</span>
+              <span class="tick-item"><i>◆</i> Care considers our origins — and the afterlife</span>
+              <span class="tick-item"><i>◆</i> The practitioner's inner state shapes the change</span>
+              <span class="tick-item"><i>◆</i> The psyche is multidimensional — no single approach fits all</span>
+              <span class="tick-item"><i>◆</i> Change one element and every other element shifts</span>
+              <span class="tick-item"><i>◆</i> All three sources of knowledge are valid — graded by strength of evidence</span>
+              <span class="tick-item"><i>◆</i> Every human is born upon the <em>&nbsp;fiṭrah</em>&nbsp; — inclined toward good</span>
+              <span class="tick-item"><i>◆</i> Health and wellness exist on a continuum, not a diagnosis</span>
+              <span class="tick-item"><i>◆</i> Care considers our origins — and the afterlife</span>
+              <span class="tick-item"><i>◆</i> The practitioner's inner state shapes the change</span>
+              <span class="tick-item"><i>◆</i> The psyche is multidimensional — no single approach fits all</span>
+              <span class="tick-item"><i>◆</i> Change one element and every other element shifts</span>
             </div>
           </div>
         </div>
-        <div class="reveal">
-          <p class="eyebrow">The therapeutic relationship</p>
-          <h2>Not a hierarchy. A companionship.</h2>
-          <p>TIIP describes the practitioner not as a detached expert but as a <strong>Rafīq</strong> — an “intimate friend.” The word comes from <em>rifq</em>, meaning gentle companionship: a relationship that is collaborative and authoritative, never hierarchical or cold.</p>
-          <p>Crucially, the Rafīq is understood to be on their own parallel journey of growth — expected to stay aware of their own deficiencies and biases, and to tend to their own wellbeing so it never bleeds into the care they provide.</p>
-        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- CASE ILLUSTRATION -->
-  <section class="bg-cream">
-    <div class="container" style="max-width:880px;">
-      <div class="section-head reveal">
-        <p class="eyebrow">Case illustration</p>
-        <h2>The model in practice</h2>
-        <p class="lead muted">Harris, a 30-year-old man, sought therapy for marital conflict and anger outbursts rooted in anxiety and depression. His case shows how every layer of the psyche surfaces — and how each was addressed in turn.</p>
-      </div>
-      <div class="accordion reveal" data-single>
-        <div class="acc-item open"><button class="acc-head"><span><span class="tag teal">Iḥsās</span> &nbsp;Where it began — emotion</span><span class="chev">+</span></button><div class="acc-body"><div class="inner">Harris’s primary issue began with his <em>iḥsās</em> — sadness from unmet needs for connection, which surfaced as anxiety and explosive anger whenever he felt overwhelmed or out of control.</div></div></div>
-        <div class="acc-item"><button class="acc-head"><span><span class="tag">Nafs &amp; ʾAql</span> &nbsp;Pattern &amp; reframe</span><span class="chev">+</span></button><div class="acc-body"><div class="inner">Behavioral pattern recognition addressed his inclinations (<em>nafs</em>), while cognitive reframing — rooted in his own religious education — recalibrated the appraisals driving his reactivity (<em>ʾaql</em>).</div></div></div>
-        <div class="acc-item"><button class="acc-head"><span><span class="tag">Rūḥ &amp; Qalb</span> &nbsp;Spiritual integration</span><span class="chev">+</span></button><div class="acc-body"><div class="inner">Spiritual practices — prayer and acceptance of God’s decree — nourished the <em>rūḥ</em>. As the elements realigned, his <em>qalb</em> steadied: symptom scores improved, his anger came under control, and he learned to hold boundaries without swinging to emotional extremes.</div></div></div>
-      </div>
-    </div>
-  </section>
+    <!-- ============ THE PSYCHE ============ -->
+    <section id="psyche" style="background:linear-gradient(180deg, transparent, rgba(11,32,30,.55) 18%, rgba(11,32,30,.55) 82%, transparent);">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow">Interactive · The ontological model</p>
+          <h2>The architecture of the human psyche</h2>
+          <p class="lead">TIIP conceptualizes the psyche as interacting elements that all feed into the heart — and a person with no diagnosis may still be unwell, afflicted by spiritual illnesses like <em>ḥasad</em> (corrosive envy) or <em>shuḥḥ</em> (avarice) that secular models overlook. Select any element to explore what it governs and how it is healed.</p>
+        </div>
 
-  <!-- FAQ ACCORDION -->
-  <section class="bg-white">
-    <div class="container" style="max-width:840px;">
-      <div class="section-head reveal">
-        <p class="eyebrow">Common questions</p>
-        <h2>Understanding the model</h2>
-      </div>
-      <div class="accordion reveal" data-single>
-        <div class="acc-item open">
-          <button class="acc-head">Is TIIP only for Muslim patients? <span class="chev">+</span></button>
-          <div class="acc-body"><div class="inner">TIIP is designed for clinicians serving Muslim patients who wish to integrate their faith into care, but many of its principles — meaning-making, values-based behavior, and holistic formulation — inform compassionate practice more broadly. Treatment is always calibrated to the individual patient’s beliefs and consent.</div></div>
-        </div>
-        <div class="acc-item">
-          <button class="acc-head">Does it replace established psychotherapies? <span class="chev">+</span></button>
-          <div class="acc-body"><div class="inner">No. TIIP is integrative. It draws on evidence-based methods — cognitive, behavioral, emotion-focused, and experiential — and situates them within an Islamic model of the human soul, rather than discarding or replacing them.</div></div>
-        </div>
-        <div class="acc-item">
-          <button class="acc-head">Who can train in the model? <span class="chev">+</span></button>
-          <div class="acc-body"><div class="inner">Training is generally intended for mental health professionals and those preparing to enter the field. Cohorts and certification pathways are announced through the <a href="events.html">Events</a> page and the member community.</div></div>
-        </div>
-        <div class="acc-item">
-          <button class="acc-head">How is the model kept rigorous? <span class="chev">+</span></button>
-          <div class="acc-body"><div class="inner">The framework is articulated through peer-reviewed scholarship, supervised clinical training, and ongoing research. See the <a href="research.html">Research</a> page for publications advancing its evidence base.</div></div>
-        </div>
-      </div>
-      <div class="footer-note mt-3"><strong>Source:</strong> Khan, F., &amp; Keshavarzi, H. (2023). <em>Theoretical Foundations and Clinical Applications of Traditional Islamically Integrated Psychotherapy.</em> In P. S. Richards, G. E. K. Allen, &amp; D. K. Judd (Eds.), <em>Handbook of Spiritually Integrated Psychotherapies</em>. American Psychological Association. TIIP was developed by Hooman Keshavarzi &amp; Fahad Khan and is taught and practiced at the Khalil Center.</div>
-    </div>
-  </section>
+        <div class="psyche-wrap">
+          <div class="reveal">
+            <div class="orbital" role="group" aria-label="Interactive diagram of the TIIP ontological model">
+              <svg class="rings" viewBox="0 0 100 100" aria-hidden="true">
+                <circle class="ring dashed" cx="50" cy="50" r="46" />
+                <circle class="ring" cx="50" cy="50" r="36.5" />
+                <line class="spoke" x1="50" y1="50" x2="50" y2="13.5" />
+                <line class="spoke" x1="50" y1="50" x2="84.7" y2="38.7" style="animation-delay:-.5s" />
+                <line class="spoke" x1="50" y1="50" x2="71.5" y2="79.5" style="animation-delay:-1s" />
+                <line class="spoke" x1="50" y1="50" x2="28.5" y2="79.5" style="animation-delay:-1.5s" />
+                <line class="spoke" x1="50" y1="50" x2="15.3" y2="38.7" style="animation-delay:-2s" />
+              </svg>
+              <div class="rotor" aria-hidden="true"><span class="satellite" style="top:4%;"></span></div>
+              <button class="psy-node" data-key="aql" aria-label="Aql, cognition"><span class="ar">عقل</span><span class="en">ʾAql</span><span class="sub">Cognition</span></button>
+              <button class="psy-node" data-key="ruh" aria-label="Ruh, spirit"><span class="ar">روح</span><span class="en">Rūḥ</span><span class="sub">Spirit</span></button>
+              <button class="psy-node" data-key="nafs" aria-label="Nafs, behavioral inclination"><span class="ar">نفس</span><span class="en">Nafs</span><span class="sub">Inclination</span></button>
+              <button class="psy-node" data-key="ihsas" aria-label="Ihsas, emotion"><span class="ar">إحساس</span><span class="en">Iḥsās</span><span class="sub">Emotion</span></button>
+              <button class="psy-node" data-key="fitrah" aria-label="Fitrah, primordial essence"><span class="ar">فطرة</span><span class="en">Fiṭrah</span><span class="sub">Essence</span></button>
+              <button class="psy-node core active" data-key="qalb" aria-label="Qalb, the metaphysical heart"><span class="ar">قلب</span><span class="en">Qalb</span><span class="sub">The Heart</span></button>
+            </div>
+            <p class="psy-hint">Tap an element — or use <kbd>←</kbd> <kbd>→</kbd> to move around the orbit.</p>
+          </div>
 
-  <!-- CTA -->
-  <section class="bg-white" style="padding-top:0;">
-    <div class="container">
-      <div class="cta-band reveal">
-        <h2>Ready to go deeper?</h2>
-        <p>Access recorded trainings, clinical tools, and the practitioner community to put the model into practice.</p>
-        <div class="cta-actions">
-          <a class="btn btn-gold" href="resources.html">Browse Resources</a>
-          <a class="btn btn-ghost" href="community.html">Join the Community</a>
+          <div class="psy-detail reveal" id="psy-detail" aria-live="polite" style="--d:.12s">
+            <div class="fade-zone">
+              <div class="head">
+                <span class="tag gold">Element of the psyche</span>
+                <span class="big-ar" aria-hidden="true">قلب</span>
+              </div>
+              <h3>Qalb — The Metaphysical Heart</h3>
+              <div class="role">Homeostatic center · locus of health &amp; pathology</div>
+              <p class="body">Distinct from the physical heart yet interacting with it, the qalb is the locus of the human being — the container of both health and dysfunction. Its condition rises and falls with the state of every other element that feeds into it: thought, drive, emotion, and spirit alike.</p>
+              <div class="heal"><b>In treatment</b><span class="heal-txt">The end-goal of all treatment: <em>qalb salīm</em> — a sound heart — reached when every element of the psyche is balanced and unified (<em>ittiḥād</em>).</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Drives -->
+        <div class="drives">
+          <div class="section-head reveal">
+            <p class="eyebrow">The four drives</p>
+            <h3 style="font-size:clamp(1.4rem,2.6vw,1.9rem);">An inner tension, by design</h3>
+            <p class="muted" style="font-size:.97rem;max-width:720px;">The human blend produces four drives in constant tension. Imām al-Ghazālī held that appetite and aggression are not inherently evil — they are survival forces. The satanic emerges only when they are left unchecked.</p>
+          </div>
+          <div class="drives-grid">
+            <div class="drive up reveal">
+              <span class="glyph">🕊️</span><b>Angelic <span class="ar-s">ملكي</span></b>
+              <p>The pull toward the divine, the good, and the true — allied with the fiṭrah.</p>
+            </div>
+            <div class="drive up reveal" style="--d:.08s">
+              <span class="glyph">🍯</span><b>Hedonistic <span class="ar-s">شهوة</span></b>
+              <p>Appetite and desire. Necessary for life — pathological only in overindulgence.</p>
+            </div>
+            <div class="drive up reveal" style="--d:.16s">
+              <span class="glyph">🛡️</span><b>Aggressive <span class="ar-s">غضب</span></b>
+              <p>The survival force. "Without anger man may not survive" — yet unchecked, it destroys.</p>
+            </div>
+            <div class="drive down reveal" style="--d:.24s">
+              <span class="glyph">🕳️</span><b>Satanic <span class="ar-s">شيطاني</span></b>
+              <p>Not a starting point but an emergence — appearing when appetite and aggression go unregulated.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Nafs journey -->
+        <div class="nafs-journey">
+          <div class="section-head reveal">
+            <p class="eyebrow">The ascent of the nafs</p>
+            <h3 style="font-size:clamp(1.4rem,2.6vw,1.9rem);">Three stations of the self</h3>
+            <p class="muted" style="font-size:.97rem;max-width:720px;">The Qur'ān names three states through which the trained self ascends. Follow the journey from raw impulse to serenity.</p>
+          </div>
+          <div class="reveal">
+            <div class="nafs-track" role="tablist" aria-label="Stations of the nafs">
+              <span class="fill" style="width:0%;"></span>
+              <button class="nafs-stop active" role="tab" aria-selected="true"><span class="dot"></span><span>Ammārah</span></button>
+              <button class="nafs-stop" role="tab" aria-selected="false"><span class="dot"></span><span>Lawwāmah</span></button>
+              <button class="nafs-stop" role="tab" aria-selected="false"><span class="dot"></span><span>Muṭmaʾinnah</span></button>
+            </div>
+            <div class="nafs-detail" id="nafs-detail" aria-live="polite">
+              <div class="ar fade-zone">النفس الأمّارة</div>
+              <div class="fade-zone">
+                <b>Nafs al-Ammārah — the commanding self</b>
+                <span class="vref">Qur'an 12:53</span>
+                <p>The primitive expression: appetite and aggression indulged without restraint, commanding the person toward excess and harm. This is where unregulated drives keep the psyche in tension.</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+
+    <!-- ============ PROCESS OF CHANGE ============ -->
+    <section id="process">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow">The process of change</p>
+          <h2>Four stages. Two parallel journeys.</h2>
+          <p class="lead">At every stage, the clinician deploys a <strong>mechanism of change</strong> designed to draw out a corresponding <strong>principle of change</strong> in the patient. Scroll through the arc of therapy.</p>
+        </div>
+
+        <div class="stages-wrap">
+          <div class="stages-side reveal" aria-hidden="true">
+            <span class="stage-num">01</span>
+            <span class="stage-word">مُرابَطة</span>
+            <div class="stage-meter"><i class="done"></i><i></i><i></i><i></i></div>
+          </div>
+
+          <div class="stages-flow">
+            <article class="stage-card active reveal">
+              <div class="arrow-flow">Clinician acts · patient responds</div>
+              <div class="stage-pair"><span class="tag gold">Clinician · Alliance (Murābaṭah)</span><span class="tag">Patient · Compliance (Inqiyād)</span></div>
+              <h3>The groundwork</h3>
+              <p>Everything rests on the therapeutic bond. Through empathic following and attunement, the clinician lowers anxiety and defensiveness — and determines which element of the psyche is the primary source of dysfunction, so later intervention can be aimed precisely. The assessment pursues six goals:</p>
+              <ul>
+                <li>Build the therapeutic alliance</li>
+                <li>Assess motivation to change</li>
+                <li>Assess religiosity</li>
+                <li>Form a psychospiritual diagnosis and conceptualization</li>
+                <li>Assess internal and external psychospiritual functioning</li>
+                <li>Orient the patient — psychoeducation, prognosis, and goals</li>
+              </ul>
+            </article>
+
+            <article class="stage-card reveal">
+              <div class="arrow-flow">Clinician acts · patient responds</div>
+              <div class="stage-pair"><span class="tag gold">Clinician · Uncovering (Mukāshafah)</span><span class="tag">Patient · Self-Awareness (Inkishāf)</span></div>
+              <h3>Introspective self-awareness</h3>
+              <p>The clinician teaches the ontological model itself and co-conceptualizes the patient's struggles in its terms — which part of the psyche activates, moment to moment, as they think, feel, act, and pray. Classical scholars held that this uncovering requires a guide: it is hard to see one's own deficiencies alone.</p>
+              <p>Acting as a <strong>psychospiritual mirror</strong>, the Rafīq helps the patient watch the layers interact — how one level ignites another until the whole registers as distress.</p>
+            </article>
+
+            <article class="stage-card reveal">
+              <div class="arrow-flow">Clinician acts · patient responds</div>
+              <div class="stage-pair"><span class="tag gold">Clinician · Intervention (Muʿālajah)</span><span class="tag">Patient · Equilibrium (Iʿtidāl)</span></div>
+              <h3>Psychospiritual equilibrium</h3>
+              <p>The most directive stage. Treatment targets the primary source of dysfunction first and treats the rest as resultant effects — clearing what is unhealthy before implanting the praiseworthy, the way soil is prepared before planting:</p>
+              <ul>
+                <li><strong>ʾAql</strong> — engender an actively contemplative mind through reflection and psychoeducation</li>
+                <li><strong>Iḥsās</strong> — express maladaptive emotion, transform it into balanced expression</li>
+                <li><strong>Nafs</strong> — confront discomfort and resist avoidance (<em>mukhālafat al-nafs</em>)</li>
+                <li><strong>Rūḥ</strong> — clear spiritual diseases, fill the void with remembrance of God</li>
+              </ul>
+            </article>
+
+            <article class="stage-card reveal">
+              <div class="arrow-flow">Clinician acts · patient responds</div>
+              <div class="stage-pair"><span class="tag gold">Clinician · Continuity (Muwāṣalah)</span><span class="tag">Patient · Integrative Unity (Ittiḥād)</span></div>
+              <h3>Integrative unity</h3>
+              <p>Reached only after bond, awareness, and balance. The elements of the psyche now align until no dissonance remains between them — fragmentation gives way to an integrative, holistic experience of being.</p>
+              <p>From this ground, the patient takes on higher-level spiritual practices: acquiring virtues, building psychological and spiritual resilience, and protecting the equilibrium they have won.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ RAFIQ ============ -->
+    <section id="rafiq" style="padding-top:0;">
+      <div class="container">
+        <div class="rafiq-band reveal">
+          <div class="rafiq-seal" aria-hidden="true">
+            <svg viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="47" fill="none" stroke="rgba(216,165,65,.35)" stroke-width="1" stroke-dasharray="2 5" />
+              <circle cx="50" cy="50" r="39" fill="none" stroke="rgba(139,219,210,.25)" stroke-width="1" />
+              <polygon points="50,15 74.7,25.3 85,50 74.7,74.7 50,85 25.3,74.7 15,50 25.3,25.3" fill="none" stroke="rgba(216,165,65,.3)" stroke-width="1" />
+            </svg>
+            <div class="word"><span class="ar">رفيق</span><small>Rafīq · intimate friend</small></div>
+          </div>
+          <div class="rafiq-copy">
+            <p class="eyebrow">The therapeutic relationship</p>
+            <h2>Not a hierarchy.<br>A companionship.</h2>
+            <p>TIIP names the practitioner with al-Ghazālī's relational term <strong>Rafīq</strong> — from <em>rifq</em>, gentle companionship. The relationship is collaborative and authoritative, never hierarchical or cold, and it extends beyond technique into the metaphysical dimensions of healing.</p>
+            <div class="rafiq-points">
+              <div class="pt">Patient and practitioner are understood to be on similar journeys of personal development.</div>
+              <div class="pt">The Rafīq stays aware of their own deficiencies and biases, and actively works on them.</div>
+              <div class="pt">Clear boundaries separate the clinician's domain from that of pastoral clergy — holistic care without infringement.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CASE STUDY ============ -->
+    <section id="case">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow">Case illustration</p>
+          <h2>The model in practice</h2>
+          <p class="lead">Harris, a 30-year-old married man, sought therapy for marital conflict — and was referred onward for anxiety and depression that erupted as anger. Walk through his case as TIIP saw it. <span class="muted" style="font-size:.85rem;">(All identifying details altered.)</span></p>
+        </div>
+
+        <div class="case-shell reveal">
+          <div class="case-steps" role="tablist" aria-label="Case study steps">
+            <button class="case-step-btn active" role="tab" aria-selected="true"><small>Step 1</small><b>The Patient</b></button>
+            <button class="case-step-btn" role="tab" aria-selected="false"><small>Step 2</small><b>Conceptualization</b></button>
+            <button class="case-step-btn" role="tab" aria-selected="false"><small>Stages 1–2</small><b>Alliance &amp; Uncovering</b></button>
+            <button class="case-step-btn" role="tab" aria-selected="false"><small>Stage 3</small><b>Intervention</b></button>
+            <button class="case-step-btn" role="tab" aria-selected="false"><small>Stage 4</small><b>Integration</b></button>
+          </div>
+
+          <div class="case-panel active">
+            <div>
+              <h3>A marriage under siege, a self under strain</h3>
+              <p>Born in Pakistan, Harris moved to the United States as a teenager. He grew up emotionally dependent on his parents, continuously seeking his mother's approval. When he married a woman from another culture, his family cut off all ties with him and his wife.</p>
+              <p>He described an overarching feeling of being overwhelmed, isolation, and emotional pain. His relationship was marked by his excessive need for reassurance and his wife's emotional volatility. A beta-blocker had been prescribed for anger episodes that arrived with panic-like symptoms.</p>
+            </div>
+            <div class="case-aside">
+              <b>Clinical picture</b>
+              <ul>
+                <li>Adjustment disorder with mixed anxiety and depressed mood</li>
+                <li>Criteria met for intermittent explosive disorder</li>
+                <li>Elevated Brief Symptom Inventory scores</li>
+                <li>High religiosity — formal Islamic education alongside a STEM degree</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="case-panel">
+            <div>
+              <h3>Reading the psyche, element by element</h3>
+              <p>Harris's primary dysfunction sat in his <strong>iḥsās</strong>: maladaptive sadness from unmet needs for connection, anxiety when life felt unpredictable, and anger as a secondary emotion masking helplessness — a vicious cycle that left his real needs further neglected.</p>
+              <p>His <strong>nafs</strong> produced childlike attention-seeking and avoidance; his <strong>ʾaql</strong> catastrophized when activated yet held real capacity for religious reframing; his <strong>rūḥ</strong> found relief in prayer but wavered in contentment with God's decree (<em>riḍā bi-al-qaḍāʾ</em>). All of it weighed on his <strong>qalb</strong>.</p>
+            </div>
+            <div class="case-aside">
+              <b>Element map</b>
+              <ul>
+                <li><strong>Iḥsās</strong> — primary source: sadness, anxiety, secondary anger</li>
+                <li><strong>Nafs</strong> — low frustration tolerance, avoidance, approval-seeking</li>
+                <li><strong>ʾAql</strong> — catastrophizing, but insight available</li>
+                <li><strong>Rūḥ</strong> — soothed by ritual, weak riḍā under stress</li>
+                <li><strong>Qalb</strong> — bearing the cumulative toll</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="case-panel">
+            <div>
+              <h3>Building the bond, turning on the light</h3>
+              <p>Harris arrived motivated. His religiosity was formally assessed — the Muslim Experiential Religiousness scale and the Islamic Positive Religious Coping subscale both ran high — so the TIIP model itself was taught to him as psychoeducation. He embraced it enthusiastically, and the alliance deepened.</p>
+              <p>Awareness training moved from day-to-day emotional shifts down to moment-to-moment ones, with emotions deliberately evoked in session, reflected, and regulated. He then learned to catch his <em>nafsānī</em> desires as they surfaced in ordinary behavior.</p>
+            </div>
+            <div class="case-aside">
+              <b>His daily nafsānī inventory included</b>
+              <ul>
+                <li>Leaving the house when upset; stonewalling his wife</li>
+                <li>Fits of rage and verbal outbursts</li>
+                <li>Sleeping and eating beyond need</li>
+                <li>Seeking approval and attention of others</li>
+                <li>Putting others down to elevate himself</li>
+                <li>Praising himself instead of staying humble</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="case-panel">
+            <div>
+              <h3>Directive work toward balance</h3>
+              <p>A <strong>two-chair dialogue through a spiritual lens of compassion</strong> softened Harris's view of himself and his parents — engendering forgiveness and breaking the all-good/all-bad split he held about them.</p>
+              <p>In marital work, the couple learned to sidestep secondary anger and speak from underlying vulnerable pain. Islamic notions of humility, seeing the other positively (<em>ḥusn al-ẓann</em>), and selflessness re-anchored their commitment — moving them from dissecting the problem to communicating their needs.</p>
+            </div>
+            <div class="case-aside">
+              <b>Interventions in play</b>
+              <ul>
+                <li>Emotion evocation, reflection, and transformation</li>
+                <li>Two-chair dialogue, spiritually reframed</li>
+                <li>Process-over-content communication coaching</li>
+                <li>ḥusn al-ẓann and humility as relational stances</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="case-panel">
+            <div>
+              <h3>The elements begin to serve each other</h3>
+              <p>With balance restored, therapy turned to <strong>complementarity</strong>: hopeful thinking about his wife, parents, and self, demonstrated through matching behavior; virtue development; and prayer focused on patience, mercy, and asking God's help against regressive instincts — followed by contemplating the hidden blessings inside his distress.</p>
+              <p>His Brief Symptom Inventory score fell. The anger outbursts came under control. His marriage remained challenging — but he could hold boundaries without being pulled into emotional extremes.</p>
+            </div>
+            <div class="case-aside">
+              <b>Outcome</b>
+              <ul>
+                <li>Measurable symptom reduction on the BSI</li>
+                <li>Regulated emotional functioning, anger contained</li>
+                <li>Learned optimism — distress reframed in spiritually positive terms</li>
+                <li>Congruence between professed beliefs and lived behavior</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="case-nav">
+            <button class="btn btn-ghost btn-sm" data-case-prev>← Previous</button>
+            <span class="count">1 / 5</span>
+            <button class="btn btn-gold btn-sm" data-case-next>Next →</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ IJTIMA'I ============ -->
+    <section id="community-note" style="padding-top:0;">
+      <div class="container">
+        <div class="ijtimai reveal">
+          <span class="big-ar" aria-hidden="true">اجتماعي</span>
+          <p class="eyebrow" style="justify-content:center;display:flex;">The ijtimāʿī focus</p>
+          <h2 style="font-size:clamp(1.6rem,3vw,2.3rem);">No psyche heals in isolation</h2>
+          <p>Ibn Khaldūn called compassion for one's kin "a divine gift put into the hearts of men," and al-Ghazālī observed that society constantly shapes our inclinations, feelings, and thoughts. So TIIP treats the person <em>within</em> their family, community, and surroundings — a dimension of psychotherapy too often neglected.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FAQ ============ -->
+    <section id="faq" style="padding-top:0;">
+      <div class="container">
+        <div class="section-head center reveal">
+          <p class="eyebrow">Common questions</p>
+          <h2>Understanding the model</h2>
+        </div>
+        <div class="accordion reveal" data-single>
+          <div class="acc-item open">
+            <button class="acc-head" aria-expanded="true">Is TIIP only for Muslim patients? <span class="chev">+</span></button>
+            <div class="acc-body"><div class="inner">TIIP is designed for clinicians serving Muslim patients who wish to integrate their faith into care, but many of its principles — meaning-making, values-based behavior, and holistic formulation — inform compassionate practice more broadly. Treatment is always calibrated to the individual patient's beliefs and consent.</div></div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-head" aria-expanded="false">Does it replace established psychotherapies? <span class="chev">+</span></button>
+            <div class="acc-body"><div class="inner">No. TIIP is integrative: it draws on evidence-based methods — cognitive, behavioral, emotion-focused, and experiential — and situates them within an Islamic model of the human soul rather than discarding them. Its epistemology grades every source of knowledge by the strength of its evidence, wherever it originates.</div></div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-head" aria-expanded="false">What has it been used to treat? <span class="chev">+</span></button>
+            <div class="acc-body"><div class="inner">At the Khalil Center — where TIIP is taught and practiced — most patients present with family or social issues (41%), followed by anxiety-related (20%), mood-related (19%), and trauma or stressor-related (10%) concerns. TIIP has been effective across these, alongside spiritual illnesses treated within the context of psychological functioning. Formulations also exist for specific problems such as marital conflict and obsessive–compulsive scrupulosity (<em>waswasa</em>).</div></div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-head" aria-expanded="false">Where does a TIIP practitioner's role end? <span class="chev">+</span></button>
+            <div class="acc-body"><div class="inner">TIIP practitioners take a holistic approach to mental health, but clear boundaries distinguish their domain from that of pastoral or spiritual counselors. Spiritual illnesses are addressed within the context of psychological functioning and resilience — not as an end in themselves — avoiding infringement on either profession's territory.</div></div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-head" aria-expanded="false">How is the model kept rigorous? <span class="chev">+</span></button>
+            <div class="acc-body"><div class="inner">The framework is articulated through peer-reviewed scholarship, refined by the research department at the Khalil Center, and advanced through supervised clinical training and ongoing research. See the <a href="research.html">Research</a> page for the publications building its evidence base.</div></div>
+          </div>
+        </div>
+        <div class="footer-note reveal"><strong>Source:</strong> Khan, F., &amp; Keshavarzi, H. (2023). <em>Theoretical Foundations and Clinical Applications of Traditional Islamically Integrated Psychotherapy.</em> In P. S. Richards, G. E. K. Allen, &amp; D. K. Judd (Eds.), <em>Handbook of Spiritually Integrated Psychotherapies</em>. American Psychological Association. TIIP was initiated by Keshavarzi &amp; Haque (2013), developed by Hooman Keshavarzi and Fahad Khan, and is taught and practiced at the Khalil Center.</div>
+      </div>
+    </section>
+
+    <!-- ============ CTA ============ -->
+    <section style="padding-top:0;">
+      <div class="container">
+        <div class="cta-band reveal">
+          <p class="eyebrow" style="justify-content:center;display:flex;">Go deeper</p>
+          <h2>Bring the model into your practice</h2>
+          <p>Access recorded trainings, clinical tools, and a practitioner community putting TIIP to work in the therapy room.</p>
+          <div class="cta-actions">
+            <a class="btn btn-gold" href="resources.html">Browse Resources</a>
+            <a class="btn btn-ghost" href="community.html">Join the Community</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
 
   <footer class="site-footer">
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
           <a class="brand" href="index.html"><span class="mark">ت</span><span><b>TIIP</b><span>Community</span></span></a>
-          <p class="mt-1">A professional home for clinicians practicing Traditional Islamically Integrated Psychotherapy.</p>
+          <p>A professional home for clinicians practicing Traditional Islamically Integrated Psychotherapy.</p>
         </div>
         <div><h4>Explore</h4><a href="model.html">The Model</a><a href="community.html">Community</a><a href="resources.html">Resources</a><a href="research.html">Research</a></div>
         <div><h4>Participate</h4><a href="events.html">Events</a><a href="community.html">Case Consultation</a><a href="#" data-open-login>Member Login</a></div>
@@ -262,18 +518,18 @@
   </footer>
 
   <div class="modal-overlay" id="login-modal" role="dialog" aria-modal="true">
-    <div class="modal modal-wrap">
+    <div class="modal">
       <button class="modal-close" data-close-login aria-label="Close">×</button>
       <h3>Member Login</h3>
       <div class="demo-pill">Demo only — this is a non-functional mock-up.</div>
       <form>
         <div class="field"><label>Email</label><input type="email" placeholder="you@practice.com" /></div>
         <div class="field"><label>Password</label><input type="password" placeholder="••••••••" /></div>
-        <button class="btn btn-primary" type="submit">Sign In</button>
+        <button class="btn btn-gold" type="submit">Sign In</button>
       </form>
     </div>
   </div>
 
-  <script src="assets/js/main.js"></script>
+  <script src="assets/js/model.js"></script>
 </body>
 </html>
