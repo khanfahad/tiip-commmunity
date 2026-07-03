@@ -230,6 +230,13 @@
       role: "Two forces · the heavenly & the animal spirit",
       body: "The <em>rūḥ ʿulwī samāwī</em> longs for reconnection with the divine; the <em>rūḥ ḥayawānī</em> is the life-force animating the body. Its chief nourishment is <em>dhikr</em> — remembrance of God — which research links to parasympathetic calm, improved emotion regulation, and reduced clinical anxiety.",
       heal: "Treated by clearing spiritual diseases first, then filling the void with remembrance, righteous action, and virtuous character."
+    },
+    ijtimai: {
+      ar: "اجتماعي",
+      title: "Ijtimāʿī — The Communal Layer",
+      role: "The outer layer · family, community & surroundings",
+      body: "The psyche never turns in a vacuum. Ibn Khaldūn called compassion for one's kin a divine gift placed in the hearts of men, and al-Ghazālī observed that society constantly shapes our inclinations, feelings, and thoughts. Communally influenced inclinations interact with every element within.",
+      heal: "Treatment considers the person within their family, community, and environment — enlisting the surroundings as part of healing rather than ignoring them."
     }
   };
 
@@ -248,7 +255,7 @@
       detail.classList.remove("switching");
     }, 240);
   }
-  var psyOrder = ["fitrah", "aql", "ruh", "ihsas", "nafs", "qalb"];
+  var psyOrder = ["fitrah", "aql", "ruh", "ihsas", "nafs", "qalb", "ijtimai"];
   psyNodes.forEach(function (node) {
     node.addEventListener("click", function () {
       psyNodes.forEach(function (n) { n.classList.remove("active"); });
@@ -264,55 +271,6 @@
         if (el) { el.focus(); el.click(); }
       }
     });
-  });
-
-  /* ---------------------------------------------------------
-     Nafs journey (three stations)
-  --------------------------------------------------------- */
-  var nafsData = [
-    {
-      ar: "النفس الأمّارة",
-      name: "Nafs al-Ammārah — the commanding self",
-      vref: "Qur'an 12:53",
-      body: "The primitive expression: appetite and aggression indulged without restraint, commanding the person toward excess and harm. This is where unregulated drives keep the psyche in tension."
-    },
-    {
-      ar: "النفس اللوّامة",
-      name: "Nafs al-Lawwāmah — the reprimanding self",
-      vref: "Qur'an 75:2",
-      body: "Through training, regulation, and refusal of overconsumption, the self begins to elevate — it notices its own slips and reproaches itself. Growth lives in this stage of honest self-correction."
-    },
-    {
-      ar: "النفس المطمئنّة",
-      name: "Nafs al-Muṭmaʾinnah — the tranquil self",
-      vref: "Qur'an 89:27",
-      body: "The desire for overconsumption is extinguished. No longer shackled by the dictates of carnal drives, the inner tension is relieved and the self settles into calm and serenity."
-    }
-  ];
-  var nafsStops = document.querySelectorAll(".nafs-stop");
-  var nafsDetail = document.getElementById("nafs-detail");
-  var nafsFill = document.querySelector(".nafs-track .fill");
-  function setNafs(idx) {
-    nafsStops.forEach(function (s, i) {
-      s.classList.toggle("active", i === idx);
-      s.classList.toggle("passed", i < idx);
-      s.setAttribute("aria-selected", i === idx ? "true" : "false");
-    });
-    if (nafsFill) nafsFill.style.width = (idx * 46) + "%";
-    if (nafsDetail) {
-      var d = nafsData[idx];
-      nafsDetail.classList.add("switching");
-      setTimeout(function () {
-        nafsDetail.querySelector(".ar").textContent = d.ar;
-        nafsDetail.querySelector("b").textContent = d.name;
-        nafsDetail.querySelector(".vref").textContent = d.vref;
-        nafsDetail.querySelector("p").textContent = d.body;
-        nafsDetail.classList.remove("switching");
-      }, 220);
-    }
-  }
-  nafsStops.forEach(function (stop, i) {
-    stop.addEventListener("click", function () { setNafs(i); });
   });
 
   /* ---------------------------------------------------------
@@ -399,31 +357,6 @@
   document.querySelectorAll(".acc-item.open .acc-body").forEach(function (body) {
     body.style.maxHeight = body.scrollHeight + "px";
   });
-
-  /* ---------------------------------------------------------
-     Login modal (mock)
-  --------------------------------------------------------- */
-  var overlay = document.getElementById("login-modal");
-  function openModal() { if (overlay) overlay.classList.add("open"); }
-  function closeModal() { if (overlay) overlay.classList.remove("open"); }
-  document.querySelectorAll("[data-open-login]").forEach(function (b) {
-    b.addEventListener("click", function (e) { e.preventDefault(); openModal(); });
-  });
-  document.querySelectorAll("[data-close-login]").forEach(function (b) {
-    b.addEventListener("click", closeModal);
-  });
-  if (overlay) {
-    overlay.addEventListener("click", function (e) { if (e.target === overlay) closeModal(); });
-    var form = overlay.querySelector("form");
-    if (form) {
-      form.addEventListener("submit", function (e) {
-        e.preventDefault();
-        var msg = overlay.querySelector(".demo-pill");
-        if (msg) msg.textContent = "✓ Demo only — member accounts are not active in this mock-up.";
-      });
-    }
-  }
-  document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeModal(); });
 
   /* ---------------------------------------------------------
      Footer year
