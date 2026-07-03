@@ -457,32 +457,64 @@ section { position: relative; padding: clamp(72px, 9vw, 130px) 0; }
 }
 @media (max-width: 980px) { .psyche-wrap { grid-template-columns: 1fr; } }
 
-.orbital {
-  position: relative;
+/* Hierarchical figure: fitrah arc → drives → psyche cluster */
+.model-fig {
+  display: flex; flex-direction: column; align-items: center;
   width: min(560px, 100%);
-  aspect-ratio: 1;
   margin: 0 auto;
 }
-.orbital svg.rings { position: absolute; inset: 0; width: 100%; height: 100%; }
-.orbital .ring { fill: none; stroke: rgba(139, 219, 210, 0.14); stroke-width: 1; }
-.orbital .ring.dashed { stroke-dasharray: 3 7; stroke: rgba(216, 165, 65, 0.22); }
-.orbital .spoke {
+.fitrah-band {
+  width: 100%;
+  background: none; border: 0; padding: 0; cursor: pointer;
+  transition: filter 0.3s ease, transform 0.3s var(--ease-out);
+}
+.fitrah-band svg { width: 100%; height: auto; display: block; overflow: visible; }
+.fitrah-band .band {
+  fill: none; stroke: url(#arcGrad); stroke-width: 32; stroke-linecap: round;
+  opacity: 0.5; transition: opacity 0.3s ease;
+}
+.fitrah-band text {
+  font-family: var(--font-body); font-size: 15px; font-weight: 700;
+  letter-spacing: 0.24em; fill: var(--cream);
+}
+.fitrah-band:hover { transform: translateY(-2px); }
+.fitrah-band:hover .band { opacity: 0.75; }
+.fitrah-band.active .band { opacity: 1; }
+.fitrah-band.active { filter: drop-shadow(0 8px 26px rgba(216, 165, 65, 0.35)); }
+.fitrah-band:focus-visible { outline: 2px solid var(--gold-400); outline-offset: 4px; border-radius: 14px; }
+
+.drives-row {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 7px;
+  margin-top: 10px;
+}
+.drive-chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 10px; border-radius: 9px;
+  border: 1px solid rgba(216, 165, 65, 0.32);
+  background: rgba(216, 165, 65, 0.07);
+  color: var(--gold-300);
+  font-size: 0.64rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  white-space: nowrap;
+  transition: background 0.25s ease, transform 0.25s var(--ease-out), border-color 0.25s ease;
+}
+.drive-chip .ar-s { font-family: var(--font-ar); font-size: 0.84rem; text-transform: none; color: var(--gold-400); }
+.drive-chip:hover { background: rgba(216, 165, 65, 0.16); border-color: var(--gold-400); color: var(--gold-300); transform: translateY(-2px); }
+
+.fig-connector {
+  width: 2px; height: 26px; margin: 8px 0 2px;
+  background: repeating-linear-gradient(180deg, rgba(139, 219, 210, 0.55) 0 4px, transparent 4px 9px);
+}
+
+.psy-square { position: relative; width: 100%; aspect-ratio: 1; }
+.psy-square svg.rings { position: absolute; inset: 0; width: 100%; height: 100%; }
+.psy-square .ring { fill: none; stroke: rgba(139, 219, 210, 0.14); stroke-width: 1; }
+.psy-square .ring.dashed { stroke-dasharray: 3 7; stroke: rgba(216, 165, 65, 0.22); }
+.psy-square .spoke {
   fill: none; stroke: rgba(139, 219, 210, 0.2); stroke-width: 1.2;
   stroke-dasharray: 4 8;
   animation: flow 2.8s linear infinite;
 }
 @keyframes flow { to { stroke-dashoffset: -24; } }
-.orbital .fitrah-arc { fill: none; stroke: rgba(216, 165, 65, 0.4); stroke-width: 1.6; stroke-linecap: round; }
-.orbital .arc-label {
-  font-family: var(--font-body); font-size: 10.5px; font-weight: 700;
-  letter-spacing: 0.26em; fill: var(--gold-400); text-transform: uppercase;
-}
-.rotor { position: absolute; inset: 0; animation: rotor 90s linear infinite; pointer-events: none; }
-.rotor .satellite {
-  position: absolute; width: 5px; height: 5px; border-radius: 50%;
-  background: var(--gold-400); left: 50%; top: 5.2%;
-  box-shadow: 0 0 12px rgba(216, 165, 65, 0.8);
-}
 @keyframes rotor { to { transform: rotate(360deg); } }
 
 .psy-node {
@@ -529,12 +561,11 @@ section { position: relative; padding: clamp(72px, 9vw, 130px) 0; }
   50% { transform: scale(1.09); opacity: 0.25; }
 }
 
-/* node positions — pentagon, r = 36.5% around center */
-.psy-node[data-key="aql"]   { left: 50%;   top: 13.5%; }
-.psy-node[data-key="ruh"]   { left: 84.7%; top: 38.7%; }
-.psy-node[data-key="nafs"]  { left: 71.5%; top: 79.5%; }
-.psy-node[data-key="ihsas"] { left: 28.5%; top: 79.5%; }
-.psy-node[data-key="fitrah"]{ left: 15.3%; top: 38.7%; }
+/* node positions — qalb centered, four elements on the outside */
+.psy-node[data-key="ruh"]   { left: 50%; top: 15%; }
+.psy-node[data-key="ihsas"] { left: 85%; top: 50%; }
+.psy-node[data-key="nafs"]  { left: 50%; top: 85%; }
+.psy-node[data-key="aql"]   { left: 15%; top: 50%; }
 
 @media (max-width: 560px) {
   .psy-node { width: 88px; height: 88px; margin: -44px 0 0 -44px; }
