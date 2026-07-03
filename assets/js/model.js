@@ -234,7 +234,7 @@
   };
 
   var detail = document.getElementById("psy-detail");
-  var psyNodes = document.querySelectorAll(".psy-node");
+  var psyNodes = document.querySelectorAll(".psy-hotspot");
   function renderPsyche(key) {
     var d = psycheData[key];
     if (!d || !detail) return;
@@ -248,7 +248,7 @@
       detail.classList.remove("switching");
     }, 240);
   }
-  var psyOrder = ["fitrah", "aql", "ruh", "nafs", "ihsas", "qalb"];
+  var psyOrder = ["fitrah", "aql", "ruh", "ihsas", "nafs", "qalb"];
   psyNodes.forEach(function (node) {
     node.addEventListener("click", function () {
       psyNodes.forEach(function (n) { n.classList.remove("active"); });
@@ -260,7 +260,7 @@
         e.preventDefault();
         var i = psyOrder.indexOf(node.getAttribute("data-key"));
         var next = psyOrder[(i + (e.key === "ArrowRight" ? 1 : psyOrder.length - 1)) % psyOrder.length];
-        var el = document.querySelector('.psy-node[data-key="' + next + '"]');
+        var el = document.querySelector('.psy-hotspot[data-key="' + next + '"]');
         if (el) { el.focus(); el.click(); }
       }
     });

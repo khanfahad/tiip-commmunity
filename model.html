@@ -146,25 +146,45 @@
 
         <div class="psyche-wrap">
           <div class="reveal">
-            <div class="orbital" role="group" aria-label="Interactive diagram of the TIIP ontological model">
-              <svg class="rings" viewBox="0 0 100 100" aria-hidden="true">
-                <circle class="ring dashed" cx="50" cy="50" r="46" />
-                <circle class="ring" cx="50" cy="50" r="36.5" />
-                <line class="spoke" x1="50" y1="50" x2="50" y2="13.5" />
-                <line class="spoke" x1="50" y1="50" x2="84.7" y2="38.7" style="animation-delay:-.5s" />
-                <line class="spoke" x1="50" y1="50" x2="71.5" y2="79.5" style="animation-delay:-1s" />
-                <line class="spoke" x1="50" y1="50" x2="28.5" y2="79.5" style="animation-delay:-1.5s" />
-                <line class="spoke" x1="50" y1="50" x2="15.3" y2="38.7" style="animation-delay:-2s" />
-              </svg>
-              <div class="rotor" aria-hidden="true"><span class="satellite" style="top:4%;"></span></div>
-              <button class="psy-node" data-key="aql" aria-label="Aql, cognition"><span class="ar">عقل</span><span class="en">ʾAql</span><span class="sub">Cognition</span></button>
-              <button class="psy-node" data-key="ruh" aria-label="Ruh, spirit"><span class="ar">روح</span><span class="en">Rūḥ</span><span class="sub">Spirit</span></button>
-              <button class="psy-node" data-key="nafs" aria-label="Nafs, behavioral inclination"><span class="ar">نفس</span><span class="en">Nafs</span><span class="sub">Inclination</span></button>
-              <button class="psy-node" data-key="ihsas" aria-label="Ihsas, emotion"><span class="ar">إحساس</span><span class="en">Iḥsās</span><span class="sub">Emotion</span></button>
-              <button class="psy-node" data-key="fitrah" aria-label="Fitrah, primordial essence"><span class="ar">فطرة</span><span class="en">Fiṭrah</span><span class="sub">Essence</span></button>
-              <button class="psy-node core active" data-key="qalb" aria-label="Qalb, the metaphysical heart"><span class="ar">قلب</span><span class="en">Qalb</span><span class="sub">The Heart</span></button>
+            <div class="model-fig" role="group" aria-label="Interactive diagram of the TIIP ontological model">
+              <button class="fitrah-band psy-hotspot" data-key="fitrah" aria-label="Fitrah, primordial essence">
+                <svg viewBox="0 0 600 110" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="arcGrad" x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="0" stop-color="#bd8a2c" />
+                      <stop offset="0.5" stop-color="#d8a541" />
+                      <stop offset="1" stop-color="#1c7d75" />
+                    </linearGradient>
+                  </defs>
+                  <path class="band" d="M30 100 Q300 6 570 100" />
+                  <path id="fitrahTextPath" d="M36 100 Q300 12 564 100" fill="none" />
+                  <text><textPath href="#fitrahTextPath" startOffset="50%" text-anchor="middle">FIṬRAH · PRIMORDIAL ESSENCE</textPath></text>
+                </svg>
+              </button>
+              <div class="drives-row" aria-label="The four competing drives">
+                <a class="drive-chip" href="#drives">Angelic <span class="ar-s">ملكي</span></a>
+                <a class="drive-chip" href="#drives">Hedonistic <span class="ar-s">شهوة</span></a>
+                <a class="drive-chip" href="#drives">Satanic <span class="ar-s">شيطاني</span></a>
+                <a class="drive-chip" href="#drives">Aggressive <span class="ar-s">غضب</span></a>
+              </div>
+              <span class="fig-connector" aria-hidden="true"></span>
+              <div class="psy-square">
+                <svg class="rings" viewBox="0 0 100 100" aria-hidden="true">
+                  <circle class="ring dashed" cx="50" cy="50" r="44" />
+                  <circle class="ring" cx="50" cy="50" r="35" />
+                  <line class="spoke" x1="50" y1="50" x2="50" y2="15" />
+                  <line class="spoke" x1="50" y1="50" x2="85" y2="50" style="animation-delay:-.7s" />
+                  <line class="spoke" x1="50" y1="50" x2="50" y2="85" style="animation-delay:-1.4s" />
+                  <line class="spoke" x1="50" y1="50" x2="15" y2="50" style="animation-delay:-2.1s" />
+                </svg>
+                <button class="psy-node psy-hotspot" data-key="ruh" aria-label="Ruh, spirit"><span class="ar">روح</span><span class="en">Rūḥ</span><span class="sub">Spirit</span></button>
+                <button class="psy-node psy-hotspot" data-key="ihsas" aria-label="Ihsas, emotion"><span class="ar">إحساس</span><span class="en">Iḥsās</span><span class="sub">Emotion</span></button>
+                <button class="psy-node psy-hotspot" data-key="nafs" aria-label="Nafs, behavioral inclination"><span class="ar">نفس</span><span class="en">Nafs</span><span class="sub">Inclination</span></button>
+                <button class="psy-node psy-hotspot" data-key="aql" aria-label="Aql, cognition"><span class="ar">عقل</span><span class="en">ʾAql</span><span class="sub">Cognition</span></button>
+                <button class="psy-node core psy-hotspot active" data-key="qalb" aria-label="Qalb, the metaphysical heart"><span class="ar">قلب</span><span class="en">Qalb</span><span class="sub">The Heart</span></button>
+              </div>
             </div>
-            <p class="psy-hint">Tap an element — or use <kbd>←</kbd> <kbd>→</kbd> to move around the orbit.</p>
+            <p class="psy-hint">Tap the fiṭrah arc or any element — or use <kbd>←</kbd> <kbd>→</kbd> to move through the model.</p>
           </div>
 
           <div class="psy-detail reveal" id="psy-detail" aria-live="polite" style="--d:.12s">
@@ -182,7 +202,7 @@
         </div>
 
         <!-- Drives -->
-        <div class="drives">
+        <div class="drives" id="drives">
           <div class="section-head reveal">
             <p class="eyebrow">The four drives</p>
             <h3 style="font-size:clamp(1.4rem,2.6vw,1.9rem);">An inner tension, by design</h3>
