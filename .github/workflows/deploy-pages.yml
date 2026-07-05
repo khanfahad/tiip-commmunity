@@ -21,7 +21,7 @@ jobs:
   deploy:
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url || steps.deployment-retry-1.outputs.page_url || steps.deployment-retry-2.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -37,6 +37,31 @@ jobs:
           # Upload the whole repository root (static site)
           path: "."
 
+      # GitHub's Pages backend intermittently rejects deployments with
+      # "Deployment failed, try again later." even when the artifact is
+      # fine, so retry the deploy step (not the whole run — a re-run
+      # re-uploads the artifact and deploy-pages then fails on seeing
+      # duplicates).
       - name: Deploy to GitHub Pages
         id: deployment
+        uses: actions/deploy-pages@v4
+        continue-on-error: true
+
+      - name: Wait before retrying deployment
+        if: steps.deployment.outcome == 'failure'
+        run: sleep 60
+
+      - name: Deploy to GitHub Pages (retry 1)
+        id: deployment-retry-1
+        if: steps.deployment.outcome == 'failure'
+        uses: actions/deploy-pages@v4
+        continue-on-error: true
+
+      - name: Wait before final retry
+        if: steps.deployment.outcome == 'failure' && steps.deployment-retry-1.outcome == 'failure'
+        run: sleep 180
+
+      - name: Deploy to GitHub Pages (retry 2)
+        id: deployment-retry-2
+        if: steps.deployment.outcome == 'failure' && steps.deployment-retry-1.outcome == 'failure'
         uses: actions/deploy-pages@v4
