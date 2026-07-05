@@ -14,7 +14,7 @@ This site serves three audiences and goals:
 
 | Page | File | What it shows |
 |------|------|---------------|
-| Home | `index.html` | Overview of the model, the community, and what's inside |
+| Home | `index.html` | Overview of the model and community, plus the public **TIIP Provider Directory** — searchable by country → state/province → city, specialty, and free text (demo profiles in `assets/js/directory.js`) |
 | The Model | `model.html` | Interactive diagram of the soul's faculties, intervention domains (tabs), the therapeutic process (steps), and FAQ |
 | Community | `community.html` | An interactive member-portal preview (feed, forums, case consultation, directory, library) + how to join |
 | Resources | `resources.html` | Filterable video/training library and downloadable clinical tools |
@@ -65,6 +65,9 @@ The prototype intentionally stops where a static site must. Production needs:
 
 - Pure HTML, CSS, and vanilla JavaScript — no build step, no frameworks.
 - Design system in `assets/css/style.css`; interactions in `assets/js/main.js`.
+- Provider directory data + search logic in `assets/js/directory.js`. Portrait
+  images use a demo photo service with an automatic initials-avatar fallback,
+  so the directory works fully offline too.
 - Responsive, accessible, and fast.
 
 ## Running locally

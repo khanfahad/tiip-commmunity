@@ -9,6 +9,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Amiri:ital@0;1&display=swap" rel="stylesheet">
   <title>TIIP Community — Traditional Islamically Integrated Psychotherapy</title>
   <meta name="description" content="The home of the Traditional Islamically Integrated Psychotherapy (TIIP) community — a model, a movement, and a professional network for clinicians trained in faith-rooted mental health care." />
+  <meta name="theme-color" content="#0c302d" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="TIIP Community — Traditional Islamically Integrated Psychotherapy" />
+  <meta property="og:description" content="The home of the Traditional Islamically Integrated Psychotherapy (TIIP) community — a model, a movement, and a professional network for clinicians trained in faith-rooted mental health care." />
+  <meta property="og:site_name" content="TIIP Community" />
   <link rel="stylesheet" href="assets/css/style.css" />
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
 </head>
@@ -25,6 +30,7 @@
         <li><a href="index.html">Home</a></li>
         <li><a href="model.html">The Model</a></li>
         <li><a href="community.html">Community</a></li>
+        <li><a href="index.html#directory">Find a Provider</a></li>
         <li><a href="resources.html">Resources</a></li>
         <li><a href="events.html">Events</a></li>
         <li><a href="research.html">Research</a></li>
@@ -43,6 +49,7 @@
           <p class="lead">The home of <strong>Traditional Islamically Integrated Psychotherapy</strong> — an evidence-informed model of mental health care that unites the Islamic intellectual and spiritual tradition with contemporary clinical practice. Learn the framework, connect with trained practitioners, and grow the field together.</p>
           <div class="hero-actions">
             <a class="btn btn-gold" href="model.html">Explore the Model</a>
+            <a class="btn btn-ghost" href="#directory">Find a Provider</a>
             <a class="btn btn-ghost" href="community.html">Join the Community</a>
           </div>
         </div>
@@ -133,6 +140,56 @@
     </div>
   </section>
 
+  <!-- PROVIDER DIRECTORY -->
+  <section id="directory" class="bg-cream">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Find care</p>
+        <h2>TIIP Provider Directory</h2>
+        <p class="lead muted">Search clinicians trained in Traditional Islamically Integrated Psychotherapy around the world — by country, state or province, and city — or browse by specialty.</p>
+      </div>
+
+      <div class="dir-panel reveal" role="search" aria-label="Provider directory search">
+        <div class="dir-filters">
+          <div class="dir-field">
+            <label for="dir-country">Country</label>
+            <select id="dir-country"></select>
+          </div>
+          <div class="dir-field">
+            <label for="dir-state">State / Province</label>
+            <select id="dir-state" disabled></select>
+          </div>
+          <div class="dir-field">
+            <label for="dir-city">City</label>
+            <select id="dir-city" disabled></select>
+          </div>
+          <div class="dir-field">
+            <label for="dir-specialty">Specialty</label>
+            <select id="dir-specialty"></select>
+          </div>
+          <div class="dir-field dir-search">
+            <label for="dir-q">Search</label>
+            <input type="search" id="dir-q" placeholder="Name, specialty, language, keyword…" />
+          </div>
+        </div>
+        <div class="dir-bar">
+          <span id="dir-count" role="status" aria-live="polite"></span>
+          <button id="dir-clear" class="chip" type="button" style="margin:0;">Clear filters</button>
+        </div>
+      </div>
+
+      <div class="dir-grid" id="dir-grid" aria-label="Provider results"></div>
+
+      <div class="dir-empty hidden" id="dir-empty">
+        <span class="big" aria-hidden="true">🔍</span>
+        <b>No providers match your search.</b>
+        <p style="margin:8px 0 0;font-size:.92rem;">Try widening your location or clearing a filter — the network is growing, and new clinicians are certified every cohort.</p>
+      </div>
+
+      <p class="text-center muted mt-2" style="font-size:.82rem;opacity:.8;">Demo directory — the profiles shown are illustrative sample clinicians for this mock-up, not real practitioners.</p>
+    </div>
+  </section>
+
   <!-- QUOTE -->
   <section class="bg-emerald">
     <div class="container quote reveal">
@@ -156,7 +213,7 @@
         <div class="card reveal"><div class="icon">📅</div><h3>Events</h3><p>Workshops, retreats, conferences, and certification cohorts.</p></div>
         <div class="card reveal"><div class="icon">📄</div><h3>Resource Hub</h3><p>Clinical tools, worksheets, protocols, and reading lists.</p></div>
         <div class="card reveal"><div class="icon">🔬</div><h3>Research</h3><p>Publications and ongoing studies advancing the evidence base.</p></div>
-        <div class="card reveal"><div class="icon">🗂️</div><h3>Directory</h3><p>Find and connect with certified practitioners near you.</p></div>
+        <div class="card reveal"><div class="icon">🗂️</div><h3>Directory</h3><p>Find and connect with certified practitioners near you.</p><a class="feature-link" href="#directory">Search the directory</a></div>
         <div class="card reveal"><div class="icon">🌱</div><h3>Mentorship</h3><p>Pathways linking new clinicians with seasoned supervisors.</p></div>
       </div>
     </div>
@@ -188,6 +245,7 @@
         <div>
           <h4>Explore</h4>
           <a href="model.html">The Model</a>
+          <a href="#directory">Find a Provider</a>
           <a href="community.html">Community</a>
           <a href="resources.html">Resources</a>
           <a href="research.html">Research</a>
@@ -230,5 +288,6 @@
   </div>
 
   <script src="assets/js/main.js"></script>
+  <script src="assets/js/directory.js"></script>
 </body>
 </html>
