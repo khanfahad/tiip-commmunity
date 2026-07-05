@@ -268,6 +268,14 @@
       var card = document.createElement("article");
       card.className = "provider-card";
 
+      var banner = document.createElement("div");
+      banner.className = "pc-banner";
+      var level = document.createElement("span");
+      level.className = "pc-level " + lv.cls;
+      level.textContent = lv.label;
+      banner.appendChild(level);
+      card.appendChild(banner);
+
       var img = document.createElement("img");
       img.alt = "Portrait of " + p.name;
       img.loading = "lazy";
@@ -280,23 +288,25 @@
       var photoWrap = document.createElement("div");
       photoWrap.className = "pc-photo";
       photoWrap.appendChild(img);
+      card.appendChild(photoWrap);
 
-      var head = document.createElement("div");
-      head.className = "pc-head";
-      head.appendChild(photoWrap);
-      var id = document.createElement("div");
-      id.className = "pc-id";
-      id.innerHTML =
-        "<h3>" + p.name + "</h3>" +
-        "<div class='pc-cred'>" + p.credentials + "</div>" +
-        "<span class='pc-level " + lv.cls + "'>" + lv.label + "</span>";
-      head.appendChild(id);
-      card.appendChild(head);
+      var body = document.createElement("div");
+      body.className = "pc-body";
+      card.appendChild(body);
+
+      var nameEl = document.createElement("h3");
+      nameEl.textContent = p.name;
+      body.appendChild(nameEl);
+
+      var cred = document.createElement("div");
+      cred.className = "pc-cred";
+      cred.textContent = p.credentials;
+      body.appendChild(cred);
 
       var loc = document.createElement("div");
       loc.className = "pc-loc";
       loc.innerHTML = "<span aria-hidden='true'>📍</span> " + locationLine(p);
-      card.appendChild(loc);
+      body.appendChild(loc);
 
       var specs = document.createElement("div");
       specs.className = "pc-specs";
@@ -313,19 +323,19 @@
         });
         specs.appendChild(t);
       });
-      card.appendChild(specs);
+      body.appendChild(specs);
 
       var bio = document.createElement("p");
       bio.className = "pc-bio";
       bio.textContent = p.bio;
-      card.appendChild(bio);
+      body.appendChild(bio);
 
       var foot = document.createElement("div");
       foot.className = "pc-foot";
       foot.innerHTML =
         "<span class='pc-lang'><span aria-hidden='true'>🗣</span> " + p.languages.join(", ") + "</span>" +
         "<a href='mailto:referrals@tiip.community?subject=" + encodeURIComponent("Referral inquiry — " + p.name) + "'>Request referral →</a>";
-      card.appendChild(foot);
+      body.appendChild(foot);
 
       grid.appendChild(card);
     });
