@@ -6,11 +6,16 @@
   var toggle = document.querySelector(".nav-toggle");
   var links = document.querySelector(".nav-links");
   if (toggle && links) {
+    toggle.setAttribute("aria-expanded", "false");
     toggle.addEventListener("click", function () {
-      links.classList.toggle("open");
+      var open = links.classList.toggle("open");
+      toggle.setAttribute("aria-expanded", String(open));
     });
     links.querySelectorAll("a").forEach(function (a) {
-      a.addEventListener("click", function () { links.classList.remove("open"); });
+      a.addEventListener("click", function () {
+        links.classList.remove("open");
+        toggle.setAttribute("aria-expanded", "false");
+      });
     });
   }
 
@@ -154,7 +159,37 @@
       });
     }
   }
-  document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeModal(); });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") {
+      closeModal();
+      if (links && links.classList.contains("open")) {
+        links.classList.remove("open");
+        if (toggle) toggle.setAttribute("aria-expanded", "false");
+      }
+    }
+  });
+
+  /* ---- Header shadow + back-to-top on scroll ---- */
+  var header = document.querySelector(".site-header");
+  var topBtn = document.createElement("button");
+  topBtn.className = "back-to-top";
+  topBtn.type = "button";
+  topBtn.setAttribute("aria-label", "Back to top");
+  topBtn.innerHTML = "↑";
+  topBtn.addEventListener("click", function () {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+  document.body.appendChild(topBtn);
+  var scrollTick = false;
+  function onScroll() {
+    if (header) header.classList.toggle("scrolled", window.scrollY > 8);
+    topBtn.classList.toggle("show", window.scrollY > 600);
+    scrollTick = false;
+  }
+  window.addEventListener("scroll", function () {
+    if (!scrollTick) { scrollTick = true; requestAnimationFrame(onScroll); }
+  }, { passive: true });
+  onScroll();
 
   /* ---- Reveal on scroll ---- */
   if ("IntersectionObserver" in window) {
