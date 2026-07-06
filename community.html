@@ -20,7 +20,7 @@
 <body>
   <header class="site-header">
     <div class="container nav">
-      <a class="brand" href="index.html"><span class="mark">ت</span><span><b>TIIP</b><span>Community</span></span></a>
+      <a class="brand" href="index.html"><img class="mark" src="assets/img/tiip-mark.svg" alt="" width="46" height="46" /><span><b>TIIP</b><span>Community</span></span></a>
       <button class="nav-toggle" aria-label="Toggle menu"><span></span></button>
       <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
@@ -139,8 +139,8 @@
           <!-- DIRECTORY -->
           <div class="portal-view" data-view="directory">
             <h3>Practitioner Directory</h3>
-            <div class="thread flex center between"><div><h4 style="margin:0;">Dr. Aisha Karim</h4><p class="muted" style="margin:2px 0 0;font-size:.88rem;">London, UK · Anxiety, trauma · Certified</p></div><span class="tag teal">Verified</span></div>
-            <div class="thread flex center between"><div><h4 style="margin:0;">Yusuf Rahman, LPC</h4><p class="muted" style="margin:2px 0 0;font-size:.88rem;">Chicago, USA · Couples, mood · Certified</p></div><span class="tag teal">Verified</span></div>
+            <div class="thread flex center between"><div><h4 style="margin:0;">Dr. Aisha Karim</h4><p class="muted" style="margin:2px 0 0;font-size:.88rem;">London, UK · Anxiety, trauma · Fully Certified</p></div><span class="tag teal">Verified</span></div>
+            <div class="thread flex center between"><div><h4 style="margin:0;">Yusuf Rahman, LPC</h4><p class="muted" style="margin:2px 0 0;font-size:.88rem;">Chicago, USA · Couples, mood · Level 3 Trainee</p></div><span class="tag teal">Verified</span></div>
             <div class="thread flex center between"><div><h4 style="margin:0;">Dr. Hana Saleh</h4><p class="muted" style="margin:2px 0 0;font-size:.88rem;">Toronto, CA · Trauma, supervision · Supervisor</p></div><span class="tag">Supervisor</span></div>
             <p class="mt-1" style="font-size:.9rem;"><a href="index.html#directory">Browse the full public provider directory →</a></p>
           </div>
@@ -164,14 +164,16 @@
       <div class="section-head reveal">
         <p class="eyebrow">Access</p>
         <h2>How to join the community</h2>
+        <p class="lead muted">Registration is free and open to everyone — no prior training required.</p>
       </div>
       <div class="steps">
-        <div class="step reveal"><div class="num"></div><div><h3>Complete TIIP training</h3><p>Membership is open to clinicians who have completed a recognized TIIP training pathway or are actively enrolled.</p></div></div>
-        <div class="step reveal"><div class="num"></div><div><h3>Request access</h3><p>Submit your credentials for verification so the network remains a trusted professional space.</p></div></div>
-        <div class="step reveal"><div class="num"></div><div><h3>Get connected</h3><p>Once approved, set up your profile, join forums, and register for consultation groups.</p></div></div>
+        <div class="step reveal"><div class="num">1</div><div><h3>Register free — Level 0</h3><p>Anyone interested can create an account and become a <strong>TIIP Trainee at Level 0</strong>: watch selected introductory modules, follow events, and get engaged. Level 0 members cannot take consultations and are not listed in the provider directory.</p></div></div>
+        <div class="step reveal"><div class="num">2</div><div><h3>Progress through Levels 1–3</h3><p>Complete the foundations (Level 1), intermediate training (Level 2), and supervised practice (Level 3 — 200 hours and 10 cases). Your position on the pathway is tracked in the member portal, and directory listing begins at Level 1.</p></div></div>
+        <div class="step reveal"><div class="num">3</div><div><h3>Reach full certification</h3><p>Fully certified clinicians gain complete clinical and consultation privileges — and eligibility for the TIIP Supervisor track.</p></div></div>
       </div>
       <div class="text-center mt-3">
-        <a class="btn btn-primary" href="#" data-open-login>Request Access</a>
+        <a class="btn btn-primary" href="#" data-open-register>Register Free — Start at Level 0</a>
+        <a class="btn btn-outline" href="index.html#pathway" style="margin-left:10px;">See the full pathway</a>
       </div>
     </div>
   </section>
@@ -180,11 +182,11 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <a class="brand" href="index.html"><span class="mark">ت</span><span><b>TIIP</b><span>Community</span></span></a>
+          <a class="brand" href="index.html"><img class="mark" src="assets/img/tiip-mark.svg" alt="" width="46" height="46" /><span><b>TIIP</b><span>Community</span></span></a>
           <p class="mt-1">A professional home for clinicians practicing Traditional Islamically Integrated Psychotherapy.</p>
         </div>
         <div><h4>Explore</h4><a href="model.html">The Model</a><a href="community.html">Community</a><a href="resources.html">Resources</a><a href="research.html">Research</a></div>
-        <div><h4>Participate</h4><a href="events.html">Events</a><a href="community.html">Case Consultation</a><a href="#" data-open-login>Member Login</a></div>
+        <div><h4>Participate</h4><a href="events.html">Events</a><a href="community.html">Case Consultation</a><a href="#" data-open-login>Member Login</a><a href="#" data-open-register>Register Free</a></div>
         <div><h4>Connect</h4><a href="mailto:hello@tiip.community">hello@tiip.community</a><a href="#">Newsletter</a><a href="#">Contact</a></div>
       </div>
       <div class="footer-bottom"><span>© <span id="year">2026</span> TIIP Community. All rights reserved.</span><span>tiip.community — a mock-up demonstration site</span></div>
@@ -200,6 +202,22 @@
         <div class="field"><label>Email</label><input type="email" placeholder="you@practice.com" /></div>
         <div class="field"><label>Password</label><input type="password" placeholder="••••••••" /></div>
         <button class="btn btn-primary" type="submit">Sign In</button>
+      </form>
+      <p class="text-center mt-2" style="font-size:.85rem;"><a href="#" data-open-register>Not a member yet? Register free →</a></p>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="register-modal" role="dialog" aria-modal="true">
+    <div class="modal modal-wrap">
+      <button class="modal-close" data-close-register aria-label="Close">×</button>
+      <h3>Create Your Free Account</h3>
+      <p class="text-center muted" style="font-size:.9rem;margin-top:-6px;">Open to everyone. New members begin as a <strong>TIIP Trainee — Level 0</strong>: watch starter modules and follow the community, then progress through Levels 1–3 to full certification.</p>
+      <div class="demo-pill">Demo only — this is a non-functional mock-up.</div>
+      <form>
+        <div class="field"><label>Full name</label><input type="text" placeholder="Your name" /></div>
+        <div class="field"><label>Email</label><input type="email" placeholder="you@example.com" /></div>
+        <div class="field"><label>Password</label><input type="password" placeholder="••••••••" /></div>
+        <button class="btn btn-primary" type="submit">Register — Start at Level 0</button>
       </form>
     </div>
   </div>

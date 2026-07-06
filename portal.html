@@ -20,19 +20,19 @@
   <!-- ============ SIDEBAR ============ -->
   <aside class="p-side" id="sidebar">
     <a class="brand" href="index.html">
-      <span class="mark">ت</span>
+      <img class="mark" src="assets/img/tiip-mark.svg" alt="" width="46" height="46" />
       <span><b>TIIP Portal</b><small>Member area</small></span>
     </a>
     <nav class="p-nav" id="p-nav">
       <button data-view="dashboard" data-roles="all"><span class="ico">◈</span> Dashboard</button>
 
       <div class="group-label">Network</div>
-      <button data-view="directory" data-roles="all"><span class="ico">🗺</span> Referral Directory</button>
+      <button data-view="directory" data-roles="trainee,practitioner,supervisor,admin"><span class="ico">🗺</span> Referral Directory</button>
       <button data-view="events" data-roles="all"><span class="ico">🗓</span> Events &amp; Training</button>
       <button data-view="forums" data-roles="all"><span class="ico">💬</span> Tazkiyah Forums</button>
 
       <div class="group-label">Certification &amp; Compliance</div>
-      <button data-view="certification" data-roles="trainee,supervisor,admin"><span class="ico">🎓</span> Level III Tracker</button>
+      <button data-view="certification" data-roles="all"><span class="ico">🎓</span> Certification Pathway</button>
       <button data-view="vault" data-roles="practitioner,trainee,supervisor,admin"><span class="ico">🗄</span> Compliance Vault</button>
 
       <div class="group-label">Clinical</div>
@@ -40,7 +40,7 @@
       <button data-view="fatwa" data-roles="trainee,practitioner,supervisor,admin"><span class="ico">🕌</span> Scholar Desk</button>
 
       <div class="group-label">Research &amp; Resources</div>
-      <button data-view="resources" data-roles="all"><span class="ico">📚</span> Intervention Vault</button>
+      <button data-view="resources" data-roles="trainee,practitioner,supervisor,admin"><span class="ico">📚</span> Intervention Vault</button>
       <button data-view="incubator" data-roles="practitioner,supervisor,admin"><span class="ico">✍️</span> Publication Incubator</button>
     </nav>
     <div class="side-foot">
@@ -58,6 +58,7 @@
       <div class="role-switch">
         <label for="role-select">Viewing as</label>
         <select id="role-select" aria-label="Switch demo role">
+          <option value="explorer">TIIP Trainee (Level 0)</option>
           <option value="trainee">Trainee (Level III)</option>
           <option value="practitioner">Certified Practitioner</option>
           <option value="supervisor">Supervisor / Scholar</option>
@@ -105,10 +106,42 @@
         <div class="empty" id="dir-empty" style="display:none;">No practitioners match those filters.</div>
       </section>
 
-      <!-- ==== CERTIFICATION ==== -->
+      <!-- ==== CERTIFICATION PATHWAY ==== -->
       <section class="view" data-view="certification">
+        <p class="view-lead">The complete TIIP pathway — from open registration at Level 0 through full certification. The tracker below shows every stage and highlights where you are right now.</p>
+        <div class="card">
+          <h3>🧭 Your pathway <span class="tag gold" id="pw-where"></span></h3>
+          <div class="pathway" id="pathway-steps"></div>
+        </div>
+
+        <div id="cert-explorer" style="display:none;">
+          <div class="grid-2">
+            <div class="card">
+              <h3>🎥 Starter modules <span class="tag" id="mod-sum"></span></h3>
+              <p class="view-lead" style="margin-bottom:10px;font-size:.85rem;">Level 0 gives you a taste of the model — watch these introductory modules, then enroll in Level 1 when you're ready to begin formal training.</p>
+              <div class="rows" id="mod-rows"></div>
+            </div>
+            <div class="card">
+              <h3>🔓 What unlocks next</h3>
+              <div class="rows">
+                <div class="row"><span class="grow"><b>Level 1 — Foundations</b><small>Coursework &amp; assessment · directory listing begins</small></span><span class="tag warn">Enroll to unlock</span></div>
+                <div class="row"><span class="grow"><b>Case consultation &amp; Scholar Desk</b><small>Clinical features open as you advance</small></span><span class="tag dim">🔒 Locked at Level 0</span></div>
+                <div class="row"><span class="grow"><b>Provider directory listing</b><small>Level 0 members are not listed in the public directory</small></span><span class="tag dim">🔒 Locked at Level 0</span></div>
+              </div>
+              <p class="note"><b>Level 0 is for engagement.</b> You can watch starter modules, attend open events, and join the forums — consultations and clinical tools require Level 1 and above.</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="cert-certified" style="display:none;">
+          <div class="card">
+            <h3>🎉 Pathway complete</h3>
+            <p class="view-lead" style="margin-bottom:0;">You hold full TIIP certification — every stage of the pathway is complete. Full clinical and consultation privileges are active, and the TIIP Supervisor track is open to you.</p>
+          </div>
+        </div>
+
         <div id="cert-trainee">
-          <p class="view-lead">Level III certification requires <strong>200 supervised practice hours</strong> and <strong>10 completed cases</strong>. Logged hours are routed to your assigned supervisor for approval.</p>
+          <p class="view-lead">You are at <strong>Level 3 — supervised practice</strong>: the final stage before full certification. It requires <strong>200 supervised practice hours</strong> and <strong>10 completed cases</strong>. Logged hours are routed to your assigned supervisor for approval.</p>
           <div class="grid-2">
             <div class="card">
               <h3>⏱ Supervised hours</h3>
@@ -138,7 +171,6 @@
           <p class="view-lead">Approval queue for your assigned trainees. Approving an entry credits it toward the trainee's 200-hour requirement.</p>
           <div class="card"><h3>✅ Pending approvals</h3><div class="rows" id="approve-rows"></div></div>
         </div>
-        <div id="cert-locked" class="locked-note" style="display:none;">The Level III tracker applies to trainees; supervisors see the approval queue; admins see cohort progress. Certified practitioners have completed this pathway. 🎉</div>
       </section>
 
       <!-- ==== COMPLIANCE VAULT ==== -->

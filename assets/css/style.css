@@ -195,6 +195,10 @@ img { max-width: 100%; display: block; }
   content: ""; position: absolute; inset: 0;
   background: radial-gradient(circle at 30% 20%, rgba(255,255,255,.35), transparent 60%);
 }
+.brand img.mark {
+  background: #fff; padding: 4px; object-fit: contain;
+  border: 1px solid var(--cream-200);
+}
 .brand b { color: var(--ink-950); font-family: var(--font-head); font-size: 1.3rem; font-weight: 600; letter-spacing: -.01em; line-height: 1; }
 .brand span { display: block; font-size: .64rem; letter-spacing: .22em; text-transform: uppercase; color: var(--ink-400); font-weight: 700; margin-top: 3px; }
 
@@ -637,7 +641,7 @@ section { padding: clamp(70px, 9vw, 110px) 0; position: relative; }
   box-shadow: var(--shadow-md);
   margin-bottom: 34px;
 }
-.dir-filters { display: grid; grid-template-columns: repeat(4, 1fr) 1.3fr; gap: 16px; }
+.dir-filters { display: grid; grid-template-columns: repeat(5, 1fr) 1.3fr; gap: 16px; }
 @media (max-width: 1020px) { .dir-filters { grid-template-columns: repeat(2, 1fr); } .dir-filters .dir-search { grid-column: 1 / -1; } }
 @media (max-width: 520px) { .dir-filters { grid-template-columns: 1fr; } }
 .dir-field label {
@@ -678,7 +682,8 @@ section { padding: clamp(70px, 9vw, 110px) 0; position: relative; }
 }
 .provider-card:hover { transform: translateY(-7px); box-shadow: var(--shadow-lg); border-color: var(--emerald-300); }
 .pc-banner {
-  position: relative; height: 74px; flex-shrink: 0;
+  /* tall enough that the level badge clears the overlapping photo */
+  position: relative; height: 106px; flex-shrink: 0;
   background: var(--grad-hero);
 }
 .pc-banner::before {
@@ -690,14 +695,16 @@ section { padding: clamp(70px, 9vw, 110px) 0; position: relative; }
   background: radial-gradient(220px 90px at 80% 0%, rgba(216,165,65,.35), transparent 70%);
 }
 .pc-level {
-  position: absolute; top: 12px; left: 50%; transform: translateX(-50%); z-index: 2;
+  position: absolute; top: 14px; left: 50%; transform: translateX(-50%); z-index: 4;
   display: inline-block; padding: .34em .95em; border-radius: 999px; white-space: nowrap;
   font-size: .64rem; font-weight: 800; letter-spacing: .09em; text-transform: uppercase;
   box-shadow: var(--shadow-sm);
 }
 .pc-level.lv-supervisor { background: var(--grad-gold); color: #2a1c02; }
 .pc-level.lv-certified { background: rgba(255,255,255,.94); color: var(--emerald-700); }
-.pc-level.lv-associate { background: rgba(255,255,255,.82); color: var(--ink-700); }
+.pc-level.lv-3 { background: var(--emerald-100); color: var(--emerald-800); }
+.pc-level.lv-2 { background: rgba(255,255,255,.88); color: var(--ink-700); }
+.pc-level.lv-1 { background: var(--cream-200); color: var(--ink-700); }
 .pc-photo {
   width: 96px; height: 96px; margin: -48px auto 0; position: relative; z-index: 3;
   border-radius: 50%;
@@ -740,6 +747,39 @@ section { padding: clamp(70px, 9vw, 110px) 0; position: relative; }
   border-radius: var(--radius); color: var(--ink-500);
 }
 .dir-empty .big { font-size: 2.2rem; display: block; margin-bottom: 10px; }
+
+/* ---- Certification pathway (public) ---- */
+.pathway-track { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; counter-reset: pw; }
+@media (max-width: 940px) { .pathway-track { grid-template-columns: 1fr; } }
+.pw-step { position: relative; text-align: center; padding: 0 14px; }
+.pw-step::before {
+  content: ""; position: absolute; top: 26px; left: calc(-50% + 27px); width: calc(100% - 54px); height: 3px;
+  background: var(--cream-300); border-radius: 3px;
+}
+.pw-step:first-child::before { display: none; }
+.pw-step.reached::before { background: linear-gradient(90deg, var(--emerald-500), var(--emerald-400)); }
+.pw-dot {
+  width: 54px; height: 54px; border-radius: 50%; margin: 0 auto 16px;
+  display: grid; place-items: center; position: relative; z-index: 1;
+  background: #fff; border: 2px solid var(--cream-300); color: var(--ink-500);
+  font-family: var(--font-head); font-size: 1.25rem; font-weight: 600;
+  box-shadow: var(--shadow-xs);
+}
+.pw-step.reached .pw-dot { background: var(--grad-emerald); border-color: transparent; color: #fff; box-shadow: var(--shadow-glow); }
+.pw-step.gold .pw-dot { background: var(--grad-gold); border-color: transparent; color: #2a1c02; box-shadow: var(--shadow-gold); }
+.pw-step h3 { font-size: 1.05rem; margin-bottom: .25em; }
+.pw-step .pw-sub { display: block; font-size: .7rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--gold-600); margin-bottom: 8px; }
+.pw-step p { font-size: .86rem; color: var(--ink-500); margin: 0; line-height: 1.55; }
+.pw-step .pw-note { display: inline-block; margin-top: 10px; font-size: .68rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; padding: .35em .9em; border-radius: 999px; background: var(--cream-200); color: var(--ink-700); }
+.pw-step .pw-note.ok { background: var(--emerald-50); color: var(--emerald-700); }
+@media (max-width: 940px) {
+  .pw-step { display: grid; grid-template-columns: 54px 1fr; gap: 18px; text-align: left; padding: 0 0 30px; }
+  .pw-step::before { top: 54px; left: 26px; width: 3px; height: calc(100% - 54px); }
+  .pw-step:first-child::before { display: block; }
+  .pw-step:last-child::before { display: none; }
+  .pw-step.reached::before { background: linear-gradient(180deg, var(--emerald-500), var(--emerald-400)); }
+  .pw-dot { margin: 0; }
+}
 
 /* ---- Header scroll state ---- */
 .site-header.scrolled { box-shadow: var(--shadow-md); }
