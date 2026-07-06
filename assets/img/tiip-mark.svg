@@ -1,11 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
-  <rect width="64" height="64" rx="16" fill="#fcfaf5"/>
-  <g transform="translate(32 32) scale(0.47) translate(-60 -60)">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="TIIP mark">
+  <!-- TIIP mark — four elements of the psyche (ʾaql, nafs, rūḥ, iḥsās)
+       turning around the qalb. Khalil Center palette. -->
+  <g>
     <path d="M60 60 C 53 38, 59 19, 78 10 C 89 29, 82 51, 60 60 Z" fill="#1e3a68"/>
     <path d="M60 60 C 53 38, 59 19, 78 10 C 89 29, 82 51, 60 60 Z" fill="#9c2b51" transform="rotate(90 60 60)"/>
     <path d="M60 60 C 53 38, 59 19, 78 10 C 89 29, 82 51, 60 60 Z" fill="#7d8f62" transform="rotate(180 60 60)"/>
     <path d="M60 60 C 53 38, 59 19, 78 10 C 89 29, 82 51, 60 60 Z" fill="#2e5ea7" transform="rotate(270 60 60)"/>
-    <circle cx="60" cy="60" r="8.5" fill="#fcfaf5"/>
+    <circle cx="60" cy="60" r="8.5" fill="#ffffff"/>
     <circle cx="60" cy="60" r="8.5" fill="none" stroke="#1e3a68" stroke-width="2.6"/>
   </g>
 </svg>

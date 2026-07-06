@@ -14,7 +14,7 @@ This site serves three audiences and goals:
 
 | Page | File | What it shows |
 |------|------|---------------|
-| Home | `index.html` | Overview of the model and community, plus the public **TIIP Provider Directory** — searchable by country → state/province → city, specialty, and free text (demo profiles in `assets/js/directory.js`) |
+| Home | `index.html` | Overview of the model and community, the open **certification pathway** (Level 0 → full certification), plus the public **TIIP Provider Directory** — searchable by country → state/province → city, specialty, TIIP level (listings begin at Level 1), and free text (demo profiles in `assets/js/directory.js`) |
 | The Model | `model.html` | Interactive diagram of the soul's faculties, intervention domains (tabs), the therapeutic process (steps), and FAQ |
 | Community | `community.html` | An interactive member-portal preview (feed, forums, case consultation, directory, library) + how to join |
 | Resources | `resources.html` | Filterable video/training library and downloadable clinical tools |
@@ -27,13 +27,19 @@ This site serves three audiences and goals:
 The portal is a complete, clickable front-end prototype of the practitioner
 platform. It runs entirely in the browser (state persists to `localStorage`)
 and includes a **role switcher** to demonstrate role-based access control
-across four permission levels: **Admin, Supervisor/Scholar, Certified
-Practitioner, and Trainee (Levels I–III)**.
+across five permission levels: **Admin, Supervisor/Scholar, Certified
+Practitioner, Trainee (Levels I–III), and TIIP Trainee (Level 0)**.
+
+Registration is open to everyone: new members start as a **TIIP Trainee at
+Level 0** (starter modules, events, and forums only — no consultations, no
+directory listing) and progress through Levels 1–3 to full certification.
+The **Certification Pathway** view shows the entire journey and highlights
+the member's current stage.
 
 | Module | Spec area | What the prototype demonstrates |
 |--------|-----------|--------------------------------|
 | Referral Directory | User architecture | Search + filters for language (Arabic/Urdu/Turkish/English), timezone region, clinical focus, licensure (PSYPACT, US state, Canada, UK/EU, international); live local-time display per practitioner |
-| Level III Tracker | Certification | 200-hour + 10-case progress bars with dynamic percentages, hour-logging form, supervisor approval/decline queue |
+| Certification Pathway | Certification | Full Level 0 → 1 → 2 → 3 → certification stepper with "you are here" marker; Level 0 starter modules; 200-hour + 10-case progress bars with dynamic percentages, hour-logging form, supervisor approval/decline queue |
 | Compliance Vault | Certification | Dual categories (state CEUs vs. farḍ al-ʿayn), credit totals, expiration status with 60-day reminder badges |
 | Case Sandbox | Clinical | Conceptualization forms mapped to ʿAql/Nafs/Rūḥ/Iḥsās domains, share-with-supervisor flow, supervisor read view |
 | Scholar Desk | Clinical | Threaded consultation tickets with required anonymization confirmation, scholar routing, answered/closed states |
@@ -64,6 +70,9 @@ The prototype intentionally stops where a static site must. Production needs:
 ## Tech
 
 - Pure HTML, CSS, and vanilla JavaScript — no build step, no frameworks.
+- TIIP logo (`assets/img/tiip-logo.svg` / `tiip-mark.svg`) — four petals for the
+  four elements of the psyche turning around the qalb, in the Khalil Center
+  palette (navy, blue, sage, maroon).
 - Design system in `assets/css/style.css`; interactions in `assets/js/main.js`.
 - Provider directory data + search logic in `assets/js/directory.js`. Portrait
   images use a demo photo service with an automatic initials-avatar fallback,

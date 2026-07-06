@@ -138,30 +138,39 @@
     });
   });
 
-  /* ---- Mock login modal ---- */
-  var overlay = document.getElementById("login-modal");
-  function openModal() { if (overlay) overlay.classList.add("open"); }
-  function closeModal() { if (overlay) overlay.classList.remove("open"); }
-  document.querySelectorAll("[data-open-login]").forEach(function (b) {
-    b.addEventListener("click", function (e) { e.preventDefault(); openModal(); });
-  });
-  document.querySelectorAll("[data-close-login]").forEach(function (b) {
-    b.addEventListener("click", closeModal);
-  });
-  if (overlay) {
-    overlay.addEventListener("click", function (e) { if (e.target === overlay) closeModal(); });
+  /* ---- Mock modals (login + register) ---- */
+  var modals = [];
+  function setupModal(id, openAttr, closeAttr, submitMsg) {
+    var overlay = document.getElementById(id);
+    document.querySelectorAll("[" + openAttr + "]").forEach(function (b) {
+      b.addEventListener("click", function (e) {
+        e.preventDefault();
+        modals.forEach(function (m) { m.classList.remove("open"); });
+        if (overlay) overlay.classList.add("open");
+      });
+    });
+    if (!overlay) return;
+    modals.push(overlay);
+    document.querySelectorAll("[" + closeAttr + "]").forEach(function (b) {
+      b.addEventListener("click", function () { overlay.classList.remove("open"); });
+    });
+    overlay.addEventListener("click", function (e) { if (e.target === overlay) overlay.classList.remove("open"); });
     var form = overlay.querySelector("form");
     if (form) {
       form.addEventListener("submit", function (e) {
         e.preventDefault();
         var msg = overlay.querySelector(".demo-pill");
-        if (msg) { msg.textContent = "✓ Demo only — member accounts are not active in this mock-up."; }
+        if (msg) { msg.textContent = submitMsg; }
       });
     }
   }
+  setupModal("login-modal", "data-open-login", "data-close-login",
+    "✓ Demo only — member accounts are not active in this mock-up.");
+  setupModal("register-modal", "data-open-register", "data-close-register",
+    "✓ Demo only — in production you would now be a TIIP Trainee (Level 0).");
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape") {
-      closeModal();
+      modals.forEach(function (m) { m.classList.remove("open"); });
       if (links && links.classList.contains("open")) {
         links.classList.remove("open");
         if (toggle) toggle.setAttribute("aria-expanded", "false");

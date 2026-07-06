@@ -21,11 +21,26 @@
      Roles (RBAC demo)
   --------------------------------------------------------- */
   var ROLES = {
+    explorer:     { label: "TIIP Trainee · Level 0", name: "Zaid Mahmood" },
     trainee:      { label: "Trainee · Level III", name: "Amina Yusuf" },
     practitioner: { label: "Certified Practitioner", name: "Dr. Bilal Rahman" },
     supervisor:   { label: "Supervisor / Scholar", name: "Dr. Hana Qadri" },
     admin:        { label: "Admin", name: "Musa Adem" }
   };
+
+  /* ---------------------------------------------------------
+     Certification pathway — the full journey from open
+     registration (Level 0) to full certification.
+  --------------------------------------------------------- */
+  var PATHWAY = [
+    { num: "0", name: "Level 0", title: "TIIP Trainee", desc: "Open registration — starter modules, events & forums. No consultations; not listed in the directory." },
+    { num: "1", name: "Level 1", title: "Foundations", desc: "Foundations coursework & assessment. Directory listing begins." },
+    { num: "2", name: "Level 2", title: "Intermediate", desc: "Advanced seminars, applied skills & practicum entry." },
+    { num: "3", name: "Level 3", title: "Supervised Practice", desc: "200 supervised hours · 10 completed cases." },
+    { num: "✓", name: "Certified", title: "Full Certification", desc: "Full clinical & consultation privileges · supervisor track." }
+  ];
+  /* index into PATHWAY for each demo role (4 = fully certified) */
+  var ROLE_STAGE = { explorer: 0, trainee: 3, practitioner: 4, supervisor: 4, admin: 3 };
 
   /* ---------------------------------------------------------
      Seed data
@@ -41,6 +56,11 @@
       ],
       approvedSeed: 118.5, /* previously credited hours */
       casesDone: 6,
+      modules: [
+        { title: "Welcome to TIIP — Orientation", mins: 18, done: true },
+        { title: "The Ontological Model — a First Look", mins: 34, done: false },
+        { title: "The Four Stages of Change — Overview", mins: 27, done: false }
+      ],
       certs: [
         { name: "Ethics in Teletherapy (3 CE)", cat: "ceu", credits: 3, issued: iso(today(-320)), expires: iso(today(45)) },
         { name: "Suicide Risk Assessment (6 CE)", cat: "ceu", credits: 6, issued: iso(today(-150)), expires: iso(today(215)) },
@@ -99,6 +119,8 @@
   var state;
   try { state = JSON.parse(localStorage.getItem(LS_KEY)) || seedState(); }
   catch (e) { state = seedState(); }
+  if (!state.modules) state.modules = seedState().modules; /* migrate pre-pathway saves */
+  if (!ROLES[state.role]) state.role = "trainee";
   function save() { try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) {} }
 
   /* ---------------------------------------------------------
@@ -141,6 +163,7 @@
   ];
 
   var ADMIN_USERS = [
+    { name: "Zaid Mahmood", role: "TIIP Trainee (Level 0)" },
     { name: "Amina Yusuf", role: "Trainee (Level III)" },
     { name: "Yusuf Chaudhry", role: "Trainee (Level II)" },
     { name: "Dr. Bilal Rahman", role: "Certified Practitioner" },
@@ -158,7 +181,7 @@
   var roleSelect = document.getElementById("role-select");
 
   var VIEW_TITLES = {
-    dashboard: "Dashboard", directory: "Global Referral Directory", certification: "Level III Certification Tracker",
+    dashboard: "Dashboard", directory: "Global Referral Directory", certification: "Certification Pathway",
     vault: "Dual-Compliance Vault", sandbox: "TIIP Conceptualization Sandbox", fatwa: "Scholarly Consultation Desk",
     resources: "Multilingual Intervention Vault", incubator: "Publication Incubator", events: "Events & Training Calendar",
     forums: "Tazkiyah & Peer Forums"
@@ -254,6 +277,7 @@
     var openTickets = state.tickets.filter(function (t) { return t.status === "open"; }).length;
     var expiring = state.certs.filter(function (c) { return certStatus(c) !== "ok"; }).length;
     var leads = {
+      explorer: "As-salāmu ʿalaykum, Zaid. Welcome — you're a TIIP Trainee at Level 0. Watch the starter modules and follow the community; the full pathway to certification starts whenever you're ready.",
       trainee: "As-salāmu ʿalaykum, Amina. Your Level III pathway, compliance items, and cohort activity at a glance.",
       practitioner: "As-salāmu ʿalaykum, Dr. Rahman. Referrals, compliance, and consultation activity at a glance.",
       supervisor: "As-salāmu ʿalaykum, Dr. Qadri. Trainee approvals and scholar-desk queries awaiting you.",
@@ -262,7 +286,15 @@
     document.getElementById("dash-lead").textContent = leads[state.role];
 
     var tiles;
-    if (state.role === "supervisor") {
+    if (state.role === "explorer") {
+      var watched = state.modules.filter(function (m) { return m.done; }).length;
+      tiles = [
+        { n: "L0", l: "Current level" },
+        { n: watched + "<i>/" + state.modules.length + "</i>", l: "Starter modules watched" },
+        { n: EVENTS.length, l: "Upcoming events" },
+        { n: 4, l: "Stages to certification" }
+      ];
+    } else if (state.role === "supervisor") {
       tiles = [
         { n: pendingEntries().length, l: "Hours awaiting approval" },
         { n: state.cases.filter(function (c) { return c.shared; }).length, l: "Shared case files" },
@@ -289,6 +321,7 @@
     }).join("");
 
     var actions = {
+      explorer: [["certification", "View my pathway"], ["certification", "Watch starter modules"], ["events", "Browse events"], ["forums", "Join the forums"]],
       trainee: [["certification", "Log supervised hours"], ["sandbox", "Draft a conceptualization"], ["fatwa", "Ask a scholar"], ["resources", "Browse worksheets"]],
       practitioner: [["directory", "Find a referral"], ["vault", "Update CE records"], ["incubator", "Open research workspace"], ["fatwa", "Ask a scholar"]],
       supervisor: [["certification", "Review pending hours"], ["sandbox", "Review shared cases"], ["fatwa", "Answer scholar queries"], ["events", "Schedule a clinic"]],
@@ -311,7 +344,7 @@
       document.getElementById("admin-users").innerHTML = ADMIN_USERS.map(function (u, i) {
         return '<div class="row"><span class="grow"><b>' + esc(u.name) + '</b></span>' +
           '<select class="admin-role" data-i="' + i + '" style="background:var(--bg-2);color:var(--cream);border:1px solid var(--line);border-radius:8px;padding:5px 8px;font-size:.78rem;">' +
-          ["Trainee (Level I)", "Trainee (Level II)", "Trainee (Level III)", "Certified Practitioner", "Supervisor / Scholar", "Admin"].map(function (r) {
+          ["TIIP Trainee (Level 0)", "Trainee (Level I)", "Trainee (Level II)", "Trainee (Level III)", "Certified Practitioner", "Supervisor / Scholar", "Admin"].map(function (r) {
             return "<option" + (r === u.role ? " selected" : "") + ">" + r + "</option>";
           }).join("") + "</select></div>";
       }).join("");
@@ -351,13 +384,55 @@
     document.getElementById(id).addEventListener("input", renderDirectory);
   });
 
-  /* ---- Certification ---- */
+  /* ---- Certification pathway ---- */
+  function renderPathway() {
+    var stage = ROLE_STAGE[state.role] != null ? ROLE_STAGE[state.role] : 0;
+    var certified = stage >= PATHWAY.length - 1;
+    document.getElementById("pw-where").textContent = certified
+      ? (state.role === "supervisor" ? "Fully certified · TIIP Supervisor" : "Fully certified")
+      : "You are at " + PATHWAY[stage].name;
+    document.getElementById("pathway-steps").innerHTML = PATHWAY.map(function (p, i) {
+      var cls = i < stage ? "done" : i === stage ? (certified ? "done current" : "current") : "";
+      return '<div class="pw-step ' + cls + '">' +
+        '<span class="pw-dot">' + (i < stage ? "✓" : p.num) + "</span>" +
+        "<div>" +
+        '<span class="pw-name">' + p.name + "</span>" +
+        '<span class="pw-title">' + p.title + "</span>" +
+        '<span class="pw-desc">' + p.desc + "</span>" +
+        (i === stage ? '<span class="pw-here">You are here</span>' : "") +
+        "</div></div>";
+    }).join("");
+  }
+
+  function renderModules() {
+    var doneCount = state.modules.filter(function (m) { return m.done; }).length;
+    document.getElementById("mod-sum").textContent = doneCount + " / " + state.modules.length + " watched";
+    document.getElementById("mod-rows").innerHTML = state.modules.map(function (m, i) {
+      return '<div class="row"><span class="grow"><b>' + esc(m.title) + "</b><small>" + m.mins + " min · introductory module</small></span>" +
+        (m.done ? '<span class="tag ok">Watched</span>' : '<button class="btn btn-gold btn-xs" data-watch="' + i + '">▶ Watch</button>') +
+        "</div>";
+    }).join("");
+    document.querySelectorAll("[data-watch]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        state.modules[Number(b.getAttribute("data-watch"))].done = true;
+        save(); renderModules();
+      });
+    });
+  }
+
   function renderCert() {
+    renderPathway();
+    var x = document.getElementById("cert-explorer");
     var t = document.getElementById("cert-trainee");
     var s = document.getElementById("cert-supervisor");
-    var l = document.getElementById("cert-locked");
-    t.style.display = s.style.display = l.style.display = "none";
-    if (state.role === "trainee" || state.role === "admin") {
+    var c = document.getElementById("cert-certified");
+    x.style.display = t.style.display = s.style.display = c.style.display = "none";
+    if (state.role === "explorer") {
+      x.style.display = "block";
+      renderModules();
+    } else if (state.role === "practitioner") {
+      c.style.display = "block";
+    } else if (state.role === "trainee" || state.role === "admin") {
       t.style.display = "block";
       var hrs = approvedHours();
       var hp = Math.min(100, Math.round(hrs / 200 * 100));
@@ -392,8 +467,6 @@
       document.querySelectorAll("[data-decline]").forEach(function (b) {
         b.addEventListener("click", function () { state.hours[Number(b.getAttribute("data-decline"))].status = "declined"; save(); renderCert(); });
       });
-    } else {
-      l.style.display = "block";
     }
   }
   document.getElementById("hours-form").addEventListener("submit", function (e) {
