@@ -203,7 +203,7 @@
   function initials(name) {
     return name.replace(/^Dr\.\s+/, "").split(/\s+/).map(function (w) { return w.charAt(0); }).slice(0, 2).join("").toUpperCase();
   }
-  var AV_PALETTES = [["#16605a", "#2aa39a"], ["#9c6f1e", "#d8a541"], ["#5b2a4e", "#8a4a78"], ["#114440", "#4ec2b8"]];
+  var AV_PALETTES = [["#1e3468", "#3a589c"], ["#1c5a55", "#2e847e"], ["#5b2a4e", "#8a4a78"], ["#16264e", "#6a83b8"]];
   function avatarDataUri(name, i) {
     var p = AV_PALETTES[i % AV_PALETTES.length];
     var svg = "<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'>" +

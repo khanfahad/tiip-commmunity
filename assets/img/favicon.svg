@@ -1,11 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
   <rect width="64" height="64" rx="16" fill="#fcfaf5"/>
-  <g transform="translate(32 32) scale(0.47) translate(-60 -60)">
-    <path d="M60 60 C 53 38, 59 19, 78 10 C 89 29, 82 51, 60 60 Z" fill="#1e3a68"/>
-    <path d="M60 60 C 53 38, 59 19, 78 10 C 89 29, 82 51, 60 60 Z" fill="#9c2b51" transform="rotate(90 60 60)"/>
-    <path d="M60 60 C 53 38, 59 19, 78 10 C 89 29, 82 51, 60 60 Z" fill="#7d8f62" transform="rotate(180 60 60)"/>
-    <path d="M60 60 C 53 38, 59 19, 78 10 C 89 29, 82 51, 60 60 Z" fill="#2e5ea7" transform="rotate(270 60 60)"/>
-    <circle cx="60" cy="60" r="8.5" fill="#fcfaf5"/>
-    <circle cx="60" cy="60" r="8.5" fill="none" stroke="#1e3a68" stroke-width="2.6"/>
+  <g transform="translate(32 33) scale(0.46) translate(-60 -60)">
+    <g fill="none" stroke="#1e3468" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M8 64 C8 46 18 34 32 28 C46 34 56 46 56 64" stroke-width="5.4"/>
+      <path d="M64 64 C64 46 74 34 88 28 C102 34 112 46 112 64" stroke-width="5.4"/>
+      <path d="M32 60 C32 37 44 20 60 9 C76 20 88 37 88 60" stroke-width="6"/>
+      <path d="M60 26 L60 88" stroke-width="6"/>
+      <path d="M60 88 C54 96 42 97 30 103" stroke-width="5"/>
+      <path d="M60 88 L60 109" stroke-width="5"/>
+      <path d="M60 88 C66 96 78 97 90 103" stroke-width="5"/>
+    </g>
+    <g fill="#2e847e">
+      <path d="M60 13 C64.4 17.4 64.4 24.6 60 29 C55.6 24.6 55.6 17.4 60 13 Z"/>
+      <path d="M24 38 C28.4 42.4 28.4 49 24 53.4 C19.6 49 19.6 42.4 24 38 Z" transform="rotate(-18 24 46)"/>
+      <path d="M96 38 C100.4 42.4 100.4 49 96 53.4 C91.6 49 91.6 42.4 96 38 Z" transform="rotate(18 96 46)"/>
+    </g>
   </g>
 </svg>

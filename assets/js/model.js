@@ -114,7 +114,7 @@
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = p.gold ? "rgba(216,165,65,0.75)" : "rgba(139,219,210,0.55)";
+        ctx.fillStyle = p.gold ? "rgba(46, 132, 126,0.75)" : "rgba(163, 180, 214,0.55)";
         ctx.fill();
 
         for (var j = i + 1; j < particles.length; j++) {
@@ -125,7 +125,7 @@
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(q.x, q.y);
-            ctx.strokeStyle = "rgba(139,219,210," + (0.14 * (1 - d / linkDist)).toFixed(3) + ")";
+            ctx.strokeStyle = "rgba(163, 180, 214," + (0.14 * (1 - d / linkDist)).toFixed(3) + ")";
             ctx.lineWidth = 1;
             ctx.stroke();
           }
