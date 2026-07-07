@@ -8,7 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Amiri:ital@0;1&display=swap" rel="stylesheet">
   <title>Member Portal — TIIP Community</title>
   <meta name="description" content="TIIP Community member portal prototype: referral directory, certification tracking, compliance vault, case conceptualization, scholarly consultation, resource libraries, events, and peer forums." />
-  <meta name="theme-color" content="#070b16" />
+  <meta name="theme-color" content="#fcfaf5" />
   <meta name="robots" content="noindex" />
   <link rel="stylesheet" href="assets/css/portal.css" />
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
@@ -20,11 +20,14 @@
   <!-- ============ SIDEBAR ============ -->
   <aside class="p-side" id="sidebar">
     <a class="brand" href="index.html">
-      <img class="mark" src="assets/img/tiip-mark.svg" alt="" width="46" height="46" />
-      <span><b>TIIP Portal</b><small>Member area</small></span>
+      <img class="logo-full" src="assets/img/tiip-logo.svg" alt="TIIP — Traditional Islamically Integrated Psychotherapy" width="216" height="50" />
+      <small>Member portal</small>
     </a>
     <nav class="p-nav" id="p-nav">
       <button data-view="dashboard" data-roles="all"><span class="ico">◈</span> Dashboard</button>
+
+      <div class="group-label">Learning</div>
+      <button data-view="learning" data-roles="all"><span class="ico">🎬</span> Resources &amp; Modules</button>
 
       <div class="group-label">Network</div>
       <button data-view="directory" data-roles="trainee,practitioner,supervisor,admin"><span class="ico">🗺</span> Referral Directory</button>
@@ -92,6 +95,32 @@
         </div>
       </section>
 
+      <!-- ==== RESOURCES & MODULES ==== -->
+      <section class="view" data-view="learning">
+        <p class="view-lead">Training videos and modules for your level, all in one place. Every registered trainee starts with the <strong>Foundations of TIIP six-session series</strong>; higher-level curricula and clinical materials unlock as you progress.</p>
+
+        <div class="card">
+          <h3>🎬 Foundations of TIIP — Six-Session Series <span class="tag" id="l0-sum"></span></h3>
+          <p class="view-lead" style="margin-bottom:10px;font-size:.85rem;">The Level 0 core series from Khalil Center — watch the sessions in order to build the full picture of the model.</p>
+          <div class="rows" id="l0-rows"></div>
+        </div>
+
+        <!-- Level 1 online track — hidden unless an admin has enabled it for
+             this trainee. Never shown publicly or as a teaser. -->
+        <div class="card" id="l1-online-card" style="display:none;">
+          <h3>🌐 Level 1 — Fully Online Track <span class="tag gold">Enabled for you by an admin</span></h3>
+          <p class="view-lead" style="margin-bottom:10px;font-size:.85rem;">The complete Level 1 foundations curriculum, delivered fully online for trainees who cannot travel to in-person intensives. Work through every module, then upload your required <strong>case conceptualization</strong> — it is reviewed before Level 1 is credited.</p>
+          <div class="rows" id="l1-rows"></div>
+          <div id="l1-capstone" style="margin-top:14px;"></div>
+        </div>
+
+        <div class="card" id="l1-admin-card" style="display:none;">
+          <h3>🔐 Online Level 1 access <span class="tag gold">Admin only</span></h3>
+          <p class="view-lead" style="margin-bottom:10px;font-size:.85rem;">The online track is <strong>not listed publicly</strong> and is invisible to trainees by default. Enable it per registered Level 0 trainee — for example, cohorts in countries where in-person training isn't feasible. It appears in that trainee's portal only after you switch it on.</p>
+          <div class="rows" id="l1-admin-rows"></div>
+        </div>
+      </section>
+
       <!-- ==== DIRECTORY ==== -->
       <section class="view" data-view="directory">
         <p class="view-lead">Peer-to-peer networking and patient referrals across the global TIIP network. Filter by language, timezone, clinical focus, and licensing boundaries (PSYPACT and international equivalents).</p>
@@ -117,8 +146,8 @@
         <div id="cert-explorer" style="display:none;">
           <div class="grid-2">
             <div class="card">
-              <h3>🎥 Starter modules <span class="tag" id="mod-sum"></span></h3>
-              <p class="view-lead" style="margin-bottom:10px;font-size:.85rem;">Level 0 gives you a taste of the model — watch these introductory modules, then enroll in Level 1 when you're ready to begin formal training.</p>
+              <h3>🎬 Six-session series <span class="tag" id="mod-sum"></span></h3>
+              <p class="view-lead" style="margin-bottom:10px;font-size:.85rem;">Level 0 centers on the Foundations of TIIP six-session series — watch it in Resources &amp; Modules, then enroll in Level 1 when you're ready to begin formal training.</p>
               <div class="rows" id="mod-rows"></div>
             </div>
             <div class="card">
