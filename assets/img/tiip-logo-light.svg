@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 130" width="560" height="130" role="img" aria-label="TIIP — Traditional Islamically Integrated Psychotherapy">
+  <!-- TIIP lockup, light variant for dark backgrounds.
+       Strokes/wordmark in warm white, leaves in light teal. -->
+  <g transform="translate(8 5) scale(1)">
+    <g fill="none" stroke="#eaf0fa" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M8 64 C8 46 18 34 32 28 C46 34 56 46 56 64" stroke-width="4"/>
+      <path d="M64 64 C64 46 74 34 88 28 C102 34 112 46 112 64" stroke-width="4"/>
+      <path d="M32 60 C32 37 44 20 60 9 C76 20 88 37 88 60" stroke-width="4.6"/>
+      <path d="M60 26 L60 88" stroke-width="4.6"/>
+      <path d="M60 46 C52 42 46 36 43 28" stroke-width="3.4"/>
+      <path d="M60 46 C68 42 74 36 77 28" stroke-width="3.4"/>
+      <path d="M60 88 C54 96 42 97 30 103" stroke-width="3.4"/>
+      <path d="M60 88 C58 99 49 103 41 108" stroke-width="3.4"/>
+      <path d="M60 88 L60 109" stroke-width="3.4"/>
+      <path d="M60 88 C62 99 71 103 79 108" stroke-width="3.4"/>
+      <path d="M60 88 C66 96 78 97 90 103" stroke-width="3.4"/>
+    </g>
+    <g fill="#5ba69f">
+      <path d="M60 15 C63.4 18.4 63.4 24.6 60 28 C56.6 24.6 56.6 18.4 60 15 Z"/>
+      <path d="M49 24 C52.8 25.6 55 30.4 53.6 34.6 C49.4 33.2 47.2 28.4 49 24 Z" transform="rotate(-8 51 29)"/>
+      <path d="M71 24 C67.2 25.6 65 30.4 66.4 34.6 C70.6 33.2 72.8 28.4 71 24 Z" transform="rotate(8 69 29)"/>
+      <path d="M24 40 C27.4 43.4 27.4 49 24 52.4 C20.6 49 20.6 43.4 24 40 Z" transform="rotate(-18 24 46)"/>
+      <path d="M38 44 C41 47 41 52 38 55 C35 52 35 47 38 44 Z" transform="rotate(14 38 49.5)"/>
+      <path d="M96 40 C99.4 43.4 99.4 49 96 52.4 C92.6 49 92.6 43.4 96 40 Z" transform="rotate(18 96 46)"/>
+      <path d="M82 44 C85 47 85 52 82 55 C79 52 79 47 82 44 Z" transform="rotate(-14 82 49.5)"/>
+    </g>
+  </g>
+  <g font-family="Georgia, 'Times New Roman', serif">
+    <text x="160" y="66" font-size="56" font-weight="700" letter-spacing="14" fill="#eaf0fa">TIIP</text>
+    <path d="M150 48 L154 52 L150 56 L146 52 Z" fill="#5ba69f"/>
+    <path d="M340 48 L344 52 L340 56 L336 52 Z" fill="#5ba69f"/>
+    <text x="160" y="96" font-size="14" letter-spacing="1.8" fill="#bfcce0" font-family="'Plus Jakarta Sans', 'Segoe UI', sans-serif">TRADITIONAL ISLAMICALLY</text>
+    <text x="160" y="116" font-size="14" letter-spacing="1.8" fill="#bfcce0" font-family="'Plus Jakarta Sans', 'Segoe UI', sans-serif">INTEGRATED PSYCHOTHERAPY</text>
+  </g>
+</svg>

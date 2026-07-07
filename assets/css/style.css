@@ -211,6 +211,10 @@ img { max-width: 100%; display: block; }
 .nav-links a:hover { background: rgba(58, 88, 156,.09); color: var(--emerald-800); }
 .nav-links a.active { color: var(--emerald-800); font-weight: 700; }
 .nav-cta { margin-left: 10px; }
+/* The generic .nav-links a color/hover rules outrank .btn-* — keep the
+   CTA button white-on-navy so "Member Portal" stays legible. */
+.nav-links a.btn-primary,
+.nav-links a.btn-primary:hover { background: var(--grad-emerald); color: #fff; }
 
 .nav-toggle { display: none; background: none; border: none; width: 46px; height: 46px; cursor: pointer; border-radius: 12px; }
 .nav-toggle span, .nav-toggle span::before, .nav-toggle span::after {
@@ -420,43 +424,17 @@ section { padding: clamp(70px, 9vw, 110px) 0; position: relative; }
 .page-head-wave svg { width: 100%; height: 56px; display: block; }
 @media (max-width: 640px){ .page-head .ph-ar { display:none; } }
 
-/* ---- Psyche diagram ---- */
+/* ---- Psyche figure (home preview) ----
+   The home page embeds the same ontological-model figure that model.html
+   renders (markup + component styles come from model.css); these rules
+   only lay it out and neutralize the interactive affordances since the
+   home version is a static preview. */
 .psyche { display: grid; grid-template-columns: 1fr 1.05fr; gap: 56px; align-items: center; }
 @media (max-width: 900px) { .psyche { grid-template-columns: 1fr; } }
-.psyche-diagram {
-  position: relative; aspect-ratio: 1; max-width: 460px; margin: 0 auto; border-radius: 50%;
-  background: radial-gradient(circle at 50% 42%, #fff, var(--emerald-50) 72%);
-  box-shadow: var(--shadow-lg), inset 0 0 0 1px rgba(58, 88, 156,.1);
-  display: grid; place-items: center;
-}
-.psyche-diagram::before { content:""; position:absolute; inset:8%; border-radius:50%; border:1px dashed var(--cream-300); }
-.psyche-diagram::after { content:""; position:absolute; inset:-5%; border-radius:50%; border:1px solid rgba(46, 132, 126,.25); }
-.psyche-core {
-  width: 38%; aspect-ratio: 1; border-radius: 50%;
-  background: var(--grad-emerald); color: #fff; display: grid; place-items: center; text-align: center;
-  box-shadow: var(--shadow-glow), inset 0 2px 12px rgba(255,255,255,.18);
-  font-family: var(--font-head); font-weight: 600; font-size: 1.05rem; z-index: 4; cursor: pointer;
-  transition: .25s cubic-bezier(.2,.8,.2,1);
-}
-.psyche-core small { font-weight: 400; }
-.psyche-core[data-key]:hover, .psyche-core.active { box-shadow: var(--shadow-gold), 0 0 0 4px rgba(46, 132, 126,.3); transform: scale(1.04); }
-.psyche-node {
-  position: absolute; width: 31%; aspect-ratio: 1; border-radius: 50%;
-  background: rgba(255,255,255,.95); border: 1px solid var(--cream-200);
-  display: grid; place-items: center; text-align: center; cursor: pointer; padding: 8px;
-  box-shadow: var(--shadow-sm); transition: .25s cubic-bezier(.2,.8,.2,1);
-  font-weight: 700; color: var(--emerald-800); font-family: var(--font-head); z-index: 3;
-}
-.psyche-node small { display: block; font-size: .6rem; font-weight: 700; color: var(--ink-400); text-transform: uppercase; letter-spacing: .08em; font-family: var(--font-body); margin-top: 2px; }
-.psyche-node:hover, .psyche-node.active { border-color: var(--gold-400); transform: scale(1.1); box-shadow: var(--shadow-gold); color: var(--emerald-900); }
-/* five-point arrangement around the heart */
-.psyche-node.n1 { top: -1.5%; left: 34.5%; }
-.psyche-node.n2 { top: 23.4%; left: 68.7%; }
-.psyche-node.n3 { top: 63.6%; left: 55.7%; }
-.psyche-node.n4 { top: 63.6%; left: 13.3%; }
-.psyche-node.n5 { top: 23.4%; left: 0.3%; }
-.psyche-detail { min-height: 130px; }
-.psyche-detail h3 { color: var(--emerald-800); font-size: 1.7rem; }
+.psyche .model-fig .psy-node,
+.psyche .model-fig .fitrah-band,
+.psyche .model-fig .ij-pill { cursor: default; }
+.psyche .model-fig .fitrah-band:hover { transform: none; }
 
 /* ---- Tabs ---- */
 .tabs { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 34px; }
@@ -607,6 +585,7 @@ section { padding: clamp(70px, 9vw, 110px) 0; position: relative; }
 .site-footer a:hover { color: var(--gold-300); }
 .footer-brand p { font-size:.94rem; max-width: 36ch; }
 .footer-brand .brand b { color:#fff; } .footer-brand .brand span { color:#7f8ba8; }
+.footer-brand .logo-full { width: min(320px, 100%); height: auto; display: block; }
 .footer-bottom { border-top:1px solid rgba(255,255,255,.08); margin-top:52px; padding-top:26px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; font-size:.85rem; position:relative; z-index:1; }
 .footer-note { background: var(--gold-100); border-left:4px solid var(--gold-500); padding:16px 20px; border-radius:12px; font-size:.88rem; color:var(--ink-700); margin-top:16px; }
 

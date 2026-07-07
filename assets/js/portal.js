@@ -61,6 +61,31 @@
         { title: "The Ontological Model — a First Look", mins: 34, done: false },
         { title: "The Four Stages of Change — Overview", mins: 27, done: false }
       ],
+      learning: {
+        /* Level 0 — the Foundations of TIIP six-session series */
+        l0: [
+          { title: "Session 1 · Worldviews — How Psychology Came to Be", mins: 28, done: true },
+          { title: "Session 2 · What is TIIP? An Integrative Model", mins: 32, done: false },
+          { title: "Session 3 · Epistemology — Three Sources of Knowledge", mins: 35, done: false },
+          { title: "Session 4 · Ontology — The Psyche & Its Elements", mins: 40, done: false },
+          { title: "Session 5 · Health & Pathology — Beyond the DSM", mins: 38, done: false },
+          { title: "Session 6 · Taking a TIIP Approach — Mechanisms of Change", mins: 36, done: false }
+        ],
+        /* Level 1 fully-online track — hidden unless an admin enables it
+           for a specific Level 0 trainee (never publicly listed). */
+        l1EnabledUsers: {},
+        l1: [
+          { title: "Module 1 · Foundations Intensive — Orientation & Ādāb", mins: 55, done: false },
+          { title: "Module 2 · The Epistemological Framework in Practice", mins: 60, done: false },
+          { title: "Module 3 · Ontology I — Qalb & ʿAql", mins: 65, done: false },
+          { title: "Module 4 · Ontology II — Nafs, Rūḥ & Iḥsās", mins: 65, done: false },
+          { title: "Module 5 · Health, Pathology & Assessment", mins: 70, done: false },
+          { title: "Module 6 · Mechanisms of Change — Stages I–II", mins: 60, done: false },
+          { title: "Module 7 · Mechanisms of Change — Stages III–IV", mins: 60, done: false },
+          { title: "Module 8 · Integrative Case Formulation", mins: 75, done: false }
+        ],
+        l1Submission: null /* { name, at } — required end-of-level upload */
+      },
       certs: [
         { name: "Ethics in Teletherapy (3 CE)", cat: "ceu", credits: 3, issued: iso(today(-320)), expires: iso(today(45)) },
         { name: "Suicide Risk Assessment (6 CE)", cat: "ceu", credits: 6, issued: iso(today(-150)), expires: iso(today(215)) },
@@ -120,6 +145,7 @@
   try { state = JSON.parse(localStorage.getItem(LS_KEY)) || seedState(); }
   catch (e) { state = seedState(); }
   if (!state.modules) state.modules = seedState().modules; /* migrate pre-pathway saves */
+  if (!state.learning) state.learning = seedState().learning; /* migrate pre-learning saves */
   if (!ROLES[state.role]) state.role = "trainee";
   function save() { try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) {} }
 
@@ -164,6 +190,8 @@
 
   var ADMIN_USERS = [
     { name: "Zaid Mahmood", role: "TIIP Trainee (Level 0)" },
+    { name: "Hafsa Karim", role: "TIIP Trainee (Level 0)", city: "Lahore, PK" },
+    { name: "Imran Baig", role: "TIIP Trainee (Level 0)", city: "Karachi, PK" },
     { name: "Amina Yusuf", role: "Trainee (Level III)" },
     { name: "Yusuf Chaudhry", role: "Trainee (Level II)" },
     { name: "Dr. Bilal Rahman", role: "Certified Practitioner" },
@@ -181,7 +209,7 @@
   var roleSelect = document.getElementById("role-select");
 
   var VIEW_TITLES = {
-    dashboard: "Dashboard", directory: "Global Referral Directory", certification: "Certification Pathway",
+    dashboard: "Dashboard", learning: "Resources & Modules", directory: "Global Referral Directory", certification: "Certification Pathway",
     vault: "Dual-Compliance Vault", sandbox: "TIIP Conceptualization Sandbox", fatwa: "Scholarly Consultation Desk",
     resources: "Multilingual Intervention Vault", incubator: "Publication Incubator", events: "Events & Training Calendar",
     forums: "Tazkiyah & Peer Forums"
@@ -253,6 +281,7 @@
   --------------------------------------------------------- */
   function renderView(view) {
     if (view === "dashboard") renderDashboard();
+    if (view === "learning") renderLearning();
     if (view === "directory") renderDirectory();
     if (view === "certification") renderCert();
     if (view === "vault") renderVault();
@@ -287,10 +316,10 @@
 
     var tiles;
     if (state.role === "explorer") {
-      var watched = state.modules.filter(function (m) { return m.done; }).length;
+      var watched = state.learning.l0.filter(function (m) { return m.done; }).length;
       tiles = [
         { n: "L0", l: "Current level" },
-        { n: watched + "<i>/" + state.modules.length + "</i>", l: "Starter modules watched" },
+        { n: watched + "<i>/" + state.learning.l0.length + "</i>", l: "Sessions watched" },
         { n: EVENTS.length, l: "Upcoming events" },
         { n: 4, l: "Stages to certification" }
       ];
@@ -321,8 +350,8 @@
     }).join("");
 
     var actions = {
-      explorer: [["certification", "View my pathway"], ["certification", "Watch starter modules"], ["events", "Browse events"], ["forums", "Join the forums"]],
-      trainee: [["certification", "Log supervised hours"], ["sandbox", "Draft a conceptualization"], ["fatwa", "Ask a scholar"], ["resources", "Browse worksheets"]],
+      explorer: [["learning", "Watch the six-session series"], ["certification", "View my pathway"], ["events", "Browse events"], ["forums", "Join the forums"]],
+      trainee: [["learning", "Open resources & modules"], ["certification", "Log supervised hours"], ["sandbox", "Draft a conceptualization"], ["fatwa", "Ask a scholar"]],
       practitioner: [["directory", "Find a referral"], ["vault", "Update CE records"], ["incubator", "Open research workspace"], ["fatwa", "Ask a scholar"]],
       supervisor: [["certification", "Review pending hours"], ["sandbox", "Review shared cases"], ["fatwa", "Answer scholar queries"], ["events", "Schedule a clinic"]],
       admin: [["directory", "Audit directory"], ["resources", "Publish a resource"], ["events", "Manage events"], ["forums", "Moderate forums"]]
@@ -350,6 +379,83 @@
       }).join("");
       document.querySelectorAll(".admin-role").forEach(function (sel) {
         sel.addEventListener("change", function () { ADMIN_USERS[Number(sel.getAttribute("data-i"))].role = sel.value; });
+      });
+    }
+  }
+
+  /* ---- Resources & Modules (learning) ---- */
+  function l1EnabledFor(name) { return !!state.learning.l1EnabledUsers[name]; }
+
+  function renderLearning() {
+    /* Level 0 — six-session series (all members) */
+    var l0 = state.learning.l0;
+    var watched = l0.filter(function (m) { return m.done; }).length;
+    document.getElementById("l0-sum").textContent = watched + " / " + l0.length + " watched";
+    document.getElementById("l0-rows").innerHTML = l0.map(function (m, i) {
+      return '<div class="row"><span class="grow"><b>' + esc(m.title) + "</b><small>" + m.mins + " min · video module</small></span>" +
+        (m.done ? '<span class="tag ok">Watched</span>' : '<button class="btn btn-gold btn-xs" data-l0-watch="' + i + '">▶ Watch</button>') +
+        "</div>";
+    }).join("");
+    document.querySelectorAll("[data-l0-watch]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        state.learning.l0[Number(b.getAttribute("data-l0-watch"))].done = true;
+        save(); renderLearning();
+      });
+    });
+
+    /* Level 1 online track — only for trainees an admin has enabled */
+    var meEnabled = l1EnabledFor(ROLES[state.role].name);
+    var showTrack = meEnabled && state.role !== "admin";
+    document.getElementById("l1-online-card").style.display = showTrack ? "block" : "none";
+    if (showTrack) {
+      var l1 = state.learning.l1;
+      document.getElementById("l1-rows").innerHTML = l1.map(function (m, i) {
+        return '<div class="row"><span class="grow"><b>' + esc(m.title) + "</b><small>" + m.mins + " min · online module</small></span>" +
+          (m.done ? '<span class="tag ok">Completed</span>' : '<button class="btn btn-gold btn-xs" data-l1-watch="' + i + '">▶ Start</button>') +
+          "</div>";
+      }).join("");
+      document.querySelectorAll("[data-l1-watch]").forEach(function (b) {
+        b.addEventListener("click", function () {
+          state.learning.l1[Number(b.getAttribute("data-l1-watch"))].done = true;
+          save(); renderLearning();
+        });
+      });
+      var sub = state.learning.l1Submission;
+      document.getElementById("l1-capstone").innerHTML =
+        '<div class="row" style="border-top:1px solid var(--line); padding-top:14px;"><span class="grow">' +
+        "<b>📤 Required: case conceptualization</b>" +
+        "<small>Upload your written case conceptualization at the end of Level 1 — it is reviewed by a supervisor before the level is credited.</small></span>" +
+        (sub
+          ? '<span class="tag ok">Submitted · pending review</span><span class="tag dim">' + esc(sub.name) + " · " + sub.at + '</span><button class="btn btn-ghost btn-xs" id="l1-replace">Replace</button>'
+          : '<span class="tag warn">Required</span><button class="btn btn-gold btn-xs" id="l1-upload">Upload file</button>') +
+        '<input type="file" id="l1-file" accept=".pdf,.doc,.docx" style="display:none;" />';
+      var file = document.getElementById("l1-file");
+      var trigger = document.getElementById(sub ? "l1-replace" : "l1-upload");
+      trigger.addEventListener("click", function () { file.click(); });
+      file.addEventListener("change", function () {
+        if (!file.files.length) return;
+        state.learning.l1Submission = { name: file.files[0].name, at: iso(new Date()) };
+        save(); renderLearning();
+      });
+    }
+
+    /* Admin — per-trainee access to the online Level 1 track */
+    var isAdmin = state.role === "admin";
+    document.getElementById("l1-admin-card").style.display = isAdmin ? "block" : "none";
+    if (isAdmin) {
+      var level0 = ADMIN_USERS.filter(function (u) { return u.role.indexOf("Level 0") !== -1; });
+      document.getElementById("l1-admin-rows").innerHTML = level0.map(function (u) {
+        var on = l1EnabledFor(u.name);
+        return '<div class="row"><span class="grow"><b>' + esc(u.name) + "</b><small>" + esc(u.role) + (u.city ? " · " + esc(u.city) : "") + "</small></span>" +
+          (on ? '<span class="tag ok">Online Level 1 enabled</span>' : '<span class="tag dim">Not enabled</span>') +
+          '<button class="btn ' + (on ? "btn-ghost" : "btn-gold") + ' btn-xs" data-l1-toggle="' + esc(u.name) + '">' + (on ? "Disable" : "Enable") + "</button></div>";
+      }).join("");
+      document.querySelectorAll("[data-l1-toggle]").forEach(function (b) {
+        b.addEventListener("click", function () {
+          var name = b.getAttribute("data-l1-toggle");
+          state.learning.l1EnabledUsers[name] = !state.learning.l1EnabledUsers[name];
+          save(); renderLearning();
+        });
       });
     }
   }
@@ -405,16 +511,17 @@
   }
 
   function renderModules() {
-    var doneCount = state.modules.filter(function (m) { return m.done; }).length;
-    document.getElementById("mod-sum").textContent = doneCount + " / " + state.modules.length + " watched";
-    document.getElementById("mod-rows").innerHTML = state.modules.map(function (m, i) {
-      return '<div class="row"><span class="grow"><b>' + esc(m.title) + "</b><small>" + m.mins + " min · introductory module</small></span>" +
+    var series = state.learning.l0;
+    var doneCount = series.filter(function (m) { return m.done; }).length;
+    document.getElementById("mod-sum").textContent = doneCount + " / " + series.length + " watched";
+    document.getElementById("mod-rows").innerHTML = series.map(function (m, i) {
+      return '<div class="row"><span class="grow"><b>' + esc(m.title) + "</b><small>" + m.mins + " min · video module</small></span>" +
         (m.done ? '<span class="tag ok">Watched</span>' : '<button class="btn btn-gold btn-xs" data-watch="' + i + '">▶ Watch</button>') +
         "</div>";
     }).join("");
     document.querySelectorAll("[data-watch]").forEach(function (b) {
       b.addEventListener("click", function () {
-        state.modules[Number(b.getAttribute("data-watch"))].done = true;
+        state.learning.l0[Number(b.getAttribute("data-watch"))].done = true;
         save(); renderModules();
       });
     });
