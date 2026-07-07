@@ -4,7 +4,7 @@
 (function () {
   "use strict";
 
-  var LS_KEY = "tiip-portal-demo-v1";
+  var LS_KEY = "tiip-portal-demo-v2";
   var DAY = 86400000;
   function today(offset) { return new Date(Date.now() + (offset || 0) * DAY); }
   function iso(d) { return d.toISOString().slice(0, 10); }
@@ -62,27 +62,27 @@
         { title: "The Four Stages of Change — Overview", mins: 27, done: false }
       ],
       learning: {
-        /* Level 0 — the Foundations of TIIP six-session series */
+        /* Level 0 — the six-part introductory series, open to every member */
         l0: [
-          { title: "Session 1 · Worldviews — How Psychology Came to Be", mins: 28, done: true },
-          { title: "Session 2 · What is TIIP? An Integrative Model", mins: 32, done: false },
-          { title: "Session 3 · Epistemology — Three Sources of Knowledge", mins: 35, done: false },
-          { title: "Session 4 · Ontology — The Psyche & Its Elements", mins: 40, done: false },
-          { title: "Session 5 · Health & Pathology — Beyond the DSM", mins: 38, done: false },
-          { title: "Session 6 · Taking a TIIP Approach — Mechanisms of Change", mins: 36, done: false }
+          { title: "Part 1 · Introducing Islamically Integrated Psychotherapies", mins: 32, done: true },
+          { title: "Part 2 · A Glimpse into the Living Islamic Tradition", mins: 30, done: false },
+          { title: "Part 3 · Traditional Islamically Integrated Psychotherapy (TIIP)", mins: 38, done: false },
+          { title: "Part 4 · TIIP Treatment of OCD Scrupulosity (Waswasa)", mins: 35, done: false },
+          { title: "Part 5 · Dreams & Their Role in Islamically Integrated Mental Health Practice", mins: 33, done: false },
+          { title: "Part 6 · The Intersection of Islamic Jurisprudence & Mental Health Care", mins: 34, done: false }
         ],
-        /* Level 1 fully-online track — hidden unless an admin enables it
-           for a specific Level 0 trainee (never publicly listed). */
+        /* Level 1 curriculum — invisible except to trainees an admin has
+           approved and to members already at Level 2 and beyond. */
         l1EnabledUsers: {},
         l1: [
-          { title: "Module 1 · Foundations Intensive — Orientation & Ādāb", mins: 55, done: false },
-          { title: "Module 2 · The Epistemological Framework in Practice", mins: 60, done: false },
-          { title: "Module 3 · Ontology I — Qalb & ʿAql", mins: 65, done: false },
-          { title: "Module 4 · Ontology II — Nafs, Rūḥ & Iḥsās", mins: 65, done: false },
-          { title: "Module 5 · Health, Pathology & Assessment", mins: 70, done: false },
-          { title: "Module 6 · Mechanisms of Change — Stages I–II", mins: 60, done: false },
-          { title: "Module 7 · Mechanisms of Change — Stages III–IV", mins: 60, done: false },
-          { title: "Module 8 · Integrative Case Formulation", mins: 75, done: false }
+          { title: "Module 1 · Foundations of TIIP", mins: 60, done: false },
+          { title: "Module 2 · The Role of the TIIP Clinician", mins: 55, done: false },
+          { title: "Module 3 · Assessment & Conceptualization", mins: 70, done: false },
+          { title: "Module 4 · ʿAql — Cognition", mins: 60, done: false },
+          { title: "Module 5 · Nafs — Behavioral Inclinations", mins: 60, done: false },
+          { title: "Module 6 · Iḥsās — Emotion", mins: 60, done: false },
+          { title: "Module 7 · Rūḥ — Spirit", mins: 60, done: false },
+          { title: "Module 8 · Islamic Virtues", mins: 55, done: false }
         ],
         l1Submission: null /* { name, at } — required end-of-level upload */
       },
@@ -319,7 +319,7 @@
       var watched = state.learning.l0.filter(function (m) { return m.done; }).length;
       tiles = [
         { n: "L0", l: "Current level" },
-        { n: watched + "<i>/" + state.learning.l0.length + "</i>", l: "Sessions watched" },
+        { n: watched + "<i>/" + state.learning.l0.length + "</i>", l: "Parts watched" },
         { n: EVENTS.length, l: "Upcoming events" },
         { n: 4, l: "Stages to certification" }
       ];
@@ -350,7 +350,7 @@
     }).join("");
 
     var actions = {
-      explorer: [["learning", "Watch the six-session series"], ["certification", "View my pathway"], ["events", "Browse events"], ["forums", "Join the forums"]],
+      explorer: [["learning", "Watch the six-part series"], ["certification", "View my pathway"], ["events", "Browse events"], ["forums", "Join the forums"]],
       trainee: [["learning", "Open resources & modules"], ["certification", "Log supervised hours"], ["sandbox", "Draft a conceptualization"], ["fatwa", "Ask a scholar"]],
       practitioner: [["directory", "Find a referral"], ["vault", "Update CE records"], ["incubator", "Open research workspace"], ["fatwa", "Ask a scholar"]],
       supervisor: [["certification", "Review pending hours"], ["sandbox", "Review shared cases"], ["fatwa", "Answer scholar queries"], ["events", "Schedule a clinic"]],
@@ -387,7 +387,7 @@
   function l1EnabledFor(name) { return !!state.learning.l1EnabledUsers[name]; }
 
   function renderLearning() {
-    /* Level 0 — six-session series (all members) */
+    /* Level 0 — six-part series (all members) */
     var l0 = state.learning.l0;
     var watched = l0.filter(function (m) { return m.done; }).length;
     document.getElementById("l0-sum").textContent = watched + " / " + l0.length + " watched";
@@ -403,11 +403,19 @@
       });
     });
 
-    /* Level 1 online track — only for trainees an admin has enabled */
-    var meEnabled = l1EnabledFor(ROLES[state.role].name);
-    var showTrack = meEnabled && state.role !== "admin";
+    /* Level 1 — invisible to everyone except trainees an admin has
+       approved and members already at Level 2 and beyond. Nobody else
+       even sees that the card exists. */
+    var stage = ROLE_STAGE[state.role] != null ? ROLE_STAGE[state.role] : 0;
+    var approved = l1EnabledFor(ROLES[state.role].name);
+    var isAdmin = state.role === "admin";
+    var showTrack = !isAdmin && (approved || stage >= 2);
+    var takingL1 = showTrack && stage < 2; /* actually working through it */
     document.getElementById("l1-online-card").style.display = showTrack ? "block" : "none";
     if (showTrack) {
+      document.getElementById("l1-why").textContent = approved && stage < 2
+        ? "Approved — enabled for you by an admin"
+        : "Visible from Level 2 upward";
       var l1 = state.learning.l1;
       document.getElementById("l1-rows").innerHTML = l1.map(function (m, i) {
         return '<div class="row"><span class="grow"><b>' + esc(m.title) + "</b><small>" + m.mins + " min · online module</small></span>" +
@@ -420,35 +428,44 @@
           save(); renderLearning();
         });
       });
-      var sub = state.learning.l1Submission;
-      document.getElementById("l1-capstone").innerHTML =
-        '<div class="row" style="border-top:1px solid var(--line); padding-top:14px;"><span class="grow">' +
-        "<b>📤 Required: case conceptualization</b>" +
-        "<small>Upload your written case conceptualization at the end of Level 1 — it is reviewed by a supervisor before the level is credited.</small></span>" +
-        (sub
-          ? '<span class="tag ok">Submitted · pending review</span><span class="tag dim">' + esc(sub.name) + " · " + sub.at + '</span><button class="btn btn-ghost btn-xs" id="l1-replace">Replace</button>'
-          : '<span class="tag warn">Required</span><button class="btn btn-gold btn-xs" id="l1-upload">Upload file</button>') +
-        '<input type="file" id="l1-file" accept=".pdf,.doc,.docx" style="display:none;" />';
-      var file = document.getElementById("l1-file");
-      var trigger = document.getElementById(sub ? "l1-replace" : "l1-upload");
-      trigger.addEventListener("click", function () { file.click(); });
-      file.addEventListener("change", function () {
-        if (!file.files.length) return;
-        state.learning.l1Submission = { name: file.files[0].name, at: iso(new Date()) };
-        save(); renderLearning();
-      });
+      /* The capstone upload only applies to members actually taking the
+         level — not to Level 2+ members revisiting the material. */
+      if (takingL1) {
+        var sub = state.learning.l1Submission;
+        document.getElementById("l1-capstone").innerHTML =
+          '<div class="row" style="border-top:1px solid var(--line); padding-top:14px;"><span class="grow">' +
+          "<b>📤 Required: case conceptualization</b>" +
+          "<small>Upload your written case conceptualization at the end of Level 1 — it is reviewed by a supervisor before the level is credited.</small></span>" +
+          (sub
+            ? '<span class="tag ok">Submitted · pending review</span><span class="tag dim">' + esc(sub.name) + " · " + sub.at + '</span><button class="btn btn-ghost btn-xs" id="l1-replace">Replace</button>'
+            : '<span class="tag warn">Required</span><button class="btn btn-gold btn-xs" id="l1-upload">Upload file</button>') +
+          '<input type="file" id="l1-file" accept=".pdf,.doc,.docx" style="display:none;" />';
+        var file = document.getElementById("l1-file");
+        var trigger = document.getElementById(sub ? "l1-replace" : "l1-upload");
+        trigger.addEventListener("click", function () { file.click(); });
+        file.addEventListener("change", function () {
+          if (!file.files.length) return;
+          state.learning.l1Submission = { name: file.files[0].name, at: iso(new Date()) };
+          save(); renderLearning();
+        });
+      } else {
+        document.getElementById("l1-capstone").innerHTML = "";
+      }
+    } else {
+      /* wipe the content too, so nothing lingers in the hidden card */
+      document.getElementById("l1-rows").innerHTML = "";
+      document.getElementById("l1-capstone").innerHTML = "";
     }
 
-    /* Admin — per-trainee access to the online Level 1 track */
-    var isAdmin = state.role === "admin";
+    /* Admin — approve Level 1 access per registered Level 0 trainee */
     document.getElementById("l1-admin-card").style.display = isAdmin ? "block" : "none";
     if (isAdmin) {
       var level0 = ADMIN_USERS.filter(function (u) { return u.role.indexOf("Level 0") !== -1; });
       document.getElementById("l1-admin-rows").innerHTML = level0.map(function (u) {
         var on = l1EnabledFor(u.name);
         return '<div class="row"><span class="grow"><b>' + esc(u.name) + "</b><small>" + esc(u.role) + (u.city ? " · " + esc(u.city) : "") + "</small></span>" +
-          (on ? '<span class="tag ok">Online Level 1 enabled</span>' : '<span class="tag dim">Not enabled</span>') +
-          '<button class="btn ' + (on ? "btn-ghost" : "btn-gold") + ' btn-xs" data-l1-toggle="' + esc(u.name) + '">' + (on ? "Disable" : "Enable") + "</button></div>";
+          (on ? '<span class="tag ok">Level 1 approved</span>' : '<span class="tag dim">Not approved</span>') +
+          '<button class="btn ' + (on ? "btn-ghost" : "btn-gold") + ' btn-xs" data-l1-toggle="' + esc(u.name) + '">' + (on ? "Revoke" : "Approve") + "</button></div>";
       }).join("");
       document.querySelectorAll("[data-l1-toggle]").forEach(function (b) {
         b.addEventListener("click", function () {
