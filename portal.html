@@ -110,10 +110,16 @@
              Never shown publicly or as a teaser. -->
         <div class="card" id="l1-online-card" style="display:none;">
           <h3>🔐 Level 1 — Foundations Curriculum <span class="tag gold" id="l1-why"></span></h3>
-          <p class="view-lead" style="margin-bottom:10px;font-size:.85rem;">The Level 1 modules: the foundations of TIIP, the role of the TIIP clinician, assessment &amp; conceptualization, the elements of the psyche — <em>ʿaql</em>, <em>nafs</em>, <em>iḥsās</em>, <em>rūḥ</em> — and Islamic virtues. Work through every module, then upload your required <strong>case conceptualization</strong> — it is reviewed before Level 1 is credited.</p>
+          <p class="view-lead" style="margin-bottom:10px;font-size:.85rem;">The Level 1 modules: the foundations of TIIP, the role of the TIIP clinician, assessment &amp; conceptualization, the elements of the psyche — <em>ʿaql</em>, <em>nafs</em>, <em>iḥsās</em>, <em>rūḥ</em> — and Islamic virtues. Work through every module, then complete the required <strong>TIIP Case Formulation Sheet</strong> — the end-of-level case conceptualization, reviewed by a supervisor before Level 1 is credited.</p>
           <div class="rows" id="l1-rows"></div>
           <div id="l1-capstone" style="margin-top:14px;"></div>
         </div>
+
+        <!-- Level 1 capstone — the Khalil Center TIIP Case Formulation
+             Sheet, built section-by-section by JS. Only rendered for
+             approved trainees actually taking the level; locked until
+             every module is complete. -->
+        <div class="card" id="l1-formulation-card" style="display:none;"></div>
 
         <div class="card" id="l1-admin-card" style="display:none;">
           <h3>🔐 Level 1 access approvals <span class="tag gold">Admin only</span></h3>
@@ -233,7 +239,7 @@
 
       <!-- ==== CASE SANDBOX ==== -->
       <section class="view" data-view="sandbox">
-        <p class="view-lead">Map cases onto the TIIP ontological framework. Trainee conceptualizations can be shared with an assigned supervisor for structured feedback.</p>
+        <p class="view-lead">Map cases onto the TIIP ontological framework — presenting picture, precipitating event, a quick assessment snapshot, the four elements, and the vicious-cycle narrative. The sandbox mirrors the Level 1 <strong>TIIP Case Formulation Sheet</strong> in miniature; trainee conceptualizations can be shared with an assigned supervisor for structured feedback.</p>
         <div class="grid-2">
           <div class="card">
             <h3>🧭 New conceptualization</h3>
@@ -243,10 +249,17 @@
                 <div class="field"><label>Primary domain</label><select id="cf-primary"><option>Iḥsās</option><option>ʾAql</option><option>Nafs</option><option>Rūḥ</option></select></div>
               </div>
               <div class="field"><label>Presenting concerns</label><textarea id="cf-presenting" placeholder="Chief complaint, context, relevant history…"></textarea></div>
+              <div class="field"><label>Precipitating event</label><textarea id="cf-precip" placeholder="Why now? The recent incident that brought them to therapy…"></textarea></div>
+              <div class="field-row">
+                <div class="field"><label>Motivation to change</label><select id="cf-motivation"><option value="">—</option><option>Strong</option><option>Moderate</option><option>Weak</option><option>Ambivalent</option><option>Instrumental</option><option>Due to others</option></select></div>
+                <div class="field"><label>Social support</label><select id="cf-support"><option value="">—</option><option>Strong</option><option>Moderate</option><option>Weak</option></select></div>
+                <div class="field"><label>Religious identification</label><select id="cf-religiosity"><option value="">—</option><option>Strong</option><option>Moderate</option><option>Weak</option></select></div>
+              </div>
               <div class="field"><label>ʿAql — cognition</label><textarea id="cf-aql" placeholder="Appraisals, distortions, reframing capacity…"></textarea></div>
               <div class="field"><label>Nafs — behavioral inclination</label><textarea id="cf-nafs" placeholder="Drives, avoidance patterns, nafsānī behaviors…"></textarea></div>
               <div class="field"><label>Rūḥ — spirit</label><textarea id="cf-ruh" placeholder="Spiritual practices, riḍā, dhikr, spiritual struggles…"></textarea></div>
               <div class="field"><label>Iḥsās — emotion</label><textarea id="cf-ihsas" placeholder="Primary/secondary emotions, regulation, expression…"></textarea></div>
+              <div class="field"><label>Vicious cycle — narrative synthesis</label><textarea id="cf-narrative" placeholder="How do ʿaql, nafs, iḥsās and rūḥ interlock to maintain the problem?"></textarea></div>
               <div class="check"><input type="checkbox" id="cf-share" /> <span>Share with my supervisor <em>(end-to-end encrypted in production — HIPAA/GDPR)</em></span></div>
               <button class="btn btn-gold" type="submit">Save conceptualization</button>
             </form>

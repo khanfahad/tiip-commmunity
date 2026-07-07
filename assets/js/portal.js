@@ -43,6 +43,71 @@
   var ROLE_STAGE = { explorer: 0, trainee: 3, practitioner: 4, supervisor: 4, admin: 3 };
 
   /* ---------------------------------------------------------
+     Level 1 capstone — the Khalil Center "TIIP Case
+     Formulation Sheet" (2024), section by section.
+  --------------------------------------------------------- */
+  var FORM_RATINGS = [
+    ["motivation", "Motivation to change", ["Strong", "Moderate", "Weak", "Ambivalent", "Instrumental", "Due to others"]],
+    ["support", "Social support available", ["Strong", "Moderate", "Weak"]],
+    ["community", "Involvement in community settings (ijtimāʿī)", ["Strong", "Moderate", "Weak"]],
+    ["religiosity", "How strongly does the patient identify with their religion?", ["Strong", "Moderate", "Weak"]],
+    ["rapport", "Level of therapeutic rapport", ["Strong", "Moderate", "Weak"]]
+  ];
+
+  var TIIP_ELEMENTS = [
+    { key: "aql", label: "ʿAql — cognition", items: [
+      ["distortions", "Cognitive distortions"],
+      ["fusion", "Cognitive fusion"],
+      ["rumination", "Rumination"],
+      ["other", "Other ʿaqlī patterns"]
+    ] },
+    { key: "nafs", label: "Nafs — behavioral inclinations", items: [
+      ["addictions", "Behavioral addictions"],
+      ["compulsive", "Compulsive behaviors"],
+      ["safety", "Safety behaviors"],
+      ["avoidance", "Avoidance behaviors"],
+      ["overcomp", "Overcompensatory behaviors"],
+      ["pain", "Pain/pleasure-seeking (eating/drinking, sexual pleasure, nail biting, self-harm…)"]
+    ] },
+    { key: "ihsas", label: "Iḥsās — emotion", items: [
+      ["maladaptive", "Maladaptive emotional expression"],
+      ["adaptive", "Adaptive emotional expression"],
+      ["dysregulation", "Emotional dysregulation"],
+      ["needs", "Unmet emotional needs"],
+      ["primary", "Primary emotion"],
+      ["secondary", "Secondary emotion"],
+      ["instrumental", "Instrumental emotion"],
+      ["blocking", "Dissociative emotional blocking"],
+      ["trauma", "Emotional reaction to past traumatic events"],
+      ["markers", "Emotional markers — self-self / self-other relations"]
+    ] },
+    { key: "ruh", label: "Rūḥ — spirit", items: [
+      ["diseases", "Spiritual diseases of the heart (kibr, ḥasad, absent tawakkul, overemphasis on asbāb)"],
+      ["existential", "Existential crisis of faith"],
+      ["weakrel", "Weak or impaired relationship with Allah"],
+      ["projection", "Projection of intrapsychic tensions onto Allah (e.g., anger at Allah)"],
+      ["enmeshment", "Enmeshment of Allah with family (e.g., obedience equated with faith)"],
+      ["other", "Other rūḥānī concerns"]
+    ] }
+  ];
+
+  var PLAN_DOMAINS = ["ʿAql", "Nafs", "Iḥsās", "Rūḥ"];
+
+  function seedFormulation() {
+    function fig() { return { situation: "", ruh: "", aql: "", qalb: "", primary: "", secondary: "", instrumental: "", safety: "", avoidance: "", pain: "" }; }
+    return {
+      alias: "", profile: "", presenting: "", precipitating: "", history: "",
+      assess: { motivation: "", support: "", community: "", religiosity: "", rapport: "" },
+      additional: "", dsm: "",
+      elements: { aql: {}, nafs: {}, ihsas: {}, ruh: {} }, /* key → { on, note } */
+      dominant: "", narrative: "",
+      plan: PLAN_DOMAINS.map(function (d) { return { domain: d, goal: "", intervention: "", details: "" }; }),
+      prognosis: "",
+      fig: fig(), fig2: fig()
+    };
+  }
+
+  /* ---------------------------------------------------------
      Seed data
   --------------------------------------------------------- */
   function seedState() {
@@ -84,7 +149,8 @@
           { title: "Module 7 · Rūḥ — Spirit", mins: 60, done: false },
           { title: "Module 8 · Islamic Virtues", mins: 55, done: false }
         ],
-        l1Submission: null /* { name, at } — required end-of-level upload */
+        l1Formulation: seedFormulation(), /* the in-portal TIIP Case Formulation Sheet draft */
+        l1Submission: null /* { name, at } — required end-of-level submission */
       },
       certs: [
         { name: "Ethics in Teletherapy (3 CE)", cat: "ceu", credits: 3, issued: iso(today(-320)), expires: iso(today(45)) },
@@ -93,7 +159,7 @@
         { name: "ʿAqīdah Essentials — Farḍ al-ʿAyn II", cat: "fard", credits: 10, issued: iso(today(-60)), expires: iso(today(305)) }
       ],
       cases: [
-        { id: 1, alias: "Case H-30", primary: "Iḥsās", presenting: "Marital conflict; anger outbursts masking sadness from unmet connection needs.", aql: "Catastrophizing under activation; strong capacity for religious reframing.", nafs: "Avoidance (leaving home), approval-seeking, low frustration tolerance.", ruh: "Prayer soothes; weak riḍā bi-al-qaḍāʾ during conflict.", ihsas: "Secondary anger over primary sadness and helplessness.", shared: true, updated: iso(today(-5)) }
+        { id: 1, alias: "Case H-30", primary: "Iḥsās", presenting: "Marital conflict; anger outbursts masking sadness from unmet connection needs.", precipitating: "Blow-up after spouse threatened to involve both families; client left home for two nights and returned only after a relative intervened.", motivation: "Ambivalent", support: "Moderate", religiosity: "Strong", aql: "Catastrophizing under activation; strong capacity for religious reframing.", nafs: "Avoidance (leaving home), approval-seeking, low frustration tolerance.", ruh: "Prayer soothes; weak riḍā bi-al-qaḍāʾ during conflict.", ihsas: "Secondary anger over primary sadness and helplessness.", narrative: "Perceived criticism (trigger) → catastrophizing (ʿaql) → primary sadness masked by secondary anger (iḥsās) → withdrawal and leaving home (nafs) → guilt and distance from Allah (rūḥ) → further conflict, restarting the cycle.", shared: true, updated: iso(today(-5)) }
       ],
       tickets: [
         {
@@ -146,6 +212,7 @@
   catch (e) { state = seedState(); }
   if (!state.modules) state.modules = seedState().modules; /* migrate pre-pathway saves */
   if (!state.learning) state.learning = seedState().learning; /* migrate pre-learning saves */
+  if (!state.learning.l1Formulation) state.learning.l1Formulation = seedFormulation(); /* migrate pre-formulation saves */
   if (!ROLES[state.role]) state.role = "trainee";
   function save() { try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) {} }
 
@@ -428,33 +495,33 @@
           save(); renderLearning();
         });
       });
-      /* The capstone upload only applies to members actually taking the
-         level — not to Level 2+ members revisiting the material. */
+      /* The capstone formulation only applies to members actually taking
+         the level — not to Level 2+ members revisiting the material. */
       if (takingL1) {
+        var modsDone = l1.every(function (m) { return m.done; });
+        var f = state.learning.l1Formulation;
+        var doneCount = FORM_SECTIONS.filter(function (s) { return s.done(f); }).length;
         var sub = state.learning.l1Submission;
+        var capTag = sub
+          ? '<span class="tag ok">Submitted · pending supervisor review</span><span class="tag dim">' + esc(sub.name) + " · " + sub.at + "</span>"
+          : !modsDone
+            ? '<span class="tag dim" id="l1-cap-tag">🔒 Unlocks when all modules are complete</span>'
+            : '<span class="tag warn" id="l1-cap-tag">' + doneCount + " / " + FORM_SECTIONS.length + " sections complete</span>";
         document.getElementById("l1-capstone").innerHTML =
           '<div class="row" style="border-top:1px solid var(--line); padding-top:14px;"><span class="grow">' +
-          "<b>📤 Required: case conceptualization</b>" +
-          "<small>Upload your written case conceptualization at the end of Level 1 — it is reviewed by a supervisor before the level is credited.</small></span>" +
-          (sub
-            ? '<span class="tag ok">Submitted · pending review</span><span class="tag dim">' + esc(sub.name) + " · " + sub.at + '</span><button class="btn btn-ghost btn-xs" id="l1-replace">Replace</button>'
-            : '<span class="tag warn">Required</span><button class="btn btn-gold btn-xs" id="l1-upload">Upload file</button>') +
-          '<input type="file" id="l1-file" accept=".pdf,.doc,.docx" style="display:none;" />';
-        var file = document.getElementById("l1-file");
-        var trigger = document.getElementById(sub ? "l1-replace" : "l1-upload");
-        trigger.addEventListener("click", function () { file.click(); });
-        file.addEventListener("change", function () {
-          if (!file.files.length) return;
-          state.learning.l1Submission = { name: file.files[0].name, at: iso(new Date()) };
-          save(); renderLearning();
-        });
+          "<b>📤 Capstone: TIIP Case Formulation Sheet</b>" +
+          "<small>At the end of your modules, complete the Khalil Center case formulation below — every section filled, reviewed by a supervisor before Level 1 is credited.</small></span>" +
+          capTag + "</div>";
+        renderFormulation(modsDone);
       } else {
         document.getElementById("l1-capstone").innerHTML = "";
+        hideFormulationCard();
       }
     } else {
       /* wipe the content too, so nothing lingers in the hidden card */
       document.getElementById("l1-rows").innerHTML = "";
       document.getElementById("l1-capstone").innerHTML = "";
+      hideFormulationCard();
     }
 
     /* Admin — approve Level 1 access per registered Level 0 trainee */
@@ -475,6 +542,261 @@
         });
       });
     }
+  }
+
+  /* ---- Level 1 capstone: TIIP Case Formulation Sheet ---- */
+  function filled(s) { return !!(s && String(s).trim()); }
+  function fSet(obj, path, v) {
+    var ks = path.split("."), last = ks.pop(), t = obj;
+    for (var i = 0; i < ks.length; i++) t = t[ks[i]];
+    t[last] = v;
+  }
+
+  var FORM_SECTIONS = [
+    { id: "profile", title: "Patient profile / demographics", done: function (f) { return filled(f.alias) && filled(f.profile); } },
+    { id: "presenting", title: "Presenting problem / complaints", done: function (f) { return filled(f.presenting); } },
+    { id: "precipitating", title: "Precipitating event", done: function (f) { return filled(f.precipitating); } },
+    { id: "history", title: "Significant early or life experiences", done: function (f) { return filled(f.history); } },
+    { id: "assess", title: "Assessment", done: function (f) { return FORM_RATINGS.every(function (r) { return filled(f.assess[r[0]]); }); } },
+    { id: "additional", title: "Additional details", done: function (f) { return filled(f.additional); } },
+    { id: "dsm", title: "Diagnosis (DSM-5)", done: function (f) { return filled(f.dsm); } },
+    { id: "elements", title: "Diagnosis (TIIP elements)", done: function (f) {
+        return TIIP_ELEMENTS.every(function (el) {
+          return el.items.some(function (it) { var st = f.elements[el.key][it[0]]; return st && st.on; });
+        });
+      } },
+    { id: "dominant", title: "Dominant area of dysfunction", done: function (f) { return filled(f.dominant); } },
+    { id: "narrative", title: "Conceptualization (narrative form)", done: function (f) { return filled(f.narrative); } },
+    { id: "plan", title: "Therapy plan", done: function (f) { return f.plan.every(function (r) { return filled(r.goal) && filled(r.intervention); }); } },
+    { id: "prognosis", title: "Prognosis", done: function (f) { return filled(f.prognosis); } },
+    { id: "figure", title: "Figure — the vicious cycle", done: function (f) {
+        var g = f.fig;
+        return filled(g.situation) && filled(g.ruh) && filled(g.aql) && filled(g.qalb) && filled(g.primary) &&
+          (filled(g.safety) || filled(g.avoidance) || filled(g.pain));
+      } }
+  ];
+
+  function fTxt(label, path, val, ph, big) {
+    return '<div class="field"><label>' + label + "</label>" +
+      (big
+        ? '<textarea data-f="' + path + '" placeholder="' + esc(ph || "") + '">' + esc(val || "") + "</textarea>"
+        : '<input type="text" data-f="' + path + '" placeholder="' + esc(ph || "") + '" value="' + esc(val || "") + '" />') +
+      "</div>";
+  }
+  function pillGroup(name, path, opts, val) {
+    return '<div class="pill-group">' + opts.map(function (o) {
+      return '<label class="pill' + (val === o ? " sel" : "") + '"><input type="radio" name="' + name + '" data-f="' + path + '" value="' + esc(o) + '"' + (val === o ? " checked" : "") + " />" + esc(o) + "</label>";
+    }).join("") + "</div>";
+  }
+  function figHTML(prefix, g) {
+    return '<div class="fig-grid">' +
+      '<div class="fig-full">' + fTxt("Situation / trigger", prefix + ".situation", g.situation, "A specific recent event that set the cycle in motion…", true) + "</div>" +
+      fTxt("Rūḥ — spiritual symptoms", prefix + ".ruh", g.ruh, "e.g., prayer feels hollow; distance from Allah", true) +
+      fTxt("ʿAql — thoughts", prefix + ".aql", g.aql, "Automatic thoughts / appraisals in the moment", true) +
+      '<div class="fig-full fig-qalb">' + fTxt("Qalb — state of the heart", prefix + ".qalb", g.qalb, "The resultant state of the heart at the center of the cycle", true) + "</div>" +
+      '<div><span class="flabel">Iḥsās — emotions</span>' +
+        fTxt("Primary emotion", prefix + ".primary", g.primary, "") +
+        fTxt("Secondary emotion", prefix + ".secondary", g.secondary, "") +
+        fTxt("Instrumental emotion", prefix + ".instrumental", g.instrumental, "") + "</div>" +
+      '<div><span class="flabel">Nafs — behavioral inclinations</span>' +
+        fTxt("Safety behaviors", prefix + ".safety", g.safety, "") +
+        fTxt("Avoidance behaviors", prefix + ".avoidance", g.avoidance, "") +
+        fTxt("Pain / pleasure", prefix + ".pain", g.pain, "") + "</div>" +
+      "</div>";
+  }
+
+  function formSectionBody(id, f) {
+    if (id === "profile") return '<p class="hint">A concise narrative of who the patient is. Use a de-identified alias only.</p>' +
+      fTxt("Case alias (never real names)", "alias", f.alias, "e.g., Case M-42") +
+      fTxt("Profile / demographics", "profile", f.profile, "Age, gender, marital status, education, occupation, socioeconomic status…", true);
+    if (id === "presenting") return '<p class="hint">The patient’s chief complaints, in their own terms where possible.</p>' +
+      fTxt("Presenting problem / complaints", "presenting", f.presenting, "", true);
+    if (id === "precipitating") return '<p class="hint">The recent, specific incident or catalyst that triggered the current symptoms — what led the patient to seek therapy at this particular time.</p>' +
+      fTxt("Precipitating event", "precipitating", f.precipitating, "", true);
+    if (id === "history") return '<p class="hint">Upbringing; grief, loss, trauma or neglect; family of origin and structure; socioeconomic, cultural and religious background; familial mental health — linked to the current issues.</p>' +
+      fTxt("Significant early or life experiences", "history", f.history, "", true);
+    if (id === "assess") return FORM_RATINGS.map(function (r) {
+        return '<span class="flabel">' + r[1] + "</span>" + pillGroup("l1f-" + r[0], "assess." + r[0], r[2], f.assess[r[0]]);
+      }).join("");
+    if (id === "additional") return '<p class="hint">Anything else relevant to the case: current medication, alcohol/drug use, suicidal ideation, etc.</p>' +
+      fTxt("Additional details", "additional", f.additional, "", true);
+    if (id === "dsm") return fTxt("Diagnosis (DSM-5)", "dsm", f.dsm, "e.g., F41.1 Generalized Anxiety Disorder", true);
+    if (id === "elements") return '<p class="hint">Fill in every TIIP element, with a concrete example for each item you mark.</p>' +
+      TIIP_ELEMENTS.map(function (el) {
+        return '<div class="el-block"><h4>' + el.label + '</h4><div class="chkgrid">' + el.items.map(function (it) {
+          var st = f.elements[el.key][it[0]] || {};
+          return '<div class="chk-item' + (st.on ? " on" : "") + '"><label><input type="checkbox" data-el="' + el.key + ":" + it[0] + '"' + (st.on ? " checked" : "") + ' /> <span>' + it[1] + "</span></label>" +
+            '<input class="spec" type="text" placeholder="Specify with an example…" data-eln="' + el.key + ":" + it[0] + '" value="' + esc(st.note || "") + '" /></div>';
+        }).join("") + "</div></div>";
+      }).join("");
+    if (id === "dominant") return '<p class="hint">Specify only one dominant area of dysfunction.</p>' +
+      pillGroup("l1f-dominant", "dominant", PLAN_DOMAINS, f.dominant);
+    if (id === "narrative") return '<p class="hint">Weave together the complaints, early experiences, precipitating factors and areas of dysfunction from a TIIP perspective — a summary encompassing all elements, their interconnections, and the specific formation that explains the vicious cycle.</p>' +
+      fTxt("Narrative conceptualization", "narrative", f.narrative, "", true);
+    if (id === "plan") return '<p class="hint">State a therapy goal, a TIIP signature intervention, and details for each of the four domains.</p>' +
+      '<div class="ex-row"><span class="tag gold">Example</span> <b>Goal:</b> Externalize and cognitively defuse negative thinking from beliefs · <b>Intervention:</b> RIDA · <b>Details:</b> Teach the client they are not their thoughts; externalize negative thinking to Shayṭān’s running narrative.</div>' +
+      f.plan.map(function (row, i) {
+        return '<div class="plan-row"><span class="tag gold">' + row.domain + "</span>" +
+          '<div class="field"><label>Goal</label><input type="text" data-plan="' + i + ':goal" value="' + esc(row.goal) + '" /></div>' +
+          '<div class="field"><label>TIIP intervention</label><input type="text" data-plan="' + i + ':intervention" placeholder="e.g., RIDA, murāqabah, two-chair…" value="' + esc(row.intervention) + '" /></div>' +
+          '<div class="field"><label>Details</label><input type="text" data-plan="' + i + ':details" value="' + esc(row.details) + '" /></div></div>';
+      }).join("");
+    if (id === "prognosis") return '<p class="hint">Your prediction of the expected outcome of treatment — how likely is full remission?</p>' +
+      fTxt("Prognosis", "prognosis", f.prognosis, "", true);
+    if (id === "figure") return '<p class="hint">Start from a specific triggering situation, then map the thoughts, emotions, behaviors and spiritual symptoms it induced — with the qalb at the center of the cycle.</p>' +
+      figHTML("fig", f.fig) +
+      '<details style="margin-top:12px;"><summary style="cursor:pointer;font-size:.82rem;color:var(--muted);">＋ Situation 2 (optional)</summary>' + figHTML("fig2", f.fig2) + "</details>";
+    return "";
+  }
+
+  function hideFormulationCard() {
+    var card = document.getElementById("l1-formulation-card");
+    card.style.display = "none"; card.innerHTML = ""; card.removeAttribute("data-built");
+  }
+
+  function renderFormulation(modsDone) {
+    var card = document.getElementById("l1-formulation-card");
+    card.style.display = "block";
+    var f = state.learning.l1Formulation;
+    if (!modsDone) {
+      var left = state.learning.l1.filter(function (m) { return !m.done; }).length;
+      card.removeAttribute("data-built");
+      card.innerHTML = '<h3>📝 TIIP Case Formulation Sheet <span class="tag dim">🔒 Locked</span></h3>' +
+        '<p class="view-lead" style="margin-bottom:0;font-size:.85rem;">The end-of-level case conceptualization opens once every module is complete — ' + left + " module" + (left === 1 ? "" : "s") + ' to go. It follows the Khalil Center <strong>TIIP Case Formulation Sheet</strong>: no section may be left empty, and submissions are reviewed by a supervisor before Level 1 is credited.</p>';
+      return;
+    }
+
+    /* preserve which sections were open across re-renders */
+    var open = {};
+    var prev = card.querySelectorAll("details.fsec[open]");
+    for (var i = 0; i < prev.length; i++) open[prev[i].getAttribute("data-sec")] = true;
+    if (!prev.length && !card.getAttribute("data-built")) open.profile = true;
+    card.setAttribute("data-built", "1");
+
+    var doneCount = FORM_SECTIONS.filter(function (s) { return s.done(f); }).length;
+    var sub = state.learning.l1Submission;
+    card.innerHTML = '<h3>📝 TIIP Case Formulation Sheet' + (sub ? ' <span class="tag ok">Submitted</span>' : "") + "</h3>" +
+      '<p class="view-lead" style="margin-bottom:12px;font-size:.85rem;">Complete every section — <strong>no section may be left empty</strong>. Use a de-identified case alias only. Your formulation is reviewed by a supervisor before Level 1 is credited.</p>' +
+      '<div class="prog"><div class="prog-head"><b>Sections complete</b><span id="l1f-count">' + doneCount + " / " + FORM_SECTIONS.length + '</span></div><div class="bar"><i id="l1f-bar" style="width:' + Math.round(doneCount / FORM_SECTIONS.length * 100) + '%"></i></div></div>' +
+      FORM_SECTIONS.map(function (s, idx) {
+        var ok = s.done(f);
+        return '<details class="fsec" data-sec="' + s.id + '"' + (open[s.id] ? " open" : "") + ">" +
+          '<summary><span class="sec-num">' + (idx + 1) + "</span><b>" + s.title + '</b><span class="tag ' + (ok ? "ok" : "dim") + '" data-sec-tag="' + s.id + '">' + (ok ? "✓ Complete" : "To do") + "</span></summary>" +
+          '<div class="fsec-body">' + formSectionBody(s.id, f) + "</div></details>";
+      }).join("") +
+      '<div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:14px;">' +
+      '<button class="btn btn-gold" id="l1f-submit"' + (doneCount === FORM_SECTIONS.length ? "" : " disabled") + ">" + (sub ? "Resubmit for review" : "Submit for supervisor review") + "</button>" +
+      '<button class="btn btn-ghost" id="l1f-download">⬇ Download draft (.txt)</button>' +
+      '<span class="tag dim">Drafts save automatically (demo · localStorage)</span></div>' +
+      '<p class="note"><b>Submission guidelines:</b> every section completed · electronic format only (no handwriting or images) · file named <em>Name_Surname_TIIP Level 1 Case Formulation</em>. Non-compliant submissions are not evaluated.</p>';
+
+    bindFormulation(card, f);
+  }
+
+  function updateFormulationMeta(card, f) {
+    var done = 0;
+    FORM_SECTIONS.forEach(function (s) {
+      var ok = s.done(f); if (ok) done++;
+      var tag = card.querySelector('[data-sec-tag="' + s.id + '"]');
+      if (tag) { tag.className = "tag " + (ok ? "ok" : "dim"); tag.textContent = ok ? "✓ Complete" : "To do"; }
+    });
+    card.querySelector("#l1f-count").textContent = done + " / " + FORM_SECTIONS.length;
+    card.querySelector("#l1f-bar").style.width = Math.round(done / FORM_SECTIONS.length * 100) + "%";
+    card.querySelector("#l1f-submit").disabled = done !== FORM_SECTIONS.length;
+    var cap = document.getElementById("l1-cap-tag");
+    if (cap && !state.learning.l1Submission) {
+      cap.className = "tag warn";
+      cap.textContent = done + " / " + FORM_SECTIONS.length + " sections complete";
+    }
+  }
+
+  function bindFormulation(card, f) {
+    /* assigned as properties (not addEventListener) so re-renders never stack handlers */
+    card.oninput = function (e) {
+      var t = e.target;
+      var p = t.getAttribute("data-f");
+      if (p) { fSet(f, p, t.value); save(); updateFormulationMeta(card, f); return; }
+      var pl = t.getAttribute("data-plan");
+      if (pl) { var a = pl.split(":"); f.plan[Number(a[0])][a[1]] = t.value; save(); updateFormulationMeta(card, f); return; }
+      var en = t.getAttribute("data-eln");
+      if (en) {
+        var b = en.split(":");
+        var st = f.elements[b[0]][b[1]] || { on: true, note: "" };
+        st.note = t.value; f.elements[b[0]][b[1]] = st; save();
+      }
+    };
+    card.onchange = function (e) {
+      var t = e.target;
+      if (t.type === "radio" && t.getAttribute("data-f")) {
+        fSet(f, t.getAttribute("data-f"), t.value); save();
+        var group = t.closest(".pill-group");
+        if (group) group.querySelectorAll(".pill").forEach(function (p) { p.classList.remove("sel"); });
+        t.closest(".pill").classList.add("sel");
+        updateFormulationMeta(card, f);
+      }
+      if (t.type === "checkbox" && t.getAttribute("data-el")) {
+        var a = t.getAttribute("data-el").split(":");
+        var st = f.elements[a[0]][a[1]] || { on: false, note: "" };
+        st.on = t.checked; f.elements[a[0]][a[1]] = st; save();
+        t.closest(".chk-item").classList.toggle("on", t.checked);
+        updateFormulationMeta(card, f);
+      }
+    };
+    card.onclick = function (e) {
+      var id = e.target.id;
+      if (id === "l1f-submit") {
+        if (!FORM_SECTIONS.every(function (s) { return s.done(f); })) return;
+        state.learning.l1Submission = {
+          name: ROLES[state.role].name.replace(/\s+/g, "_") + "_TIIP Level 1 Case Formulation",
+          at: iso(new Date())
+        };
+        save(); renderLearning();
+      }
+      if (id === "l1f-download") downloadFormulation(f);
+    };
+  }
+
+  function downloadFormulation(f) {
+    var L = [];
+    function head(t) { L.push("", t.toUpperCase(), "-".repeat(t.length)); }
+    L.push("TIIP CASE FORMULATION SHEET", "Khalil Center | TIIP Level 1", "Candidate: " + ROLES[state.role].name);
+    head("Patient (alias)"); L.push(f.alias || "—");
+    head("Patient profile / demographics"); L.push(f.profile || "—");
+    head("Presenting problem / complaints"); L.push(f.presenting || "—");
+    head("Precipitating event"); L.push(f.precipitating || "—");
+    head("Significant early or life experiences"); L.push(f.history || "—");
+    head("Assessment");
+    FORM_RATINGS.forEach(function (r) { L.push(r[1] + ": " + (f.assess[r[0]] || "—")); });
+    head("Additional details"); L.push(f.additional || "—");
+    head("Diagnosis (DSM-5)"); L.push(f.dsm || "—");
+    head("Diagnosis (TIIP elements)");
+    TIIP_ELEMENTS.forEach(function (el) {
+      L.push(el.label + ":");
+      el.items.forEach(function (it) {
+        var st = f.elements[el.key][it[0]];
+        if (st && st.on) L.push("  [x] " + it[1] + (st.note ? " — " + st.note : ""));
+      });
+    });
+    head("Dominant area of dysfunction"); L.push(f.dominant || "—");
+    head("Conceptualization (narrative form)"); L.push(f.narrative || "—");
+    head("Therapy plan");
+    f.plan.forEach(function (r) { L.push(r.domain + " — Goal: " + (r.goal || "—") + " | Intervention: " + (r.intervention || "—") + " | Details: " + (r.details || "—")); });
+    head("Prognosis"); L.push(f.prognosis || "—");
+    [["Situation 1", f.fig], ["Situation 2", f.fig2]].forEach(function (p) {
+      var g = p[1];
+      if (p[0] === "Situation 2" && !Object.keys(g).some(function (k) { return filled(g[k]); })) return;
+      head("Figure — " + p[0]);
+      L.push("Situation/trigger: " + (g.situation || "—"),
+        "Ruh/spirit: " + (g.ruh || "—"),
+        "'Aql/thoughts: " + (g.aql || "—"),
+        "Qalb/heart: " + (g.qalb || "—"),
+        "Ihsas — primary: " + (g.primary || "—") + " | secondary: " + (g.secondary || "—") + " | instrumental: " + (g.instrumental || "—"),
+        "Nafs — safety: " + (g.safety || "—") + " | avoidance: " + (g.avoidance || "—") + " | pain/pleasure: " + (g.pain || "—"));
+    });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([L.join("\n")], { type: "text/plain" }));
+    a.download = ROLES[state.role].name.replace(/[^\w]+/g, "_") + "_TIIP_Level_1_Case_Formulation.txt";
+    a.click(); URL.revokeObjectURL(a.href);
   }
 
   /* ---- Directory ---- */
@@ -646,16 +968,22 @@
     document.getElementById("case-form").closest(".card").style.display = isSup ? "none" : "block";
     var list = isSup ? state.cases.filter(function (c) { return c.shared; }) : state.cases;
     document.getElementById("case-list").innerHTML = list.length ? list.slice().reverse().map(function (c) {
+      var snap = [c.motivation && ["Motivation", c.motivation], c.support && ["Support", c.support], c.religiosity && ["Religiosity", c.religiosity]]
+        .filter(Boolean).map(function (s) { return '<span class="tag dim">' + s[0] + ": " + esc(s[1]) + "</span>"; }).join(" ");
       return '<div class="thread"><div class="t-head"><b>' + esc(c.alias) + '</b><span>' +
         '<span class="tag gold">' + esc(c.primary) + " primary</span> " +
         (c.shared ? '<span class="tag ok">🔐 Shared · E2E</span>' : '<span class="tag dim">Private</span>') + "</span></div>" +
         '<div class="t-sub">Updated ' + c.updated + "</div>" +
+        (snap ? '<div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:7px;">' + snap + "</div>" : "") +
         '<div style="margin-top:8px;font-size:.84rem;color:var(--muted);">' +
         "<p style='margin:0 0 6px;'><strong>Presenting:</strong> " + esc(c.presenting) + "</p>" +
+        (c.precipitating ? "<p style='margin:0 0 6px;'><strong>Precipitating:</strong> " + esc(c.precipitating) + "</p>" : "") +
         "<p style='margin:0 0 4px;'><strong>ʿAql:</strong> " + esc(c.aql || "—") + "</p>" +
         "<p style='margin:0 0 4px;'><strong>Nafs:</strong> " + esc(c.nafs || "—") + "</p>" +
         "<p style='margin:0 0 4px;'><strong>Rūḥ:</strong> " + esc(c.ruh || "—") + "</p>" +
-        "<p style='margin:0;'><strong>Iḥsās:</strong> " + esc(c.ihsas || "—") + "</p></div></div>";
+        "<p style='margin:0;'><strong>Iḥsās:</strong> " + esc(c.ihsas || "—") + "</p>" +
+        (c.narrative ? "<p style='margin:6px 0 0;'><strong>Cycle:</strong> " + esc(c.narrative) + "</p>" : "") +
+        "</div></div>";
     }).join("") : '<div class="empty">' + (isSup ? "No trainee cases shared with you yet." : "No conceptualizations yet.") + "</div>";
   }
   document.getElementById("case-form").addEventListener("submit", function (e) {
@@ -665,10 +993,15 @@
       alias: document.getElementById("cf-alias").value,
       primary: document.getElementById("cf-primary").value,
       presenting: document.getElementById("cf-presenting").value,
+      precipitating: document.getElementById("cf-precip").value,
+      motivation: document.getElementById("cf-motivation").value,
+      support: document.getElementById("cf-support").value,
+      religiosity: document.getElementById("cf-religiosity").value,
       aql: document.getElementById("cf-aql").value,
       nafs: document.getElementById("cf-nafs").value,
       ruh: document.getElementById("cf-ruh").value,
       ihsas: document.getElementById("cf-ihsas").value,
+      narrative: document.getElementById("cf-narrative").value,
       shared: document.getElementById("cf-share").checked,
       updated: iso(new Date())
     });
