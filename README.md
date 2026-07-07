@@ -70,9 +70,10 @@ The prototype intentionally stops where a static site must. Production needs:
 ## Tech
 
 - Pure HTML, CSS, and vanilla JavaScript — no build step, no frameworks.
-- TIIP logo (`assets/img/tiip-logo.svg` / `tiip-mark.svg`) — a rooted tree rising
-  into a trefoil of pointed arches: leaves of growth above, roots of tradition
-  below, in the TIIP brand palette (deep navy `#1e3468`, teal `#2e847e`). The
+- TIIP logo (`assets/img/tiip-logo.svg` / `tiip-mark.svg`) — the full TIIP
+  emblem: the letters T·I·I·P grown into a rooted tree, a central ogee arch
+  sheltering leaves of growth above, roots of tradition spreading below, in
+  the TIIP brand palette (deep navy `#1e3468`, teal `#2e847e`). The
   site-wide color scheme is keyed to these two logo colors on warm cream.
 - Design system in `assets/css/style.css`; interactions in `assets/js/main.js`.
 - Provider directory data + search logic in `assets/js/directory.js`. Portrait
