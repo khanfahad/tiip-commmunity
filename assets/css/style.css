@@ -205,6 +205,11 @@ img { max-width: 100%; display: block; }
 }
 .brand b { color: var(--ink-950); font-family: var(--font-head); font-size: 1.3rem; font-weight: 600; letter-spacing: -.01em; line-height: 1; }
 .brand span { display: block; font-size: .64rem; letter-spacing: .22em; text-transform: uppercase; color: var(--ink-400); font-weight: 700; margin-top: 3px; }
+/* "Developed at Khalil Center" link stacked under the header logo */
+.brand-stack { display: flex; flex-direction: column; gap: 4px; }
+.brand-khalil { font-size: .64rem; font-weight: 700; letter-spacing: .01em; color: var(--gold-600); line-height: 1; padding-left: 59px; }
+.brand-khalil:hover { color: var(--emerald-700); }
+@media (max-width: 420px) { .brand-khalil { padding-left: 0; font-size: .58rem; } }
 
 .nav-links { display: flex; align-items: center; gap: 4px; list-style: none; margin: 0; padding: 0; }
 .nav-links a { padding: .55em .9em; border-radius: 10px; color: var(--ink-700); font-weight: 500; font-size: .96rem; transition: .2s; }
@@ -634,6 +639,17 @@ a.hero-badge:hover { color: #fff; border-color: rgba(255,255,255,.34); backgroun
 .notice p { margin: 0; }
 
 /* ---- Join (sign up / login) ---- */
+.join-layout { display: grid; grid-template-columns: 1fr 340px; gap: 40px; align-items: start; }
+.join-side { position: sticky; top: 100px; }
+@media (max-width: 900px) { .join-layout { grid-template-columns: 1fr; } .join-side { position: static; order: -1; } }
+.join-benefits { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 8px 0 34px; }
+@media (max-width: 620px) { .join-benefits { grid-template-columns: 1fr; } }
+.join-benefit { display: flex; gap: 13px; align-items: flex-start; background: rgba(255,255,255,.7); border: 1px solid var(--cream-200); border-radius: 14px; padding: 16px 18px; box-shadow: var(--shadow-xs); }
+.join-benefit .bi { width: 40px; height: 40px; border-radius: 11px; flex-shrink: 0; display: grid; place-items: center; font-size: 1.2rem; background: linear-gradient(135deg, var(--emerald-50), var(--emerald-100)); color: var(--emerald-700); box-shadow: inset 0 0 0 1px rgba(58,88,156,.14); }
+.join-benefit b { color: var(--ink-950); display: block; font-size: .98rem; }
+.join-benefit small { display: block; color: var(--ink-500); font-size: .85rem; line-height: 1.5; margin-top: 2px; }
+.join-login { border-top: 4px solid var(--emerald-600); }
+.join-login h3 { margin-top: 0; }
 .join-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 34px; align-items: start; }
 @media (max-width: 900px) { .join-grid { grid-template-columns: 1fr; } }
 .join-form .field { margin-bottom: 18px; }
@@ -681,6 +697,26 @@ a.hero-badge:hover { color: #fff; border-color: rgba(255,255,255,.34); backgroun
 .divider-motif { display:flex; align-items:center; justify-content:center; gap:16px; margin: 0 auto 8px; color: var(--gold-500); }
 .divider-motif::before, .divider-motif::after { content:""; height:1px; width:60px; background: linear-gradient(90deg, transparent, var(--gold-400)); }
 .divider-motif::after { background: linear-gradient(90deg, var(--gold-400), transparent); }
+
+/* ---- Provider directory world map ---- */
+.dir-map {
+  position: relative; overflow: hidden;
+  background: radial-gradient(120% 140% at 50% -10%, #16264e 0%, #0d1a3a 60%, #0a1226 100%);
+  border: 1px solid var(--emerald-800);
+  border-radius: var(--radius-lg); padding: 16px 16px 10px;
+  margin-bottom: 26px; box-shadow: var(--shadow-md);
+}
+.dir-map svg { width: 100%; height: auto; display: block; }
+.dir-map .land-dot { fill: rgba(143, 196, 191, .26); }
+.dir-map .mk-ring { fill: rgba(91, 166, 159, .45); transform-box: fill-box; transform-origin: center; animation: mkpulse 2.6s ease-out infinite; }
+@keyframes mkpulse { 0% { transform: scale(.5); opacity: .75; } 70% { transform: scale(2.1); opacity: 0; } 100% { opacity: 0; } }
+.dir-map .mk { stroke: #fff; stroke-width: 1.4; cursor: default; }
+.dir-map .mk-lg { fill: var(--gold-400); }
+.dir-map .mk-sm { fill: var(--gold-300); }
+.dir-map-cap { color: rgba(234, 240, 250, .82); font-size: .8rem; text-align: center; padding: 10px 6px 4px; }
+.dir-map-cap .dot-key { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--gold-400); margin: 0 6px -1px 0; box-shadow: 0 0 0 3px rgba(91,166,159,.3); }
+.dir-map-cap b { color: #fff; }
+@media (prefers-reduced-motion: reduce) { .dir-map .mk-ring { animation: none; } }
 
 /* ---- Provider directory ---- */
 .dir-panel {

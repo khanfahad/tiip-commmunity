@@ -20,7 +20,10 @@
 <body>
   <header class="site-header">
     <div class="container nav">
-      <a class="brand" href="index.html"><img class="mark" src="assets/img/tiip-mark.svg" alt="" width="46" height="46" /><span><b>TIIP</b><span>Community</span></span></a>
+      <div class="brand-stack">
+        <a class="brand" href="index.html"><img class="mark" src="assets/img/tiip-mark.svg" alt="" width="46" height="46" /><span><b>TIIP</b><span>Community</span></span></a>
+        <a class="brand-khalil" href="https://khalilcenter.com" target="_blank" rel="noopener">Developed at Khalil Center ↗</a>
+      </div>
       <button class="nav-toggle" aria-label="Toggle menu"><span></span></button>
       <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
@@ -49,39 +52,26 @@
 
   <section class="bg-white">
     <div class="container">
-      <div class="join-grid">
+      <div class="join-layout">
 
-        <!-- LEFT: benefits + login -->
-        <div class="reveal">
-          <div class="card" style="margin-bottom:26px;">
-            <p class="eyebrow" style="margin-bottom:.7em;">Already a member?</p>
-            <h3 style="margin-top:0;">Log in to your portal</h3>
-            <form class="join-form" id="login-form">
-              <div class="demo-pill">Demo only — this is a non-functional mock-up.</div>
-              <div class="field"><label for="li-email">Email</label><input type="email" id="li-email" placeholder="you@practice.com" required /></div>
-              <div class="field"><label for="li-pass">Password</label><input type="password" id="li-pass" placeholder="••••••••" required /></div>
-              <button class="btn btn-primary" type="submit">Sign In</button>
-              <p class="text-center mt-1" style="font-size:.85rem;"><a href="#register">Not a member yet? Register free ↓</a></p>
-            </form>
+        <!-- MAIN: benefits + registration -->
+        <div class="join-main reveal">
+          <p class="eyebrow">Why join?</p>
+          <h2 style="font-size:2rem;">Everything you get as a TIIP member</h2>
+          <p class="lead muted" style="font-size:1.1rem;">Registration is <strong>free and open to everyone</strong>. You begin as a TIIP Trainee at Level 0 and unlock more of the community as you progress through the certification pathway.</p>
+
+          <div class="join-benefits">
+            <div class="join-benefit"><span class="bi" aria-hidden="true">🎓</span><span><b>A free, open certification pathway</b><small>Start at Level 0 and progress through Levels 1–3 to full TIIP certification, at your own pace.</small></span></div>
+            <div class="join-benefit"><span class="bi" aria-hidden="true">🎬</span><span><b>The six-part introductory series</b><small>Watch the full Level 0 training series from Khalil Center the moment you register.</small></span></div>
+            <div class="join-benefit"><span class="bi" aria-hidden="true">🗺</span><span><b>Provider directory listing</b><small>From Level 1 upward, be found by people looking for faith-rooted care near them.</small></span></div>
+            <div class="join-benefit"><span class="bi" aria-hidden="true">🧠</span><span><b>Case consultation &amp; Scholar Desk</b><small>Confidential peer review and scholarly guidance on complex cases as you advance.</small></span></div>
+            <div class="join-benefit"><span class="bi" aria-hidden="true">💬</span><span><b>Peer forums &amp; events</b><small>Join the Tazkiyah &amp; peer-support boards, RSVP to events, and propose your own.</small></span></div>
+            <div class="join-benefit"><span class="bi" aria-hidden="true">🗄</span><span><b>Compliance &amp; resource vaults</b><small>Track CEUs and farḍ al-ʿayn, and use multilingual clinical worksheets and protocols.</small></span></div>
           </div>
 
-          <p class="eyebrow">Why join?</p>
-          <h2 style="font-size:1.8rem;">The benefits of membership</h2>
-          <ul class="benefit-list mt-1">
-            <li><span class="bi" aria-hidden="true">🎓</span><span><b>A free, open certification pathway</b><small>Start at Level 0 and progress through Levels 1–3 to full TIIP certification, at your own pace.</small></span></li>
-            <li><span class="bi" aria-hidden="true">🎬</span><span><b>The six-part introductory series</b><small>Watch the full Level 0 training series from Khalil Center the moment you register.</small></span></li>
-            <li><span class="bi" aria-hidden="true">🗺</span><span><b>Provider directory listing</b><small>From Level 1 upward, be found by people looking for faith-rooted care near them.</small></span></li>
-            <li><span class="bi" aria-hidden="true">🧠</span><span><b>Case consultation &amp; Scholar Desk</b><small>Confidential peer review and scholarly guidance on complex cases as you advance.</small></span></li>
-            <li><span class="bi" aria-hidden="true">💬</span><span><b>Peer forums &amp; events</b><small>Join the Tazkiyah &amp; peer-support boards, RSVP to events, and propose your own.</small></span></li>
-            <li><span class="bi" aria-hidden="true">🗄</span><span><b>Compliance &amp; resource vaults</b><small>Track CEUs and farḍ al-ʿayn, and use multilingual clinical worksheets and protocols.</small></span></li>
-          </ul>
-        </div>
-
-        <!-- RIGHT: registration -->
-        <div class="reveal" id="register">
-          <div class="card">
-            <p class="eyebrow" style="margin-bottom:.7em;">New here</p>
-            <h3 style="margin-top:0;">Create your free account</h3>
+          <div class="card" id="register">
+            <p class="eyebrow" style="margin-bottom:.7em;">Register free</p>
+            <h3 style="margin-top:0;font-size:1.5rem;">Create your account</h3>
             <p class="muted" style="font-size:.92rem;margin-top:-4px;">Everyone starts as a <strong>TIIP Trainee — Level 0</strong>. If you already hold a completed level, upload your certificate below and we'll credit it after review.</p>
 
             <div class="notice warn" style="margin-bottom:20px;">
@@ -113,12 +103,27 @@
               </div>
 
               <button class="btn btn-gold" type="submit">Register — Start free</button>
-              <p class="text-center mt-1" style="font-size:.85rem;">By registering you agree to the community guidelines. Already a member? <a href="#login-form">Sign in ↑</a></p>
+              <p class="text-center mt-1" style="font-size:.85rem;">By registering you agree to the community guidelines.</p>
             </form>
           </div>
-        </div>
+        </div><!-- /.join-main -->
 
-      </div>
+        <!-- SIDE: login box -->
+        <aside class="join-side reveal">
+          <div class="card join-login">
+            <p class="eyebrow" style="margin-bottom:.7em;">Already a member?</p>
+            <h3>Log in</h3>
+            <form class="join-form" id="login-form">
+              <div class="demo-pill">Demo only — this is a non-functional mock-up.</div>
+              <div class="field"><label for="li-email">Email</label><input type="email" id="li-email" placeholder="you@practice.com" required /></div>
+              <div class="field"><label for="li-pass">Password</label><input type="password" id="li-pass" placeholder="••••••••" required /></div>
+              <button class="btn btn-primary" type="submit">Sign In</button>
+              <p class="text-center mt-1" style="font-size:.82rem;"><a href="#register">Not a member yet? Register ↓</a></p>
+            </form>
+          </div>
+        </aside>
+
+      </div><!-- /.join-layout -->
     </div>
   </section>
 
