@@ -292,6 +292,7 @@ strong { color: var(--cream); }
   background: rgba(46, 132, 126, 0.16); color: var(--teal-300);
   font-size: 0.64rem; font-weight: 650; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
+.cal-cell .ev.member { background: rgba(58, 88, 156, 0.16); color: var(--gold-400); }
 @media (max-width: 720px) { .cal-cell { min-height: 44px; } .cal-cell .ev { display: none; } .cal-cell.has-ev::after { content: ""; position: absolute; bottom: 5px; left: 50%; margin-left: -2.5px; width: 5px; height: 5px; border-radius: 50%; background: var(--teal-400); } }
 
 /* Certification pathway stepper */
@@ -351,6 +352,26 @@ strong { color: var(--cream); }
   margin: 14px 0 0;
 }
 .note b { color: var(--gold-400); }
+
+/* "Developed at Khalil Center" link under the sidebar logo */
+.p-side .dev-at-portal { display: block; padding: 0 18px 14px; margin-top: -6px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.02em; color: var(--teal-400); }
+.p-side .dev-at-portal:hover { color: var(--gold-400); }
+
+/* Level 0 practice-scope notice */
+.scope-note {
+  display: flex; gap: 12px; align-items: flex-start;
+  border: 1px solid rgba(58, 88, 156, 0.3); border-left: 3px solid var(--gold-500);
+  background: rgba(58, 88, 156, 0.06); border-radius: 12px;
+  padding: 14px 16px; font-size: 0.86rem; color: var(--cream-dim); margin-bottom: 18px;
+}
+.scope-note .si { font-size: 1.2rem; line-height: 1; flex-shrink: 0; }
+.scope-note p { margin: 0; }
+.scope-note strong { color: var(--cream); }
+
+/* Admin: sub-heading + invite status */
+.admin-subhead { font-size: 0.8rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin: 20px 0 8px; }
+.invite-sent { font-size: 0.82rem; color: var(--green-400); margin: 10px 0 0; }
+.admin-search { margin: 6px 0 10px; }
 
 /* ---------------------------------------------------------
    Level 1 capstone — TIIP Case Formulation Sheet

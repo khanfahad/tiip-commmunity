@@ -28,8 +28,9 @@
         <li><a href="community.html">Community</a></li>
         <li><a href="index.html#directory">Find a Provider</a></li>
         <li><a href="events.html">Events</a></li>
+        <li><a href="trainings.html">TIIP Trainings</a></li>
         <li><a href="research.html">Research</a></li>
-        <li class="nav-cta"><a class="btn btn-primary btn-sm" href="portal.html">Member Portal</a></li>
+        <li class="nav-cta"><a class="btn btn-primary btn-sm" href="join.html">Sign Up/Login</a></li>
       </ul>
     </div>
   </header>
@@ -70,9 +71,15 @@
       <div class="section-head reveal">
         <p class="eyebrow">Mark your calendar</p>
         <h2>Upcoming events</h2>
-        <p class="lead muted">Filter by type to find what fits your path.</p>
+        <p class="lead muted">Switch between a list and a calendar view, and filter by type to find what fits your path.</p>
       </div>
 
+      <div class="ev-viewtoggle reveal">
+        <button class="chip active" type="button" data-ev-view="list">☰ List</button>
+        <button class="chip" type="button" data-ev-view="calendar">▦ Calendar</button>
+      </div>
+
+      <div id="ev-list-view">
       <div class="chips reveal" data-filter-group>
         <button class="chip active" data-filter="all">All</button>
         <button class="chip" data-filter="training">Training</button>
@@ -116,6 +123,9 @@
         <div class="ev-info"><h4>Webinar: Research Methods in Integrated Psychotherapy</h4><div class="ev-meta"><span>🟢 Online · 60 min</span><span>🆓 Open to all</span></div></div>
         <div class="ev-cta"><a class="btn btn-outline btn-sm" href="#" data-open-login>Register</a></div>
       </div>
+      </div><!-- /#ev-list-view -->
+
+      <div id="ev-calendar-view" class="reveal" hidden></div>
     </div>
   </section>
 
@@ -136,9 +146,10 @@
       <div class="footer-grid">
         <div class="footer-brand">
           <a href="index.html" aria-label="TIIP Community home"><img class="logo-full" src="assets/img/tiip-logo-light.svg" alt="TIIP — Traditional Islamically Integrated Psychotherapy" width="320" height="74" /></a>
+          <a class="dev-at" href="https://khalilcenter.com" target="_blank" rel="noopener">Developed at Khalil Center ↗</a>
           <p class="mt-1">A professional home for clinicians practicing Traditional Islamically Integrated Psychotherapy.</p>
         </div>
-        <div><h4>Explore</h4><a href="model.html">The Model</a><a href="community.html">Community</a><a href="portal.html#learning">Member Resources</a><a href="research.html">Research</a></div>
+        <div><h4>Explore</h4><a href="model.html">The Model</a><a href="community.html">Community</a><a href="trainings.html">TIIP Trainings</a><a href="portal.html#learning">Member Resources</a><a href="research.html">Research</a></div>
         <div><h4>Participate</h4><a href="events.html">Events</a><a href="community.html">Case Consultation</a><a href="#" data-open-login>Member Login</a></div>
         <div><h4>Connect</h4><a href="mailto:hello@tiip.community">hello@tiip.community</a><a href="#">Newsletter</a><a href="#">Contact</a></div>
       </div>
@@ -160,5 +171,6 @@
   </div>
 
   <script src="assets/js/main.js?v=2"></script>
+  <script src="assets/js/events.js?v=2"></script>
 </body>
 </html>

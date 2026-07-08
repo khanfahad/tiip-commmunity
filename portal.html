@@ -23,6 +23,7 @@
       <img class="logo-full" src="assets/img/tiip-logo.svg" alt="TIIP — Traditional Islamically Integrated Psychotherapy" width="216" height="50" />
       <small>Member portal</small>
     </a>
+    <a class="dev-at-portal" href="https://khalilcenter.com" target="_blank" rel="noopener">Developed at Khalil Center ↗</a>
     <nav class="p-nav" id="p-nav">
       <button data-view="dashboard" data-roles="all"><span class="ico">◈</span> Dashboard</button>
 
@@ -83,6 +84,10 @@
       <!-- ==== DASHBOARD ==== -->
       <section class="view" data-view="dashboard">
         <p class="view-lead" id="dash-lead"></p>
+        <div class="scope-note" id="l0-scope" style="display:none;">
+          <span class="si" aria-hidden="true">⚖️</span>
+          <p><strong>A note on scope.</strong> TIIP training is intended for those who are legally and ethically permitted to practice psychotherapy or mental-health counseling in their own jurisdiction. It is <strong>not</strong> a qualification for life-coaching, imam or chaplaincy guidance, or other non-clinical roles, and it does not by itself authorize anyone to practice psychotherapy.</p>
+        </div>
         <div class="grid-4" id="dash-stats"></div>
         <div class="grid-2" style="margin-top:16px;">
           <div class="card"><h3>📌 Quick actions</h3><div id="dash-actions"></div></div>
@@ -90,8 +95,36 @@
         </div>
         <div class="card" id="dash-admin-card" style="margin-top:16px; display:none;">
           <h3>👥 User &amp; role administration <span class="tag gold">Admin only</span></h3>
-          <p class="view-lead" style="margin-bottom:10px;">Role-based access control: four permission levels govern every module. Change a member's role below (demo only).</p>
+          <p class="view-lead" style="margin-bottom:10px;">Role-based access control governs every module. Approve members' level-change requests, search for a member to change their level, or invite someone who isn't registered yet (demo only).</p>
+
+          <div class="admin-subhead">Level-change requests</div>
+          <div class="rows" id="admin-requests"></div>
+
+          <div class="admin-subhead">All members</div>
+          <div class="field admin-search">
+            <label for="admin-user-search">Find a member by name</label>
+            <input type="search" id="admin-user-search" placeholder="Type a name to find someone…" />
+          </div>
           <div class="rows" id="admin-users"></div>
+          <div id="admin-no-match" style="display:none;"></div>
+
+          <div class="admin-subhead">Invite a new member</div>
+          <p class="view-lead" style="margin-bottom:10px;font-size:.85rem;">Not registered yet? Invite them by email to join the TIIP community at a starting level.</p>
+          <form id="admin-invite-form">
+            <div class="field-row">
+              <div class="field"><label>Email address</label><input type="email" id="ai-email" placeholder="name@example.com" required /></div>
+              <div class="field"><label>Invite at level</label><select id="ai-level">
+                <option value="TIIP Trainee (Level 0)">TIIP Trainee (Level 0)</option>
+                <option value="Trainee (Level I)">Trainee (Level I)</option>
+                <option value="Trainee (Level II)">Trainee (Level II)</option>
+                <option value="Trainee (Level III)">Trainee (Level III)</option>
+                <option value="Certified Practitioner">Certified Practitioner</option>
+                <option value="Supervisor / Scholar">Supervisor / Scholar</option>
+              </select></div>
+            </div>
+            <button class="btn btn-gold btn-xs" type="submit">Send invitation</button>
+          </form>
+          <div class="rows" id="admin-invites"></div>
         </div>
       </section>
 
@@ -130,9 +163,10 @@
 
       <!-- ==== DIRECTORY ==== -->
       <section class="view" data-view="directory">
-        <p class="view-lead">Peer-to-peer networking and patient referrals across the global TIIP network. Filter by language, timezone, clinical focus, and licensing boundaries (PSYPACT and international equivalents).</p>
+        <p class="view-lead">Peer-to-peer networking and patient referrals across the global TIIP network. Unlike the public directory, this members-only directory includes clinicians at <strong>every level, including Levels 1 and 2</strong>. Filter by TIIP level, language, timezone, clinical focus, and licensing boundaries (PSYPACT and international equivalents).</p>
         <div class="filters">
           <div class="field wide"><label>Search</label><input type="search" id="dir-q" placeholder="Name, focus, city…" /></div>
+          <div class="field"><label>TIIP level</label><select id="dir-level"><option value="">Any level</option><option value="supervisor">Supervisor</option><option value="certified">Fully certified</option><option value="level3">Level 3</option><option value="level2">Level 2</option><option value="level1">Level 1</option></select></div>
           <div class="field"><label>Language</label><select id="dir-lang"><option value="">Any</option><option>English</option><option>Arabic</option><option>Urdu</option><option>Turkish</option></select></div>
           <div class="field"><label>Timezone region</label><select id="dir-tz"><option value="">Any</option><option>Americas</option><option>Europe / Africa</option><option>Middle East</option><option>South Asia</option><option>SE Asia / Pacific</option></select></div>
           <div class="field"><label>Clinical focus</label><select id="dir-focus"><option value="">Any</option><option>Anxiety &amp; mood</option><option>Marital &amp; family</option><option>Trauma</option><option>OCD / Waswasah</option><option>Youth &amp; identity</option><option>Addictions</option></select></div>
@@ -350,6 +384,37 @@
             <div class="cal-grid" id="cal-grid"></div>
           </div>
           <div class="card" style="margin-top:0;"><h3>📅 Upcoming</h3><div id="event-rows"></div></div>
+        </div>
+
+        <div class="grid-2" style="margin-top:16px; align-items:start;">
+          <div class="card" id="propose-event-card">
+            <h3>➕ Propose an event</h3>
+            <p class="view-lead" id="propose-note" style="margin-bottom:12px;font-size:.85rem;">Level 1 members and above can add events to the community calendar. Every submission is reviewed by an admin before it is listed.</p>
+            <form id="event-form">
+              <div class="field"><label>Event title</label><input type="text" id="ef-title" required placeholder="e.g., Local halaqah on grief &amp; the heart" /></div>
+              <div class="field-row">
+                <div class="field"><label>Date</label><input type="date" id="ef-date" required /></div>
+                <div class="field"><label>Start time</label><input type="time" id="ef-time" value="18:00" /></div>
+              </div>
+              <div class="field-row">
+                <div class="field"><label>Duration (min)</label><input type="number" id="ef-mins" min="15" step="15" value="90" /></div>
+                <div class="field"><label>Type</label><select id="ef-mode"><option>Webinar</option><option>Workshop</option><option>Clinic</option><option>Community</option><option>Retreat</option><option>Practicum</option></select></div>
+              </div>
+              <div class="field"><label>Joining / info link</label><input type="url" id="ef-link" placeholder="https://…" /></div>
+              <button class="btn btn-gold" type="submit">Submit for approval</button>
+            </form>
+            <div class="locked-note" id="propose-locked" style="display:none;">Proposing events requires <strong>Level 1</strong> or above. Enroll in Level 1 to add events to the community calendar.</div>
+          </div>
+          <div class="card" id="my-events-card">
+            <h3>🗓 My submissions</h3>
+            <div class="rows" id="my-event-rows"></div>
+          </div>
+        </div>
+
+        <div class="card" id="event-admin-card" style="display:none; margin-top:16px;">
+          <h3>✅ Event submissions awaiting approval <span class="tag gold">Admin only</span></h3>
+          <p class="view-lead" style="margin-bottom:10px;font-size:.85rem;">Member-submitted events are not listed on the calendar until approved here.</p>
+          <div class="rows" id="event-approval-rows"></div>
         </div>
       </section>
 

@@ -177,6 +177,12 @@
         }
       ],
       rsvps: {},
+      /* Member-submitted events awaiting or cleared by admin approval.
+         Approved entries appear on the calendar alongside official EVENTS. */
+      memberEvents: [
+        { id: "me-seed1", title: "Community Halaqah: Grief & the Heart", date: iso(today(9)), time: "18:30", mins: 90, mode: "Community", link: "https://meet.example.org/halaqah-grief", by: "Amina Yusuf", status: "approved" },
+        { id: "me-seed2", title: "Peer Practicum: Two-Chair Technique", date: iso(today(15)), time: "17:00", mins: 120, mode: "Practicum", link: "https://meet.example.org/two-chair", by: "Dr. Bilal Rahman", status: "pending" }
+      ],
       pubs: [
         { title: "TIIP for adjustment disorder with anger features: a case series", type: "Case study", stage: "Internal review", authors: "Yusuf, Qadri", updated: iso(today(-8)) },
         { title: "Validation of a murāqabah-based emotion regulation protocol", type: "Empirical study", stage: "Draft", authors: "Rahman et al.", updated: iso(today(-19)) }
@@ -213,6 +219,7 @@
   if (!state.modules) state.modules = seedState().modules; /* migrate pre-pathway saves */
   if (!state.learning) state.learning = seedState().learning; /* migrate pre-learning saves */
   if (!state.learning.l1Formulation) state.learning.l1Formulation = seedFormulation(); /* migrate pre-formulation saves */
+  if (!state.memberEvents) state.memberEvents = seedState().memberEvents; /* migrate pre-member-events saves */
   if (!ROLES[state.role]) state.role = "trainee";
   function save() { try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) {} }
 
@@ -231,8 +238,23 @@
     { name: "Dr. Fatima Malik", cred: "PhD · Certified", city: "Karachi, PK", region: "South Asia", tz: "Asia/Karachi", langs: ["Urdu", "English"], focus: ["Marital & family", "Addictions"], lic: "International", accepting: true },
     { name: "Nur Aisyah Binti Ahmad", cred: "MClinPsy · Certified", city: "Kuala Lumpur, MY", region: "SE Asia / Pacific", tz: "Asia/Kuala_Lumpur", langs: ["English"], focus: ["Youth & identity", "Anxiety & mood"], lic: "International", accepting: true },
     { name: "Dr. Kemal Demir", cred: "Clin. Psych · Supervisor", city: "Ankara, TR", region: "Europe / Africa", tz: "Europe/Istanbul", langs: ["Turkish"], focus: ["Trauma", "Marital & family"], lic: "International", accepting: true },
-    { name: "Sarah Abdullah", cred: "LCSW · Certified", city: "New Jersey, US", region: "Americas", tz: "America/New_York", langs: ["English", "Arabic"], focus: ["OCD / Waswasah", "Youth & identity"], lic: "US state-specific", accepting: true }
+    { name: "Sarah Abdullah", cred: "LCSW · Certified", city: "New Jersey, US", region: "Americas", tz: "America/New_York", langs: ["English", "Arabic"], focus: ["OCD / Waswasah", "Youth & identity"], lic: "US state-specific", accepting: true },
+    { name: "Nadia Bouchard", cred: "RP (Qualifying) · Trainee I", city: "Montreal, CA", region: "Americas", tz: "America/Toronto", langs: ["English", "French"], focus: ["Youth & identity", "Anxiety & mood"], lic: "Canada", accepting: true, level: "level1" },
+    { name: "Zayd Ibrahim", cred: "Provisional Psychologist · Trainee II", city: "Melbourne, AU", region: "SE Asia / Pacific", tz: "Australia/Melbourne", langs: ["English", "Arabic"], focus: ["Anxiety & mood", "Youth & identity"], lic: "International", accepting: false, level: "level2" }
   ];
+
+  /* TIIP level per listing — inferred from the credential line unless set.
+     Unlike the public directory, the members-only directory lists every
+     level, including Levels 1 and 2. */
+  var DIR_LEVELS = { supervisor: "Supervisor", certified: "Fully certified", level3: "Level 3", level2: "Level 2", level1: "Level 1" };
+  DIRECTORY.forEach(function (d) {
+    if (d.level) return;
+    if (/Supervisor/.test(d.cred)) d.level = "supervisor";
+    else if (/Trainee III/.test(d.cred)) d.level = "level3";
+    else if (/Trainee II/.test(d.cred)) d.level = "level2";
+    else if (/Trainee I/.test(d.cred)) d.level = "level1";
+    else d.level = "certified";
+  });
 
   var RESOURCES = [
     { title: "TIIP Psychospiritual Intake Form", type: "Intake form", lang: "English", tags: ["assessment", "intake"], v: "3.2", updated: iso(today(-30)), history: "v3.2 — added rūḥānī functioning scale · v3.1 — consent language · v3.0 — full TIIP domain restructure" },
@@ -266,6 +288,16 @@
     { name: "Dr. Hana Qadri", role: "Supervisor / Scholar" },
     { name: "Shaykh Idris Kamal", role: "Supervisor / Scholar" }
   ];
+
+  /* Members' pending requests to change their TIIP level, awaiting admin
+     approval. Demo-only (in-memory, resets on reload). */
+  var LEVEL_REQUESTS = [
+    { name: "Hafsa Karim", from: "TIIP Trainee (Level 0)", to: "Trainee (Level I)", note: "Completed Foundations of TIIP", cert: "Hafsa_Karim_Level1_certificate.pdf" },
+    { name: "Yusuf Chaudhry", from: "Trainee (Level II)", to: "Trainee (Level III)", note: "Finished Level 2 applied-skills assessment", cert: "Yusuf_Chaudhry_Level2_certificate.pdf" },
+    { name: "Amina Yusuf", from: "Trainee (Level III)", to: "Certified Practitioner", note: "200 supervised hours & 10 cases approved", cert: "Amina_Yusuf_Level3_completion.pdf" }
+  ];
+  /* Admin-issued invitations to unregistered people (demo-only). */
+  var INVITES = [];
 
   /* ---------------------------------------------------------
      Shell: role switching, nav, router
@@ -343,6 +375,17 @@
     document.getElementById("side-scrim").classList.remove("show");
   });
 
+  /* Admin member-search + invitation bindings (elements always present) */
+  var adminSearchEl = document.getElementById("admin-user-search");
+  if (adminSearchEl) adminSearchEl.addEventListener("input", function () { renderAdminUsers(adminSearchEl.value); });
+  var inviteFormEl = document.getElementById("admin-invite-form");
+  if (inviteFormEl) inviteFormEl.addEventListener("submit", function (e) {
+    e.preventDefault();
+    INVITES.push({ email: document.getElementById("ai-email").value, level: document.getElementById("ai-level").value });
+    e.target.reset();
+    renderAdmin();
+  });
+
   /* ---------------------------------------------------------
      Renderers
   --------------------------------------------------------- */
@@ -380,6 +423,8 @@
       admin: "As-salāmu ʿalaykum, Musa. Platform health and member administration."
     };
     document.getElementById("dash-lead").textContent = leads[state.role];
+    /* Level 0 practice-scope notice */
+    document.getElementById("l0-scope").style.display = state.role === "explorer" ? "flex" : "none";
 
     var tiles;
     if (state.role === "explorer") {
@@ -430,23 +475,76 @@
       b.addEventListener("click", function () { show(b.getAttribute("data-go")); });
     });
 
-    document.getElementById("dash-events").innerHTML = EVENTS.slice(0, 3).map(function (ev) {
+    document.getElementById("dash-events").innerHTML = allEvents().slice(0, 3).map(function (ev) {
       return '<div class="row"><span class="grow"><b>' + esc(ev.title) + "</b><small>" + fmtLocal(ev.when) + '</small></span><span class="tag">' + ev.mode + "</span></div>";
     }).join("");
 
     var adminCard = document.getElementById("dash-admin-card");
     adminCard.style.display = state.role === "admin" ? "block" : "none";
-    if (state.role === "admin") {
-      document.getElementById("admin-users").innerHTML = ADMIN_USERS.map(function (u, i) {
-        return '<div class="row"><span class="grow"><b>' + esc(u.name) + '</b></span>' +
-          '<select class="admin-role" data-i="' + i + '" style="background:var(--bg-2);color:var(--cream);border:1px solid var(--line);border-radius:8px;padding:5px 8px;font-size:.78rem;">' +
-          ["TIIP Trainee (Level 0)", "Trainee (Level I)", "Trainee (Level II)", "Trainee (Level III)", "Certified Practitioner", "Supervisor / Scholar", "Admin"].map(function (r) {
-            return "<option" + (r === u.role ? " selected" : "") + ">" + r + "</option>";
-          }).join("") + "</select></div>";
-      }).join("");
-      document.querySelectorAll(".admin-role").forEach(function (sel) {
-        sel.addEventListener("change", function () { ADMIN_USERS[Number(sel.getAttribute("data-i"))].role = sel.value; });
+    if (state.role === "admin") renderAdmin();
+  }
+
+  /* ---- Admin: level-change requests, member search, invitations ---- */
+  var ROLE_OPTIONS = ["TIIP Trainee (Level 0)", "Trainee (Level I)", "Trainee (Level II)", "Trainee (Level III)", "Certified Practitioner", "Supervisor / Scholar", "Admin"];
+
+  function renderAdmin() {
+    /* 1) Pending level-change requests */
+    var reqEl = document.getElementById("admin-requests");
+    reqEl.innerHTML = LEVEL_REQUESTS.length ? LEVEL_REQUESTS.map(function (r, i) {
+      return '<div class="row"><span class="grow"><b>' + esc(r.name) + '</b><small>' + esc(r.from) + " → " + esc(r.to) +
+        " · " + esc(r.note) + ' · 📎 <span class="tag dim" style="font-size:.6rem;">' + esc(r.cert) + "</span></small></span>" +
+        '<button class="btn btn-gold btn-xs" data-req-ok="' + i + '">Approve</button>' +
+        '<button class="btn btn-ghost btn-xs" data-req-no="' + i + '">Deny</button></div>';
+    }).join("") : '<div class="empty">No level-change requests pending. 🌙</div>';
+    reqEl.querySelectorAll("[data-req-ok]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var r = LEVEL_REQUESTS[Number(b.getAttribute("data-req-ok"))];
+        var u = ADMIN_USERS.find(function (x) { return x.name === r.name; });
+        if (u) u.role = r.to; else ADMIN_USERS.push({ name: r.name, role: r.to });
+        LEVEL_REQUESTS.splice(Number(b.getAttribute("data-req-ok")), 1);
+        renderAdmin();
       });
+    });
+    reqEl.querySelectorAll("[data-req-no]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        LEVEL_REQUESTS.splice(Number(b.getAttribute("data-req-no")), 1);
+        renderAdmin();
+      });
+    });
+
+    /* 2) Member list with name search */
+    renderAdminUsers(document.getElementById("admin-user-search").value || "");
+
+    /* 3) Invitations already sent this session */
+    var invEl = document.getElementById("admin-invites");
+    invEl.innerHTML = INVITES.map(function (iv) {
+      return '<div class="row"><span class="grow"><b>✉ ' + esc(iv.email) + "</b><small>Invited as " + esc(iv.level) + '</small></span><span class="tag warn">Invitation sent · pending</span></div>';
+    }).join("");
+  }
+
+  function renderAdminUsers(filter) {
+    var q = filter.trim().toLowerCase();
+    var matched = ADMIN_USERS.filter(function (u) { return !q || u.name.toLowerCase().indexOf(q) !== -1; });
+    var usersEl = document.getElementById("admin-users");
+    usersEl.innerHTML = matched.map(function (u) {
+      var idx = ADMIN_USERS.indexOf(u);
+      return '<div class="row"><span class="grow"><b>' + esc(u.name) + "</b>" + (u.city ? "<small>" + esc(u.city) + "</small>" : "") + "</span>" +
+        '<select class="admin-role" data-i="' + idx + '" style="background:var(--bg-2);color:var(--cream);border:1px solid var(--line);border-radius:8px;padding:5px 8px;font-size:.78rem;">' +
+        ROLE_OPTIONS.map(function (r) { return "<option" + (r === u.role ? " selected" : "") + ">" + r + "</option>"; }).join("") +
+        "</select></div>";
+    }).join("");
+    usersEl.querySelectorAll(".admin-role").forEach(function (sel) {
+      sel.addEventListener("change", function () { ADMIN_USERS[Number(sel.getAttribute("data-i"))].role = sel.value; });
+    });
+
+    /* If a search finds nobody, prompt the admin to invite them instead. */
+    var noMatch = document.getElementById("admin-no-match");
+    if (q && !matched.length) {
+      noMatch.style.display = "block";
+      noMatch.innerHTML = '<div class="empty">No member matches “' + esc(filter.trim()) + '”. They may not be registered yet — invite them by email below.</div>';
+    } else {
+      noMatch.style.display = "none";
+      noMatch.innerHTML = "";
     }
   }
 
@@ -802,12 +900,14 @@
   /* ---- Directory ---- */
   function renderDirectory() {
     var q = (document.getElementById("dir-q").value || "").toLowerCase();
+    var lvl = document.getElementById("dir-level").value;
     var lang = document.getElementById("dir-lang").value;
     var tz = document.getElementById("dir-tz").value;
     var focus = document.getElementById("dir-focus").value;
     var lic = document.getElementById("dir-lic").value;
     var list = DIRECTORY.filter(function (d) {
       if (q && (d.name + " " + d.city + " " + d.focus.join(" ") + " " + d.cred).toLowerCase().indexOf(q) === -1) return false;
+      if (lvl && d.level !== lvl) return false;
       if (lang && d.langs.indexOf(lang) === -1) return false;
       if (tz && d.region !== tz) return false;
       if (focus && d.focus.indexOf(focus) === -1) return false;
@@ -818,14 +918,15 @@
     document.getElementById("dir-grid").innerHTML = list.map(function (d) {
       var localTime = new Intl.DateTimeFormat([], { hour: "numeric", minute: "2-digit", timeZone: d.tz }).format(new Date());
       return '<div class="dir-card"><div class="head"><span class="avatar">' + initials(d.name) + '</span><span><b>' + esc(d.name) + "</b><small>" + esc(d.cred) + " · " + esc(d.city) + '</small></span></div>' +
-        '<div class="tags">' + d.langs.map(function (l) { return '<span class="tag">' + l + "</span>"; }).join("") +
+        '<div class="tags"><span class="tag warn">' + DIR_LEVELS[d.level] + "</span>" +
+        d.langs.map(function (l) { return '<span class="tag">' + l + "</span>"; }).join("") +
         d.focus.map(function (f) { return '<span class="tag gold">' + f + "</span>"; }).join("") +
         '<span class="tag dim">' + d.lic + "</span></div>" +
         '<div class="foot"><span>🕐 ' + localTime + " local</span>" +
         (d.accepting ? '<span class="tag ok">Accepting referrals</span>' : '<span class="tag dim">Waitlist</span>') + "</div></div>";
     }).join("");
   }
-  ["dir-q", "dir-lang", "dir-tz", "dir-focus", "dir-lic"].forEach(function (id) {
+  ["dir-q", "dir-level", "dir-lang", "dir-tz", "dir-focus", "dir-lic"].forEach(function (id) {
     document.getElementById(id).addEventListener("input", renderDirectory);
   });
 
@@ -1116,28 +1217,44 @@
   function fmtLocal(d) {
     return new Intl.DateTimeFormat([], { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }).format(d);
   }
+  /* Member submissions store a date (+optional time) string; build a local Date. */
+  function parseLocalDT(dateStr, timeStr) {
+    var d = (dateStr || "").split("-");
+    var t = (timeStr || "18:00").split(":");
+    return new Date(Number(d[0]), Number(d[1]) - 1, Number(d[2]), Number(t[0] || 18), Number(t[1] || 0));
+  }
+  function approvedMemberEvents() {
+    return state.memberEvents.filter(function (e) { return e.status === "approved"; }).map(function (e) {
+      return { id: e.id, title: e.title, when: parseLocalDT(e.date, e.time), mins: e.mins, mode: e.mode, link: e.link, member: true, by: e.by };
+    });
+  }
+  /* Official events plus admin-approved member submissions, sorted by date. */
+  function allEvents() {
+    return EVENTS.concat(approvedMemberEvents()).sort(function (a, b) { return a.when - b.when; });
+  }
   function renderEvents() {
+    var ALL = allEvents();
     var tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "your local timezone";
     document.getElementById("tz-label").textContent = tz.replace(/_/g, " ");
     var now = new Date();
     var y = now.getFullYear(), m = now.getMonth();
     document.getElementById("cal-title").textContent = new Intl.DateTimeFormat([], { month: "long", year: "numeric" }).format(now);
-    document.getElementById("cal-count").textContent = EVENTS.length + " events";
+    document.getElementById("cal-count").textContent = ALL.length + " events";
     var first = new Date(y, m, 1);
     var startDow = first.getDay();
     var daysIn = new Date(y, m + 1, 0).getDate();
     var html = ["S", "M", "T", "W", "T", "F", "S"].map(function (d) { return '<div class="dow">' + d + "</div>"; }).join("");
     for (var i = 0; i < startDow; i++) html += '<div class="cal-cell"></div>';
     for (var d = 1; d <= daysIn; d++) {
-      var dayEvents = EVENTS.filter(function (ev) { return ev.when.getFullYear() === y && ev.when.getMonth() === m && ev.when.getDate() === d; });
+      var dayEvents = ALL.filter(function (ev) { return ev.when.getFullYear() === y && ev.when.getMonth() === m && ev.when.getDate() === d; });
       html += '<div class="cal-cell' + (d === now.getDate() ? " today" : "") + (dayEvents.length ? " has-ev" : "") + '"><span class="d">' + d + "</span>" +
-        dayEvents.map(function (ev) { return '<span class="ev">' + esc(ev.title) + "</span>"; }).join("") + "</div>";
+        dayEvents.map(function (ev) { return '<span class="ev' + (ev.member ? " member" : "") + '">' + esc(ev.title) + "</span>"; }).join("") + "</div>";
     }
     document.getElementById("cal-grid").innerHTML = html;
 
-    document.getElementById("event-rows").innerHTML = EVENTS.map(function (ev) {
+    document.getElementById("event-rows").innerHTML = ALL.map(function (ev) {
       var going = !!state.rsvps[ev.id];
-      return '<div class="row"><span class="grow"><b>' + esc(ev.title) + "</b><small>" + fmtLocal(ev.when) + " · " + ev.mins + ' min · <span class="tag dim" style="font-size:.58rem;">' + ev.mode + "</span></small></span>" +
+      return '<div class="row"><span class="grow"><b>' + esc(ev.title) + "</b><small>" + fmtLocal(ev.when) + " · " + ev.mins + ' min · <span class="tag dim" style="font-size:.58rem;">' + ev.mode + "</span>" + (ev.member ? ' <span class="tag gold" style="font-size:.58rem;">Member event</span>' : "") + "</small></span>" +
         (going ? '<a class="btn btn-gold btn-xs" href="' + ev.link + '" target="_blank" rel="noopener">Join link</a>' : "") +
         '<button class="btn ' + (going ? "btn-ghost" : "btn-gold") + ' btn-xs" data-rsvp="' + ev.id + '">' + (going ? "Cancel RSVP" : "RSVP") + "</button>" +
         (going ? '<button class="btn btn-ghost btn-xs" data-ics="' + ev.id + '">.ics</button>' : "") + "</div>";
@@ -1150,7 +1267,7 @@
     });
     document.querySelectorAll("[data-ics]").forEach(function (b) {
       b.addEventListener("click", function () {
-        var ev = EVENTS.find(function (x) { return x.id === b.getAttribute("data-ics"); });
+        var ev = ALL.find(function (x) { return x.id === b.getAttribute("data-ics"); });
         var dt = function (d) { return d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, ""); };
         var end = new Date(ev.when.getTime() + ev.mins * 60000);
         var ics = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//TIIP Community//Portal//EN\r\nBEGIN:VEVENT\r\nUID:" + ev.id + "@tiip.community\r\nDTSTAMP:" + dt(new Date()) + "\r\nDTSTART:" + dt(ev.when) + "\r\nDTEND:" + dt(end) + "\r\nSUMMARY:" + ev.title + "\r\nURL:" + ev.link + "\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n";
@@ -1159,7 +1276,61 @@
         a.download = ev.id + ".ics"; a.click(); URL.revokeObjectURL(a.href);
       });
     });
+
+    /* Propose an event — Level 1 and above (everyone except Level 0). */
+    var canPropose = state.role !== "explorer";
+    document.getElementById("event-form").style.display = canPropose ? "block" : "none";
+    document.getElementById("propose-locked").style.display = canPropose ? "none" : "block";
+    document.getElementById("propose-note").textContent = canPropose
+      ? "Add an event to the community calendar. Every submission is reviewed by an admin before it is listed."
+      : "Level 1 members and above can add events to the community calendar.";
+
+    /* This member's own submissions */
+    var mine = state.memberEvents.filter(function (e) { return e.by === ROLES[state.role].name; });
+    document.getElementById("my-event-rows").innerHTML = mine.length ? mine.slice().reverse().map(function (e) {
+      var tag = e.status === "approved" ? '<span class="tag ok">Approved · listed</span>' : e.status === "declined" ? '<span class="tag bad">Declined</span>' : '<span class="tag warn">Pending review</span>';
+      return '<div class="row"><span class="grow"><b>' + esc(e.title) + "</b><small>" + esc(e.date) + (e.time ? " " + esc(e.time) : "") + " · " + e.mins + " min · " + esc(e.mode) + "</small></span>" + tag + "</div>";
+    }).join("") : '<div class="empty">You haven’t submitted any events yet.</div>';
+
+    /* Admin approval queue for member submissions */
+    var adminEvCard = document.getElementById("event-admin-card");
+    adminEvCard.style.display = state.role === "admin" ? "block" : "none";
+    if (state.role === "admin") {
+      var pending = state.memberEvents.filter(function (e) { return e.status === "pending"; });
+      document.getElementById("event-approval-rows").innerHTML = pending.length ? pending.map(function (e) {
+        return '<div class="row"><span class="grow"><b>' + esc(e.title) + "</b><small>By " + esc(e.by) + " · " + esc(e.date) + (e.time ? " " + esc(e.time) : "") + " · " + e.mins + " min · " + esc(e.mode) + "</small></span>" +
+          '<button class="btn btn-gold btn-xs" data-ev-ok="' + e.id + '">Approve</button>' +
+          '<button class="btn btn-ghost btn-xs" data-ev-no="' + e.id + '">Decline</button></div>';
+      }).join("") : '<div class="empty">No submissions awaiting approval.</div>';
+      document.querySelectorAll("[data-ev-ok]").forEach(function (b) {
+        b.addEventListener("click", function () {
+          var e = state.memberEvents.find(function (x) { return x.id === b.getAttribute("data-ev-ok"); });
+          if (e) { e.status = "approved"; save(); renderEvents(); }
+        });
+      });
+      document.querySelectorAll("[data-ev-no]").forEach(function (b) {
+        b.addEventListener("click", function () {
+          var e = state.memberEvents.find(function (x) { return x.id === b.getAttribute("data-ev-no"); });
+          if (e) { e.status = "declined"; save(); renderEvents(); }
+        });
+      });
+    }
   }
+  document.getElementById("event-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    state.memberEvents.push({
+      id: "me" + Date.now(),
+      title: document.getElementById("ef-title").value,
+      date: document.getElementById("ef-date").value,
+      time: document.getElementById("ef-time").value || "18:00",
+      mins: Number(document.getElementById("ef-mins").value || 90),
+      mode: document.getElementById("ef-mode").value,
+      link: document.getElementById("ef-link").value,
+      by: ROLES[state.role].name,
+      status: "pending"
+    });
+    save(); e.target.reset(); renderEvents();
+  });
 
   /* ---- Forums ---- */
   var activeTopic = 1, activeThread = null;

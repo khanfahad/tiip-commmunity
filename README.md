@@ -14,13 +14,18 @@ This site serves three audiences and goals:
 
 | Page | File | What it shows |
 |------|------|---------------|
-| Home | `index.html` | Overview of the model and community, the open **certification pathway** (Level 0 → full certification), plus the public **TIIP Provider Directory** — searchable by country → state/province → city, specialty, TIIP level (listings begin at Level 1), and free text (demo profiles in `assets/js/directory.js`) |
+| Home | `index.html` | Overview of the model and community, the open **certification pathway** (Level 0 → full certification), plus the public **TIIP Provider Directory** — searchable by country → state/province → city, specialty, TIIP level, gender (male/female), and free text. The public directory lists only **fully certified clinicians, TIIP supervisors, and Level 3 trainees**; Levels 1–2 appear only in the members-only portal directory (demo profiles in `assets/js/directory.js`) |
 | The Model | `model.html` | Interactive diagram of the soul's faculties, intervention domains (tabs), the therapeutic process (steps), and FAQ |
 | Community | `community.html` | An interactive member-portal preview (feed, forums, case consultation, directory, library) + how to join |
-| Resources | `resources.html` | Filterable video/training library and downloadable clinical tools |
-| Events | `events.html` | Featured conference, filterable upcoming events, and a host-a-training CTA |
+| Sign Up / Login | `join.html` | Member login **and** free registration in one place: benefits of membership, plus a registration form that asks whether a TIIP level (1/2/3) is already completed and, if so, requires a certificate upload for admin verification. Includes the Level 0 practice-scope disclaimer |
+| Events | `events.html` | Featured conference, upcoming events with **List / Calendar views** (`assets/js/events.js`), type filters, and a host-a-training CTA |
+| TIIP Trainings | `trainings.html` | The structured training **curriculum** — Level 0 series through Levels 1–3 and the supervisor track — distinct from the dated gatherings on the Events page |
+| Resources | `resources.html` | Redirects to the member portal's Resources & Modules area |
 | Research | `research.html` | Publications, ongoing studies, and ways to collaborate |
 | Member Portal | `portal.html` | Full front-end prototype of the practitioner platform (see below) |
+
+The site's nav CTA is **Sign Up/Login** (→ `join.html`). Every TIIP logo links
+"Developed at Khalil Center" out to [khalilcenter.com](https://khalilcenter.com).
 
 ## Member Portal prototype (`portal.html`)
 
@@ -38,14 +43,15 @@ the member's current stage.
 
 | Module | Spec area | What the prototype demonstrates |
 |--------|-----------|--------------------------------|
-| Referral Directory | User architecture | Search + filters for language (Arabic/Urdu/Turkish/English), timezone region, clinical focus, licensure (PSYPACT, US state, Canada, UK/EU, international); live local-time display per practitioner |
+| Referral Directory | User architecture | Members-only directory including **every level (1–2 as well)**; search + filters for TIIP level, language (Arabic/Urdu/Turkish/English), timezone region, clinical focus, licensure (PSYPACT, US state, Canada, UK/EU, international); live local-time display per practitioner |
+| User & Role Administration | User architecture | Admin-only: approve members' **level-change requests** (with certificate attachment), **search members by name** to change their level, and **invite unregistered people by email** at a chosen starting level |
 | Certification Pathway | Certification | Full Level 0 → 1 → 2 → 3 → certification stepper with "you are here" marker; Level 0 starter modules; 200-hour + 10-case progress bars with dynamic percentages, hour-logging form, supervisor approval/decline queue |
 | Compliance Vault | Certification | Dual categories (state CEUs vs. farḍ al-ʿayn), credit totals, expiration status with 60-day reminder badges |
 | Case Sandbox | Clinical | Conceptualization forms mapped to ʿAql/Nafs/Rūḥ/Iḥsās domains, share-with-supervisor flow, supervisor read view |
 | Scholar Desk | Clinical | Threaded consultation tickets with required anonymization confirmation, scholar routing, answered/closed states |
 | Intervention Vault | Research/resources | Search, language/type filters, metadata tags, version badges with history, per-asset downloads |
 | Publication Incubator | Research/resources | Project stages (draft → submission-ready), APA 7 checklist, planned Janeway API/webhook pipeline |
-| Events Calendar | Community | Month calendar, automatic local-timezone conversion (`Intl`), RSVP tracking, join links, real `.ics` export |
+| Events Calendar | Community | Month calendar, automatic local-timezone conversion (`Intl`), RSVP tracking, join links, real `.ics` export; **Level 1+ members can propose events**, which enter an **admin approval queue** before appearing on the calendar |
 | Tazkiyah Forums | Community | Boards → threads → posts with reply and new-thread forms |
 
 ### What requires a real backend before launch

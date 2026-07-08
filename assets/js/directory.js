@@ -173,12 +173,21 @@
     level1:     { label: "Level 1 Trainee", cls: "lv-1" }
   };
 
+  /* The PUBLIC directory lists only fully certified clinicians, TIIP
+     supervisors, and Level 3 trainees. Levels 1–2 are shown only in the
+     members-only directory inside the portal. */
+  var PUBLIC_LEVELS = { supervisor: 1, certified: 1, level3: 1 };
+  PROVIDERS = PROVIDERS.filter(function (p) { return PUBLIC_LEVELS[p.level]; });
+  /* Gender (Male/Female) derives from the demo portrait set unless set. */
+  PROVIDERS.forEach(function (p) { if (!p.gender) p.gender = p.photo.g === "women" ? "Female" : "Male"; });
+
   /* ---- elements ---- */
   var selCountry = document.getElementById("dir-country");
   var selState = document.getElementById("dir-state");
   var selCity = document.getElementById("dir-city");
   var selSpec = document.getElementById("dir-specialty");
   var selLevel = document.getElementById("dir-level");
+  var selGender = document.getElementById("dir-gender");
   var inputQ = document.getElementById("dir-q");
   var countEl = document.getElementById("dir-count");
   var emptyEl = document.getElementById("dir-empty");
@@ -252,6 +261,7 @@
     if (!selCity.disabled && selCity.value && p.city !== selCity.value) return false;
     if (selSpec.value && p.specialties.indexOf(selSpec.value) === -1) return false;
     if (selLevel.value && p.level !== selLevel.value) return false;
+    if (selGender && selGender.value && p.gender !== selGender.value) return false;
     var q = (inputQ.value || "").trim().toLowerCase();
     if (q) {
       var hay = [p.name, p.credentials, p.bio, p.city, p.state || "", p.country, LEVELS[p.level].label,
@@ -357,10 +367,11 @@
   var allSpecs = [];
   PROVIDERS.forEach(function (p) { allSpecs = allSpecs.concat(p.specialties); });
   fillSelect(selSpec, uniqueSorted(allSpecs), "All specialties");
-  selLevel.innerHTML = '<option value="">All levels (1+)</option>' +
-    Object.keys(LEVELS).map(function (k) {
+  selLevel.innerHTML = '<option value="">All levels</option>' +
+    Object.keys(LEVELS).filter(function (k) { return PUBLIC_LEVELS[k]; }).map(function (k) {
       return '<option value="' + k + '">' + LEVELS[k].label + "</option>";
     }).join("");
+  if (selGender) fillSelect(selGender, ["Male", "Female"], "All genders");
   refreshStateOptions();
   refreshCityOptions();
 
@@ -376,9 +387,11 @@
   selCity.addEventListener("change", render);
   selSpec.addEventListener("change", render);
   selLevel.addEventListener("change", render);
+  if (selGender) selGender.addEventListener("change", render);
   inputQ.addEventListener("input", render);
   clearBtn.addEventListener("click", function () {
     selCountry.value = ""; selSpec.value = ""; selLevel.value = ""; inputQ.value = "";
+    if (selGender) selGender.value = "";
     refreshStateOptions();
     refreshCityOptions();
     render();
