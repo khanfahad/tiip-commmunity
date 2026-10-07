@@ -20,14 +20,20 @@
   /* ---------------------------------------------------------
      Roles (RBAC demo)
   --------------------------------------------------------- */
+  /* Each demo persona is a person. "kind" is the account type (member / supervisor / scholar / admin);
+     a member's level is NOT part of the persona — it is read from their record: their certified level
+     (what grants privileges) and the training they are enrolled in (what grants training files). */
   var ROLES = {
-    explorer:     { label: "Level 0 · TIIP Trainee", short: "Trainee", name: "Zaid Mahmood" },
-    level1:       { label: "Level 1 · Trainee", short: "Trainee", name: "Nadia Bouchard" },
-    level2:       { label: "Level 2 · Trainee", short: "Trainee", name: "Zayd Ibrahim" },
-    trainee:      { label: "Level 3 · Trainee", short: "Trainee", name: "Amina Yusuf" },
-    practitioner: { label: "Fully Certified Practitioner", short: "Practitioner", name: "Dr. Bilal Rahman" },
-    supervisor:   { label: "Supervisor / Scholar", short: "Supervisor", name: "Dr. Hana Qadri" },
-    admin:        { label: "Admin", short: "Admin", name: "Musa Adem" }
+    explorer:     { short: "Trainee", name: "Zaid Mahmood", kind: "member" },
+    enrolled1:    { short: "Trainee", name: "Imran Baig", kind: "member" },
+    level1:       { short: "Trainee", name: "Nadia Bouchard", kind: "member" },
+    enrolled2:    { short: "Trainee", name: "Zayd Ibrahim", kind: "member" },
+    level2:       { short: "Trainee", name: "Sumaya Rahman", kind: "member" },
+    trainee:      { short: "Trainee", name: "Amina Yusuf", kind: "member" },
+    practitioner: { short: "Practitioner", name: "Dr. Bilal Rahman", kind: "member" },
+    supervisor:   { short: "Supervisor", name: "Dr. Hana Qadri", kind: "supervisor" },
+    scholar:      { short: "Scholar", name: "Shaykh Idris Kamal", kind: "scholar" },
+    admin:        { short: "Admin", name: "Musa Adem", kind: "admin" }
   };
 
 
@@ -44,8 +50,8 @@
   ];
 
   /* ---------------------------------------------------------
-     Level 1 capstone — the Khalil Center "TIIP Case
-     Formulation Sheet" (2024), section by section.
+     Level 1 case formulation — the Khalil Center "TIIP Case
+     Formulation Sheet" (2026), section by section.
   --------------------------------------------------------- */
   var FORM_RATINGS = [
     ["motivation", "Motivation to change", ["Strong", "Moderate", "Weak", "Ambivalent", "Instrumental", "Due to others"]],
@@ -55,52 +61,60 @@
     ["rapport", "Level of therapeutic rapport", ["Strong", "Moderate", "Weak"]]
   ];
 
+  /* spec: has a "Specify" box · free: just a free-text box (no checkbox) · pain: Pain/Pleasure options
+     · wide: spans both columns. Items without spec/free are tick-only, as on the sheet. */
   var TIIP_ELEMENTS = [
-    { key: "aql", label: "ʿAql — cognition", items: [
-      ["distortions", "Cognitive distortions"],
-      ["fusion", "Cognitive fusion"],
-      ["rumination", "Rumination"],
-      ["other", "Other ʿaqlī patterns"]
+    { key: "aql", label: "ʿAql", items: [
+      { k: "distortions", t: "Presence of cognitive distortions", spec: true, wide: true },
+      { k: "fusion", t: "Cognitive fusion", spec: true, wide: true },
+      { k: "rumination", t: "Rumination", spec: true, wide: true },
+      { k: "other", t: "Other", free: true, wide: true }
     ] },
-    { key: "nafs", label: "Nafs — behavioral inclinations", items: [
-      ["addictions", "Behavioral addictions"],
-      ["compulsive", "Compulsive behaviors"],
-      ["safety", "Safety behaviors"],
-      ["avoidance", "Avoidance behaviors"],
-      ["overcomp", "Overcompensatory behaviors"],
-      ["pain", "Pain/pleasure-seeking (eating/drinking, sexual pleasure, nail biting, self-harm…)"]
+    { key: "nafs", label: "Nafs", items: [
+      { k: "addictions", t: "Behavioral addictions", spec: true },
+      { k: "compulsive", t: "Compulsive behaviors", spec: true },
+      { k: "safety", t: "Safety behaviors", spec: true },
+      { k: "pain", t: "Pain/Pleasure", pain: true },
+      { k: "avoidance", t: "Avoidance behaviors", spec: true },
+      { k: "overcomp", t: "Overcompensatory behaviors", spec: true }
     ] },
-    { key: "ihsas", label: "Iḥsās — emotion", items: [
-      ["maladaptive", "Maladaptive emotional expression"],
-      ["adaptive", "Adaptive emotional expression"],
-      ["dysregulation", "Emotional dysregulation"],
-      ["needs", "Unmet emotional needs"],
-      ["primary", "Primary emotion"],
-      ["secondary", "Secondary emotion"],
-      ["instrumental", "Instrumental emotion"],
-      ["blocking", "Dissociative emotional blocking"],
-      ["trauma", "Emotional reaction to past traumatic events"],
-      ["markers", "Emotional markers — self-self / self-other relations"]
+    { key: "ihsas", label: "Iḥsās", items: [
+      { k: "maladaptive", t: "Maladaptive emotional expressions", spec: true },
+      { k: "secondary", t: "Secondary emotion", spec: true },
+      { k: "adaptive", t: "Adaptive emotional expression", spec: true },
+      { k: "instrumental", t: "Instrumental emotion", spec: true },
+      { k: "dysregulation", t: "Emotional dysregulation", spec: true },
+      { k: "blocking", t: "Dissociative emotional blocking", spec: true },
+      { k: "needs", t: "Emotional needs", spec: true },
+      { k: "trauma", t: "Emotional reaction to past traumatic events", spec: true },
+      { k: "primary", t: "Primary emotion", spec: true },
+      { k: "markers", t: "Emotional markers: self–self relations, self–other relations", spec: true }
     ] },
-    { key: "ruh", label: "Rūḥ — spirit", items: [
-      ["diseases", "Spiritual diseases of the heart (kibr, ḥasad, absent tawakkul, overemphasis on asbāb)"],
-      ["existential", "Existential crisis of faith"],
-      ["weakrel", "Weak or impaired relationship with Allah"],
-      ["projection", "Projection of intrapsychic tensions onto Allah (e.g., anger at Allah)"],
-      ["enmeshment", "Enmeshment of Allah with family (e.g., obedience equated with faith)"],
-      ["other", "Other rūḥānī concerns"]
+    { key: "ruh", label: "Rūḥ", items: [
+      { k: "diseases", t: "Presence of spiritual diseases of the heart (kibr, ḥasad, absence of tawakkul & overemphasis on asbāb)", spec: true, wide: true },
+      { k: "existential", t: "Existential crisis of faith", spec: true, wide: true },
+      { k: "weakrel", t: "Weak or impaired relationship with Allah", wide: true },
+      { k: "projection", t: "Projection of intrapsychic tensions on Allah (ex. angry with Allah)", wide: true },
+      { k: "enmeshment", t: "Enmeshment of Allah with family (ex. “I am disobedient if I don’t completely follow my parents’ wishes.”)", wide: true },
+      { k: "other", t: "Other", spec: true, wide: true }
     ] }
   ];
+  var PAIN_OPTS = [["eating", "Eating/drinking"], ["sexual", "Sexual pleasure"], ["nails", "Nail biting"], ["selfharm", "Self-harm"]];
 
   var PLAN_DOMAINS = ["ʿAql", "Nafs", "Iḥsās", "Rūḥ"];
+  var PLAN_MAX = 10;
+  var PLAN_EXAMPLE = { goal: "Externalize and cognitively defuse negative thinking from beliefs.", intervention: "RIDA", details: "Teach the client that, “they are not their thoughts”. Thoughts are different than their personal beliefs/values. Externalize negative thinking to Shaytan and his running narrative in your mind." };
+
+  /* the heart-and-petals diagram from the sheet: rūḥ, ʿaql, nafs, iḥsās around the qalb */
+  var SWIRL_SVG = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-5 -5 254 254\" role=\"img\" aria-label=\"The TIIP model: rūḥ, ʿaql, nafs and iḥsās swirl around the qalb, the heart\"><path fill=\"#e6e5e4\" d=\"M242.9 168.7L242.9 168C242.8 166.2 242.8 164.4 242.8 162.6C242.8 160.2 242.6 157.1 240.9 150.6C235.2 122.4 221.4 86.2 188 73.3L180 70.3L185.7 76.6C199.9 92.4 197.6 115.8 195 128.3C190.3 150.3 179.5 172.6 161.7 196.5C146.9 216.5 133 229.8 117.7 238.7L111.1 242.5L179.4 242.5C185.4 242.5 192.5 242.2 199.7 240.1C222.9 233.2 240.1 212.1 242.5 187.7C243.1 181.4 243 175 242.9 168.7Z\"/><path fill=\"#1b67b0\" d=\"M242.3 52.5C241.1 42.5 237.2 32.8 231.2 24.6C219.7 9 201.4 0 180.8 0C136.7 0 95.2 19.4 72.7 50.5C68.9 55.6 65.6 61.2 62.7 67.1L59.6 73.4L65.6 69.7C71.6 66.1 78.6 64.3 86.4 64.3C92.7 64.3 99.3 65.5 105.5 67.8C110.7 69.7 115.3 72.4 119.3 75.7C119.6 75.9 119.9 76.2 120.2 76.4L121.6 77.6L122.9 76.4C123.7 75.7 124.6 75.1 125.5 74.4C128.4 72.2 131.6 70.3 135.2 68.8C144.6 64.5 155.4 63.5 162.8 63.4L163.7 63.4C175.6 63.4 187.3 66.2 197.5 71.7C215.4 81.2 229.7 98.8 238.8 122.4L242.8 132.8L242.8 63.9C242.8 60 242.8 56.3 242.3 52.5Z\"/><path fill=\"#11264b\" d=\"M79.3 34.2C92 21.3 108.6 10.8 127.3 4L138.3 0L60.5 0C51.3 0 42.2 2.1 34.1 6.1C15.9 15 3.1 33 0.7 53.1C0.3 57 0.3 60.9 0.3 64.7L0.3 64.8C0.3 65.6 0.3 66.4 0.3 67.2C0.5 78.6 3.6 91.1 9.4 104.3C19.2 126.3 36.2 146.4 58.5 162.3C66.7 168.1 75.1 172.9 83.7 176.6L96.5 182.2L85.8 173.2C77.8 166.4 71.1 160.1 65.4 154C56.3 144.1 50.3 133.7 47.7 122.9C44.8 110.7 46 96.7 51.5 79.9C57.3 62.6 66.8 46.8 79.3 34.2Z\"/><path fill=\"#ebb830\" d=\"M174.6 157.3C168.4 163.6 161.7 169.4 156.1 174.2C146.2 182.5 135.4 190.6 121.7 190.7L121.4 190.7C120.2 191 118.3 190.8 116.8 190.7L116.8 190.7C116.4 190.7 116 190.6 115.6 190.6C113.3 190.5 110.7 190.2 108.1 189.7C101.1 188.6 93.8 186.6 86.6 183.9C68.8 177.1 51.7 165.8 35.7 150.4C22.2 137.4 11.3 122 4.3 106.1L0.3 97.1L0.3 165.8C0.3 167.8 0.3 169.8 0.3 171.7C0.1 179.4 0 187.4 1.6 194.9C5.8 214.7 20.2 231.4 39.1 238.6C48.6 242.2 58 242.5 67.6 242.5L90.4 242.5C97.2 242.5 104.4 239.3 109.9 236.6C125.5 228.8 140.3 215.6 155.1 196.2L155.2 196.1C164.4 184 172.1 171.8 177.9 159.6L183.5 148.2L174.6 157.3Z\"/><text x=\"29\" y=\"52\" text-anchor=\"middle\" font-family=\"Fraunces,Georgia,serif\" font-weight=\"600\" font-size=\"8.2\" fill=\"#fff\" letter-spacing=\".2\"><tspan x=\"29\" dy=\"0.0\">RŪḤ/</tspan><tspan x=\"29\" dy=\"9.8\">SPIRIT</tspan></text><text x=\"166\" y=\"30\" text-anchor=\"middle\" font-family=\"Fraunces,Georgia,serif\" font-weight=\"600\" font-size=\"8.2\" fill=\"#fff\" letter-spacing=\".2\"><tspan x=\"166\" dy=\"0.0\">ʿAQL/</tspan><tspan x=\"166\" dy=\"9.8\">THOUGHTS</tspan></text><text x=\"121\" y=\"131\" text-anchor=\"middle\" font-family=\"Fraunces,Georgia,serif\" font-weight=\"600\" font-size=\"8.6\" fill=\"#11264b\" letter-spacing=\".2\"><tspan x=\"121\" dy=\"0.0\">QALB/HEART</tspan></text><text x=\"46\" y=\"188\" text-anchor=\"middle\" font-family=\"Fraunces,Georgia,serif\" font-weight=\"600\" font-size=\"7.6\" fill=\"#fff\" letter-spacing=\".2\"><tspan x=\"46\" dy=\"0.0\">NAFS/</tspan><tspan x=\"46\" dy=\"9.1\">BEHAVIORAL</tspan><tspan x=\"46\" dy=\"9.1\">INCLINATIONS</tspan></text><text x=\"208\" y=\"188\" text-anchor=\"middle\" font-family=\"Fraunces,Georgia,serif\" font-weight=\"600\" font-size=\"8.2\" fill=\"#11264b\" letter-spacing=\".2\"><tspan x=\"208\" dy=\"0.0\">IḤSĀS/</tspan><tspan x=\"208\" dy=\"9.8\">EMOTIONS</tspan></text></svg>";
 
   function seedFormulation() {
-    function fig() { return { situation: "", ruh: "", aql: "", qalb: "", primary: "", secondary: "", instrumental: "", safety: "", avoidance: "", pain: "" }; }
+    function fig() { return { situation: "", ruh: "", aql: "", primary: "", secondary: "", instrumental: "", safety: "", avoidance: "", pain: "" }; }
     return {
       alias: "", profile: "", presenting: "", precipitating: "", history: "",
       assess: { motivation: "", support: "", community: "", religiosity: "", rapport: "" },
       additional: "", dsm: "",
-      elements: { aql: {}, nafs: {}, ihsas: {}, ruh: {} }, /* key → { on, note } */
+      elements: { aql: {}, nafs: {}, ihsas: {}, ruh: {} }, /* group → item → { on, note } (pain also: opts, other) */
       dominant: "", narrative: "",
       plan: PLAN_DOMAINS.map(function (d) { return { domain: d, goal: "", intervention: "", details: "" }; }),
       prognosis: "",
@@ -186,23 +200,27 @@
       ],
       /* ---- Members, level-change requests, training registry ---- */
       users: [
-        { name: "Zaid Mahmood", role: "TIIP Trainee (Level 0)" },
-        { name: "Hafsa Karim", role: "TIIP Trainee (Level 0)", city: "Lahore, PK" },
-        { name: "Imran Baig", role: "Trainee (Level I)", city: "Karachi, PK" },
-        { name: "Nadia Bouchard", role: "Trainee (Level I)", city: "Montreal, CA" },
-        { name: "Zayd Ibrahim", role: "Trainee (Level II)", city: "Melbourne, AU" },
-        { name: "Yusuf Chaudhry", role: "Trainee (Level II)", city: "Lahore, PK" },
-        { name: "Amina Yusuf", role: "Trainee (Level III)" },
-        { name: "Dr. Bilal Rahman", role: "Certified Practitioner" },
-        { name: "Sarah Abdullah", role: "Certified Practitioner" },
-        { name: "Dr. Hana Qadri", role: "Supervisor / Scholar" },
-        { name: "Shaykh Idris Kamal", role: "Supervisor / Scholar" },
-        { name: "Dr. Omar Farouk", role: "Supervisor / Scholar", city: "Cairo, EG" },
-        { name: "Dr. Kemal Demir", role: "Supervisor / Scholar", city: "Ankara, TR" }
+        /* role = account type only: Member | Supervisor | Scholar. A member's level lives in their journey. */
+        { name: "Zaid Mahmood", role: "Member" },
+        { name: "Hafsa Karim", role: "Member", city: "Lahore, PK" },
+        { name: "Imran Baig", role: "Member", city: "Karachi, PK" },
+        { name: "Nadia Bouchard", role: "Member", city: "Montreal, CA" },
+        { name: "Zayd Ibrahim", role: "Member", city: "Melbourne, AU" },
+        { name: "Yusuf Chaudhry", role: "Member", city: "Lahore, PK" },
+        { name: "Sumaya Rahman", role: "Member", city: "Dearborn, US" },
+        { name: "Amina Yusuf", role: "Member" },
+        { name: "Dr. Bilal Rahman", role: "Member" },
+        { name: "Sarah Abdullah", role: "Member" },
+        { name: "Dr. Hana Qadri", role: "Supervisor" },
+        { name: "Dr. Omar Farouk", role: "Supervisor", city: "Cairo, EG" },
+        { name: "Dr. Kemal Demir", role: "Supervisor", city: "Ankara, TR" },
+        { name: "Dr. Saad Farooqi", role: "Supervisor", city: "Toronto, CA" },
+        { name: "Shaykh Idris Kamal", role: "Scholar" }
       ],
+      /* lvl = the level the member is asking to have certified (1, 2, or 3 = fully certified) */
       levelRequests: [
-        { name: "Hafsa Karim", from: "TIIP Trainee (Level 0)", to: "Trainee (Level I)", note: "Completed Foundations of TIIP", cert: "Hafsa_Karim_Level1_certificate.pdf" },
-        { name: "Amina Yusuf", from: "Trainee (Level III)", to: "Certified Practitioner", note: "200 supervised hours & 10 cases approved", cert: "Amina_Yusuf_Level3_completion.pdf" }
+        { name: "Hafsa Karim", lvl: 1, from: "Level 0 · TIIP Trainee", to: "Level 1 certified", note: "Completed Foundations of TIIP", cert: "Hafsa_Karim_Level1_certificate.pdf" },
+        { name: "Amina Yusuf", lvl: 3, from: "Level 2 certified · Level 3 trainee", to: "Fully certified", note: "200 supervised hours & 10 cases approved", cert: "Amina_Yusuf_Level3_completion.pdf" }
       ],
       /* Who has completed / is registered for each level, with year & location.
          inv: none | invited | joined */
@@ -254,13 +272,15 @@
         "Nadia Bouchard": { flags: { l1_reg: "co-l1-chi", l1_att: true, l1_mod: true, done1: true }, notified: { done1: true } },
         "Zayd Ibrahim": { flags: { l1_reg: "co-l1-onl", done1: true, l2_reg: "co-l2-tor", l2_att: true }, notified: { done1: true } },
         "Yusuf Chaudhry": { flags: { l1_reg: "co-l1-hou", done1: true, l2_reg: "co-l2-tor", l2_att: true }, notified: { done1: true } },
-        "Amina Yusuf": { flags: { l1_reg: "co-l1-hou", done1: true, l2_reg: "co-l2-onl", done2: true }, notified: { done1: true, done2: true } },
+        "Sumaya Rahman": { flags: { l1_reg: "co-l1-chi", done1: true, l2_reg: "co-l2-onl", done2: true }, notified: { done1: true, done2: true } },
+        "Amina Yusuf": { flags: { l1_reg: "co-l1-hou", done1: true, l2_reg: "co-l2-onl", done2: true, l3_start: true }, notified: { done1: true, done2: true } },
         "Dr. Bilal Rahman": { flags: { done1: true, done2: true, done3: true, certified: true }, notified: { done1: true, done2: true, done3: true } },
         "Sarah Abdullah": { flags: { done1: true, done2: true, done3: true, certified: true }, notified: { done1: true, done2: true, done3: true } },
         "Dr. Hana Qadri": { flags: { done1: true, done2: true, done3: true, certified: true }, notified: { done1: true, done2: true, done3: true } },
         "Shaykh Idris Kamal": { flags: { done1: true, done2: true, done3: true, certified: true }, notified: { done1: true, done2: true, done3: true } },
         "Dr. Omar Farouk": { flags: { done1: true, done2: true, done3: true, certified: true }, notified: { done1: true, done2: true, done3: true } },
-        "Dr. Kemal Demir": { flags: { done1: true, done2: true, done3: true, certified: true }, notified: { done1: true, done2: true, done3: true } }
+        "Dr. Kemal Demir": { flags: { done1: true, done2: true, done3: true, certified: true }, notified: { done1: true, done2: true, done3: true } },
+        "Dr. Saad Farooqi": { flags: { done1: true, done2: true, done3: true, certified: true }, notified: { done1: true, done2: true, done3: true } }
       },
       /* Upcoming trainings (cohorts) members can register for */
       cohorts: [
@@ -279,9 +299,9 @@
       /* Member directory / public profile listings, keyed by member name.
          publicStatus: none | pending | approved | changes | declined */
       listings: {
-        "Yusuf Chaudhry": {
+        "Sumaya Rahman": {
           internal: true, referrals: true, publicStatus: "pending", publicNote: "", updated: iso(today(-2)),
-          data: { bio: "Counselor working with young adults and families in Lahore on anxiety, identity, and the pressures of study and work.", credentials: "MS, LPC · Counselor", license: "", education: "MS Counseling Psychology — Lahore", years: "6", city: "Lahore", state: "Punjab", country: "Pakistan", languages: "Urdu, English", specialties: "Anxiety, Youth & Adolescents", approach: "CBT-informed counseling with TIIP formulation", populations: "Young adults, Families", formats: "In person, Telehealth", accepting: "Accepting new clients", gender: "Male", contactEmail: "", off1_title: "Exam stress and the anxious student", off1_type: "Workshop", off1_desc: "Practical tools for students and parents.", off2_title: "", off2_type: "Workshop", off2_desc: "", off3_title: "", off3_type: "Workshop", off3_desc: "" },
+          data: { bio: "Counselor working with young adults and families in Dearborn on anxiety, identity, and the pressures of study and work.", credentials: "MS, LPC · Counselor", license: "", education: "MS Counseling Psychology — Michigan", years: "6", city: "Dearborn", state: "Michigan", country: "United States", languages: "Arabic, English", specialties: "Anxiety, Youth & Adolescents", approach: "CBT-informed counseling with TIIP formulation", populations: "Young adults, Families", formats: "In person, Telehealth", accepting: "Accepting new clients", gender: "Female", contactEmail: "", off1_title: "Exam stress and the anxious student", off1_type: "Workshop", off1_desc: "Practical tools for students and parents.", off2_title: "", off2_type: "Workshop", off2_desc: "", off3_title: "", off3_type: "Workshop", off3_desc: "" },
           show: { about: true, credentials: true, location: true, languages: true, focus: true, services: true, gender: true, contact: false, offerings: true }
         }
       },
@@ -335,11 +355,27 @@
   });
   delete state.pubs; /* the Publication Incubator was replaced by the Research Library */
   Object.keys(state.listings).forEach(function (n) { var l = state.listings[n]; if (l.publicStatus === "approved" && l.published && l.publishedLive == null) l.publishedLive = true; });
-  ["Dr. Omar Farouk", "Dr. Kemal Demir"].forEach(function (n) { /* panels need 3+ supervisors */
-    if (!state.users.some(function (u) { return u.name === n; })) state.users.push({ name: n, role: "Supervisor / Scholar" });
+  /* account type is now Member | Supervisor | Scholar (level lives in the journey, not the role) */
+  state.users.forEach(function (u) {
+    if (u.role === "Supervisor / Scholar") u.role = u.name === "Shaykh Idris Kamal" ? "Scholar" : "Supervisor";
+    else if (["Member", "Supervisor", "Scholar"].indexOf(u.role) === -1) u.role = "Member";
+  });
+  var _full = { done1: true, done2: true, done3: true, certified: true }, _fullN = { done1: true, done2: true, done3: true };
+  [["Dr. Omar Farouk", "Supervisor"], ["Dr. Kemal Demir", "Supervisor"], ["Dr. Saad Farooqi", "Supervisor"], ["Sumaya Rahman", "Member"]].forEach(function (p) { /* panels need 3+ supervisors */
+    if (!state.users.some(function (u) { return u.name === p[0]; })) state.users.push({ name: p[0], role: p[1] });
+    if (!state.journey[p[0]]) state.journey[p[0]] = p[1] === "Supervisor" ? { flags: Object.assign({}, _full), notified: Object.assign({}, _fullN) } : { flags: { l1_reg: "co-l1-chi", done1: true, l2_reg: "co-l2-onl", done2: true }, notified: { done1: true, done2: true } };
+  });
+  if (state.journey["Amina Yusuf"] && state.journey["Amina Yusuf"].flags && state.journey["Amina Yusuf"].flags.done2 && state.journey["Amina Yusuf"].flags.l3_start == null) state.journey["Amina Yusuf"].flags.l3_start = true;
+  state.levelRequests.forEach(function (r) {
+    if (r.lvl) return;
+    r.lvl = /Practitioner|Fully/.test(r.to) ? 3 : /Level III|Level 2|Level II\)/.test(r.to) ? 2 : 1;
+    if (/Practitioner/.test(r.to)) r.to = "Fully certified";
   });
   if (!ROLES[state.role]) state.role = "trainee";
-  function save() { try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) {} }
+  function save() {
+    try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) {}
+    if (typeof applyRole === "function" && typeof navBtns !== "undefined" && navBtns) applyRole(); /* keep the status label & locks in step with the record */
+  }
 
   /* ---------------------------------------------------------
      Static datasets (read-only)
@@ -362,7 +398,7 @@
   /* TIIP level per listing — inferred from the credential line unless set.
      Unlike the public directory, the members-only directory lists every
      level, including Levels 1 and 2. */
-  var DIR_LEVELS = { supervisor: "Supervisor", certified: "Fully certified", level3: "Level 3", level2: "Level 2", level1: "Level 1" };
+  var DIR_LEVELS = { supervisor: "Supervisor", scholar: "Scholar", certified: "Fully certified", level3: "Level 3 trainee", level2: "Level 2 certified", level1: "Level 1 certified" };
   DIRECTORY.forEach(function (d) {
     if (d.level) return;
     if (/Supervisor/.test(d.cred)) d.level = "supervisor";
@@ -413,15 +449,27 @@
     forums: "Tazkiyah & Peer Forums"
   };
 
-  function roleAllows(btn) {
-    var roles = btn.getAttribute("data-roles");
-    return roles === "all" || roles.split(",").indexOf(state.role) !== -1;
+  /* What each part of the portal needs. Privileges follow the CERTIFIED level (admin-credited, or earned by
+     passing the level); being enrolled in a training only unlocks that training's files and forms. */
+  function viewAllowed(view) {
+    var k = viewerKind(), c = creditOf(viewerName());
+    if (view === "admin") return k === "admin";
+    if (view === "certification") return k !== "scholar";              /* scholars do not go through the training */
+    if (view === "directory") return k === "admin" || k === "scholar" || c >= 1;
+    if (view === "profile") return k === "member" || k === "supervisor"; /* members see what unlocks it */
+    if (view === "sandbox") return k !== "admin" && k !== "scholar" && c >= 1;
+    if (view === "fatwa") return k === "admin" || k === "scholar" || c >= 1;
+    if (view === "resources") return k === "admin" || (k !== "scholar" && c >= 1);
+    return true;
   }
+  function roleAllows(btn) { return viewAllowed(btn.getAttribute("data-view")); }
+  /* may take part in the community (post in the library, propose events…): Level 1 certified and up, faculty, admin */
+  function canParticipate() { return viewerKind() !== "member" || creditOf(viewerName()) >= 1; }
 
   function applyRole() {
     var r = ROLES[state.role];
     document.getElementById("user-name").textContent = r.name;
-    document.getElementById("user-role").textContent = r.label;
+    document.getElementById("user-role").textContent = statusLabel(r.name);
     document.getElementById("user-avatar").textContent = initials(r.name);
     roleSelect.value = state.role;
     updateBadge();
@@ -522,36 +570,47 @@
     var expiring = state.certs.filter(function (c) { return certStatus(c) !== "ok"; }).length;
     var leads = {
       explorer: "As-salāmu ʿalaykum, Zaid. Welcome — you're a TIIP Trainee at Level 0. Watch the starter modules and follow the community; the full pathway to certification starts whenever you're ready.",
-      level1: "As-salāmu ʿalaykum, Nadia. You're at Level 1 — track your checklist in the Certification Journey, and register for the next training when you're ready.",
-      level2: "As-salāmu ʿalaykum, Zayd. You're at Level 2 — submit your case conceptualization; an admin will pass it or ask you to retry, and you'll be emailed the result.",
-      trainee: "As-salāmu ʿalaykum, Amina. Your Level III pathway, compliance items, and cohort activity at a glance.",
+      enrolled1: "As-salāmu ʿalaykum, Imran. You're enrolled in Level 1 — your training slides, readings, modules and case formulation are open. Level 1 privileges (the member directory, library posting and more) unlock once an admin passes your case formulation.",
+      level1: "As-salāmu ʿalaykum, Nadia. You're Level 1 certified — you can list yourself in the member directory and join the community. Register for a Level 2 training from your journey when you're ready.",
+      enrolled2: "As-salāmu ʿalaykum, Zayd. You're certified at Level 1 and enrolled in Level 2 — your Level 2 training files are open. Level 2 privileges (a public provider profile and referrals) unlock once your case conceptualization is passed.",
+      level2: "As-salāmu ʿalaykum, Sumaya. You're Level 2 certified — you can request a public provider profile and accept referrals. Level 3 supervised practice is your next stage.",
+      trainee: "As-salāmu ʿalaykum, Amina. You're Level 2 certified and in Level 3 supervised practice — your hours, cases and panel presentation at a glance.",
       practitioner: "As-salāmu ʿalaykum, Dr. Rahman. Referrals, compliance, and consultation activity at a glance.",
-      supervisor: "As-salāmu ʿalaykum, Dr. Qadri. Trainee approvals and scholar-desk queries awaiting you.",
+      supervisor: "As-salāmu ʿalaykum, Dr. Qadri. Trainee hours, panels, vault approvals and shared cases awaiting you.",
+      scholar: "As-salāmu ʿalaykum, Shaykh Idris. Scholarly questions from the community are waiting in the Scholar Desk. You have access to the Level 0 and Level 1 materials; scholars do not go through the certification training.",
       admin: "As-salāmu ʿalaykum, Musa. Platform health and member administration."
     };
     document.getElementById("dash-lead").textContent = leads[state.role];
     /* Level 0 practice-scope notice */
-    document.getElementById("l0-scope").style.display = state.role === "explorer" ? "flex" : "none";
+    document.getElementById("l0-scope").style.display = (viewerKind() === "member" && creditOf(viewerName()) === 0) ? "flex" : "none";
 
-    var tiles;
-    if (state.role === "explorer") {
-      var watched = state.learning.l0.filter(function (m) { return m.done; }).length;
+    var tiles, dk = viewerKind(), dn = viewerName(), dc = creditOf(dn), de = enrolledLevel(dn);
+    var unread = state.outbox.filter(function (e) { return e.to === dn && !e.read; }).length;
+    if (dk === "scholar") {
       tiles = [
-        { n: "L" + standing(viewerName()), l: "Current level" },
-        { n: watched + "<i>/" + state.learning.l0.length + "</i>", l: "Parts watched" },
-        { n: state.outbox.filter(function (e) { return e.to === viewerName() && !e.read; }).length, l: "Unread emails" },
-        { n: EVENTS.length, l: "Upcoming events" }
-      ];
-    } else if (state.role === "level1" || state.role === "level2") {
-      var jn = viewerName(), jlv = standing(jn), jt = jlv >= 2 ? 2 : 1;
-      var jr = reqs(jn, jt), jd = jr.filter(function (r) { return r.done; }).length;
-      tiles = [
-        { n: "L" + jlv, l: "Current level" },
-        { n: jd + "<i>/" + jr.length + "</i>", l: "Level " + jt + " checklist" },
-        { n: state.outbox.filter(function (e) { return e.to === jn && !e.read; }).length, l: "Unread emails" },
+        { n: openTickets, l: "Open scholar queries" },
+        { n: state.library.length, l: "Library posts" },
+        { n: unread, l: "Unread emails" },
         { n: allEvents().length, l: "Upcoming events" }
       ];
-    } else if (state.role === "supervisor") {
+    } else if (dk === "member" && dc === 0) {
+      var watched = state.learning.l0.filter(function (m) { return m.done; }).length;
+      var l1r = de === 1 ? reqs(dn, 1) : null;
+      tiles = [
+        { n: de === 1 ? "Trainee" : "L0", l: de === 1 ? "Level 1 · enrolled" : "Certified level" },
+        l1r ? { n: l1r.filter(function (r) { return r.done; }).length + "<i>/" + l1r.length + "</i>", l: "Level 1 checklist" } : { n: watched + "<i>/" + state.learning.l0.length + "</i>", l: "Parts watched" },
+        { n: unread, l: "Unread emails" },
+        { n: allEvents().length, l: "Upcoming events" }
+      ];
+    } else if (dk === "member" && dc <= 2 && de !== 3) {
+      var jt = de === 2 ? 2 : dc >= 2 ? 3 : 2, jr = reqs(dn, Math.min(jt, 3)), jd = jr.filter(function (r) { return r.done; }).length;
+      tiles = [
+        { n: "L" + dc, l: "Certified level" },
+        { n: de ? "L" + de : "—", l: de ? "Enrolled (training)" : "Enrolled in" },
+        { n: jd + "<i>/" + jr.length + "</i>", l: "Level " + Math.min(jt, 3) + " checklist" },
+        { n: unread, l: "Unread emails" }
+      ];
+    } else if (dk === "supervisor") {
       tiles = [
         { n: pendingEntries().length, l: "Hours awaiting approval" },
         { n: state.cases.filter(function (c) { return c.shared; }).length, l: "Shared case files" },
@@ -579,11 +638,14 @@
 
     var actions = {
       explorer: [["certification", "Register for Level 1"], ["learning", "Watch the six-part series"], ["events", "Browse events"], ["notifications", "My emails"]],
+      enrolled1: [["learning", "Level 1 modules & case formulation"], ["certification", "My certification journey"], ["events", "Browse events"], ["notifications", "My emails"]],
       level1: [["certification", "My certification journey"], ["profile", "Create my directory listing"], ["directory", "Member directory"], ["library", "Research library"]],
-      level2: [["learning", "Submit case conceptualization"], ["certification", "My certification journey"], ["profile", "My profile & public listing"], ["directory", "Member directory"]],
+      enrolled2: [["learning", "Submit case conceptualization"], ["certification", "Level 2 training files"], ["profile", "My directory listing"], ["directory", "Member directory"]],
+      level2: [["profile", "My profile & public listing"], ["certification", "Begin Level 3"], ["directory", "Member directory"], ["library", "Research library"]],
       trainee: [["certification", "Log hours & track Level 3"], ["learning", "Written case conceptualization"], ["profile", "My profile & listing"], ["fatwa", "Ask a scholar"]],
       practitioner: [["directory", "Find a referral"], ["profile", "My profile & listing"], ["resources", "Upload an intervention"], ["certification", "Update CE records"]],
-      supervisor: [["certification", "Review hours & panels"], ["resources", "Approve interventions"], ["sandbox", "Review shared cases"], ["fatwa", "Answer scholar queries"]],
+      supervisor: [["certification", "Review hours & panels"], ["resources", "Approve interventions"], ["sandbox", "Review shared cases"], ["fatwa", "Ask a scholar"]],
+      scholar: [["fatwa", "Answer scholar queries"], ["learning", "Level 0 & 1 materials"], ["library", "Research library"], ["events", "Browse events"]],
       admin: [["admin", "Administration & invitations"], ["events", "Approve events"], ["library", "Moderate the library"], ["resources", "Publish a resource"]]
     };
     document.getElementById("dash-actions").innerHTML = actions[state.role].map(function (a) {
@@ -633,7 +695,7 @@
   }
 
   /* ---- Administration ---- */
-  var ROLE_OPTIONS = ["TIIP Trainee (Level 0)", "Trainee (Level I)", "Trainee (Level II)", "Trainee (Level III)", "Certified Practitioner", "Supervisor / Scholar", "Admin"];
+  var TYPE_OPTIONS = ["Member", "Supervisor", "Scholar"]; /* account type — a member's level is separate (certified vs enrolled) */
   var adminTab = "reviews";
 
   function pendingListings() { return Object.keys(state.listings).filter(function (n) { return state.listings[n].publicStatus === "pending"; }); }
@@ -781,14 +843,14 @@
     /* notify eligible members: L1 → Level 0 members not yet registered; L2 → members who completed Level 1 */
     var eligible = ADMIN_USERS.filter(function (u) {
       if (!isClinicalMember(u.name)) return false;
-      if (level === 1) return standing(u.name) === 0 && !fl(u.name, "l1_reg");
-      return levelComplete(u.name, 1) && !fl(u.name, "l2_reg") && !levelComplete(u.name, 2);
+      if (level === 1) return creditOf(u.name) === 0 && enrolledLevel(u.name) === 0;
+      return creditOf(u.name) === 1 && enrolledLevel(u.name) < 2;
     });
     eligible.forEach(function (u) {
-      notify(u.name, "training", "New Level " + level + " training posted — " + c.loc, "A new " + cohortLabel(c) + " (" + c.mode + ") is open for registration.\n" + (level === 2 ? "You completed Level 1, so you can register now from your Certification Journey." : "Register from your Certification Journey to begin Level 1.") + "\n\nOpen the portal: portal.html#certification");
+      notify(u.name, "training", "New Level " + level + " training posted — " + c.loc, "A new " + cohortLabel(c) + " (" + c.mode + ") is open for registration.\n" + (level === 2 ? "You are certified at Level 1, so you can register now from your Certification Journey." : "Register from your Certification Journey to begin Level 1.") + "\n\nOpen the portal: portal.html#certification");
     });
     save(); e.target.reset(); renderAdmin();
-    document.getElementById("cohort-note").innerHTML = '<p class="invite-sent">✓ Training posted. Emailed ' + eligible.length + " eligible member" + (eligible.length === 1 ? "" : "s") + (level === 2 ? " who completed Level 1" : " at Level 0") + " (demo).</p>";
+    document.getElementById("cohort-note").innerHTML = '<p class="invite-sent">✓ Training posted. Emailed ' + eligible.length + " eligible member" + (eligible.length === 1 ? "" : "s") + (level === 2 ? " who are Level 1 certified" : " at Level 0") + " (demo).</p>";
   });
   function renderAttendance() {
     var list = unattended();
@@ -829,7 +891,8 @@
   function sendInvite(r) {
     r.inv = "invited"; r.invitedAt = iso(new Date());
     notify(r.email, "account", "You're invited to join the TIIP Community portal",
-      "Salaam " + r.name + ",\n\nYou're invited to join the TIIP Community member portal" + (r.level ? " — our records show you " + (r.status === "Completed" ? "completed" : "are registered for") + " Level " + r.level + (r.loc ? " (" + r.loc + (r.year ? ", " + r.year : "") + ")" : "") + "." : ".") + "\nCreate your account here: join.html");
+      "Salaam " + r.name + ",\n\nYou're invited to join the TIIP Community member portal" + (r.level ? " — our records show you " + (r.status === "Completed" ? "are certified at" : "are enrolled as a trainee in") + " Level " + r.level + (r.loc ? " (" + r.loc + (r.year ? ", " + r.year : "") + ")" : "") + "." : ".") +
+      (r.level ? (r.status === "Completed" ? "\nYour Level " + r.level + " certification will be credited to your account, with that level's privileges." : "\nYour Level " + r.level + " training files will open when you join; the level's privileges unlock once you are certified.") : "") + "\nCreate your account here: join.html");
   }
   function renderRegistry() {
     var years = [], locs = [];
@@ -850,7 +913,7 @@
     var tagFor = { none: '<span class="tag dim">Not invited</span>', invited: '<span class="tag warn">Invited · pending</span>', joined: '<span class="tag ok">Joined</span>' };
     document.getElementById("reg-rows").innerHTML = list.length ? list.map(function (r) {
       return '<div class="row"><span class="grow"><b>' + esc(r.name) + "</b><small>" + esc(r.email) + " · " + levelText(r.level) +
-        (r.level ? " · " + esc(r.status) : "") + (r.loc ? " · " + esc(r.loc) : "") + (r.year ? " · " + r.year : "") + "</small></span>" +
+        (r.level ? " · " + (r.status === "Completed" ? "Certified" : "Trainee (enrolled)") : "") + (r.loc ? " · " + esc(r.loc) : "") + (r.year ? " · " + r.year : "") + "</small></span>" +
         tagFor[r.inv] +
         (r.inv === "none" ? '<button class="btn btn-gold btn-xs" data-inv="' + r.id + '">Invite</button>' : "") + "</div>";
     }).join("") : '<div class="empty">No one in the registry matches those filters.</div>';
@@ -872,7 +935,8 @@
   /* level 0 has no status / year / location requirement */
   function syncRegForm() {
     var hasLevel = Number(document.getElementById("rg-level").value) > 0;
-    document.getElementById("rg-status").disabled = !hasLevel;
+    var cert = document.getElementById("rg-cert");
+    cert.disabled = !hasLevel; if (!hasLevel) cert.checked = false;
     document.getElementById("rg-year").required = hasLevel;
     document.getElementById("rg-loc").required = hasLevel;
   }
@@ -888,11 +952,17 @@
     var lvl = Number(document.getElementById("rg-level").value);
     var rec = {
       id: "rg" + Date.now(), name: document.getElementById("rg-name").value.trim(), email: email, level: lvl,
-      status: lvl ? document.getElementById("rg-status").value : "—",
+      status: lvl ? (document.getElementById("rg-cert").checked ? "Completed" : "Registered") : "—",
       year: lvl ? Number(document.getElementById("rg-year").value) : (Number(document.getElementById("rg-year").value) || null),
       loc: document.getElementById("rg-loc").value.trim(), inv: "none", invitedAt: ""
     };
     state.registry.unshift(rec);
+    /* someone already in the portal is updated straight away: certified → credit the level; trainee → enrol */
+    var existing = ADMIN_USERS.find(function (u) { return u.name.toLowerCase() === rec.name.toLowerCase(); });
+    if (existing && lvl) {
+      if (rec.status === "Completed") setCredit(existing.name, Math.max(creditOf(existing.name), lvl));
+      else if (lvl > Math.max(enrolledLevel(existing.name), creditOf(existing.name))) setEnrolment(existing.name, lvl);
+    }
     if (invite) sendInvite(rec);
     save(); form.reset(); renderAdmin();
     document.getElementById("reg-note").innerHTML = '<p class="invite-sent">✓ Added to the registry' + (invite ? " and invitation emailed (demo — see the Email log)." : ".") + "</p>";
@@ -980,8 +1050,6 @@
       if (b.hasAttribute("data-pn-pass")) {
         x.status = "passed"; x.note = note;
         setFl(x.member, "certified", true);
-        var u = ADMIN_USERS.find(function (q) { return q.name === x.member; });
-        if (u && u.role !== "Supervisor / Scholar") u.role = "Certified Practitioner";
         notify(x.member, "review", "Congratulations — you are fully certified", "The panel passed your Level 3 presentation. You are now a fully certified TIIP practitioner." + (note ? "\n\nNote: " + note : "") + "\n\nYou can now post interventions in the vault and request a public profile.");
       } else {
         if (!note) { inp.focus(); inp.style.borderColor = "#b64d4d"; return; }
@@ -1007,15 +1075,16 @@
     reqEl.innerHTML = LEVEL_REQUESTS.length ? LEVEL_REQUESTS.map(function (r, i) {
       return '<div class="row"><span class="grow"><b>' + esc(r.name) + '</b><small>' + esc(r.from) + " → " + esc(r.to) +
         " · " + esc(r.note) + ' · 📎 <span class="tag dim" style="font-size:.6rem;">' + esc(r.cert) + "</span></small></span>" +
-        '<button class="btn btn-gold btn-xs" data-req-ok="' + i + '">Approve</button>' +
+        '<button class="btn btn-gold btn-xs" data-req-ok="' + i + '" title="Verifies the certificate and certifies this level">Approve &amp; certify</button>' +
         '<button class="btn btn-ghost btn-xs" data-req-no="' + i + '">Deny</button></div>';
     }).join("") : '<div class="empty">No level-change requests pending. 🌙</div>';
     reqEl.querySelectorAll("[data-req-ok]").forEach(function (b) {
       b.addEventListener("click", function () {
         var i = Number(b.getAttribute("data-req-ok")), r = LEVEL_REQUESTS[i];
         var u = ADMIN_USERS.find(function (x) { return x.name === r.name; });
-        if (u) u.role = r.to; else ADMIN_USERS.push({ name: r.name, role: r.to });
-        notify(r.name, "account", "Your level change was approved", "Your request to move from " + r.from + " to " + r.to + " was approved.");
+        if (!u) ADMIN_USERS.push({ name: r.name, role: "Member" });
+        setCredit(r.name, Math.max(creditOf(r.name), r.lvl || 1), true);
+        notify(r.name, "account", "Your level change was approved", "Your certificate was verified: you are now " + statusLabel(r.name).toLowerCase() + ". Your portal privileges follow your certified level.");
         LEVEL_REQUESTS.splice(i, 1); save(); renderAdmin();
       });
     });
@@ -1028,20 +1097,38 @@
     });
   }
 
-  /* -- member list with name search -- */
+  /* -- member list with name search: account type, enrolled training, certified level -- */
   function renderAdminUsers(filter) {
     var q = filter.trim().toLowerCase();
     var matched = ADMIN_USERS.filter(function (u) { return !q || u.name.toLowerCase().indexOf(q) !== -1; });
     var usersEl = document.getElementById("admin-users");
+    function opts(list, cur) { return list.map(function (o) { return '<option value="' + o[0] + '"' + (String(o[0]) === String(cur) ? " selected" : "") + ">" + o[1] + "</option>"; }).join(""); }
     usersEl.innerHTML = matched.map(function (u) {
-      var idx = ADMIN_USERS.indexOf(u);
-      return '<div class="row"><span class="grow"><b>' + esc(u.name) + "</b>" + (u.city ? "<small>" + esc(u.city) + "</small>" : "") + "</span>" +
-        '<select class="admin-role" data-i="' + idx + '" style="background:var(--bg-2);color:var(--cream);border:1px solid var(--line);border-radius:8px;padding:5px 8px;font-size:.78rem;">' +
-        ROLE_OPTIONS.map(function (r) { return "<option" + (r === u.role ? " selected" : "") + ">" + r + "</option>"; }).join("") +
-        "</select></div>";
+      var idx = ADMIN_USERS.indexOf(u), n = u.name, scholar = u.role === "Scholar";
+      return '<div class="row member-row"><span class="grow"><b>' + esc(n) + "</b><small>" + esc(statusLabel(n)) + (u.city ? " · " + esc(u.city) : "") + "</small></span>" +
+        '<label class="mini">Account<select class="admin-role" data-i="' + idx + '">' + TYPE_OPTIONS.map(function (r) { return "<option" + (r === u.role ? " selected" : "") + ">" + r + "</option>"; }).join("") + "</select></label>" +
+        (scholar ? '<span class="tag dim">No training — Level 0 &amp; 1 materials</span>'
+          : '<label class="mini" title="Trainee: training files and forms only — no privileges">Enrolled (trainee)<select data-enrol="' + esc(n) + '">' + opts([[0, "Not enrolled"], [1, "Level 1"], [2, "Level 2"], [3, "Level 3"]], enrolledLevel(n)) + "</select></label>" +
+            '<label class="mini" title="Certified: grants that level\'s privileges">Certified level<select data-cert="' + esc(n) + '">' + opts([[0, "None (Level 0)"], [1, "Level 1"], [2, "Level 2"], [3, "Fully certified"]], creditOf(n)) + "</select></label>") + "</div>";
     }).join("");
     usersEl.querySelectorAll(".admin-role").forEach(function (sel) {
-      sel.addEventListener("change", function () { ADMIN_USERS[Number(sel.getAttribute("data-i"))].role = sel.value; save(); });
+      sel.addEventListener("change", function () {
+        var u = ADMIN_USERS[Number(sel.getAttribute("data-i"))];
+        u.role = sel.value;
+        if (u.role === "Supervisor" && creditOf(u.name) < 3) setCredit(u.name, 3, true); /* supervisors are fully certified */
+        save(); renderAdminUsers(adminSearchEl.value);
+      });
+    });
+    usersEl.querySelectorAll("[data-enrol]").forEach(function (sel) {
+      sel.addEventListener("change", function () { setEnrolment(sel.getAttribute("data-enrol"), Number(sel.value)); renderAdminUsers(adminSearchEl.value); });
+    });
+    usersEl.querySelectorAll("[data-cert]").forEach(function (sel) {
+      sel.addEventListener("change", function () {
+        var n = sel.getAttribute("data-cert"), want = Number(sel.value);
+        setCredit(n, want);
+        renderAdminUsers(adminSearchEl.value);
+        if (creditOf(n) !== want) alert(n + " earned that level by passing it, so it can't be un-certified here.");
+      });
     });
 
     /* If a search finds nobody, point the admin to the registry to invite them. */
@@ -1078,25 +1165,27 @@
     /* Level 1 — invisible to everyone except trainees an admin has
        approved and members already at Level 2 and beyond. Nobody else
        even sees that the card exists. */
-    var vname = viewerName();
-    var approved = l1EnabledFor(vname) || !!fl(vname, "l1_reg");
-    var isAdmin = state.role === "admin";
-    var showTrack = !isAdmin && (approved || standing(vname) >= 2);
-    var takingL1 = showTrack && !levelComplete(vname, 1); /* actually working through it */
+    var vname = viewerName(), vkind = viewerKind();
+    var isAdmin = vkind === "admin", isScholar = vkind === "scholar";
+    /* Level 1 files: enrolled trainees, anyone certified at Level 1+, and scholars (reference only — they don't take the training) */
+    var showTrack = !isAdmin && (isScholar || hasLevelAccess(vname, 1));
+    var takingL1 = showTrack && !isScholar && !levelComplete(vname, 1); /* actually working through it */
     document.getElementById("l1-online-card").style.display = showTrack ? "block" : "none";
     if (showTrack) {
-      document.getElementById("l1-why").textContent = takingL1
-        ? (fl(vname, "l1_reg") ? "Unlocked when you registered for Level 1" : "Approved — enabled for you by an admin")
-        : "Level 1 — completed";
+      document.getElementById("l1-why").textContent = isScholar ? "Reference access — scholars don't take the training"
+        : takingL1 ? (fl(vname, "l1_reg") ? "Unlocked when you enrolled in Level 1" : "Enrolled by an admin")
+        : "Level 1 — certified";
       var l1 = state.learning.l1;
       document.getElementById("l1-rows").innerHTML = l1.map(function (m, i) {
         return '<div class="row"><span class="grow"><b>' + esc(m.title) + "</b><small>" + m.mins + " min · online module</small></span>" +
-          (m.done ? '<span class="tag ok">Completed</span>' : '<button class="btn btn-gold btn-xs" data-l1-watch="' + i + '">▶ Start</button>') +
+          (isScholar ? '<span class="tag dim">Reference</span>' : m.done ? '<span class="tag ok">Completed</span>' : '<button class="btn btn-gold btn-xs" data-l1-watch="' + i + '">▶ Start</button>') +
           "</div>";
       }).join("");
       document.querySelectorAll("[data-l1-watch]").forEach(function (b) {
         b.addEventListener("click", function () {
           state.learning.l1[Number(b.getAttribute("data-l1-watch"))].done = true;
+          /* remember completion on the member's own record so admins (and checkProgress) can see it too */
+          if (state.learning.l1.every(function (m) { return m.done; })) setFl(viewerName(), "l1_mod", true);
           save(); checkProgress(viewerName()); renderLearning();
         });
       });
@@ -1119,7 +1208,7 @@
           capTag + "</div>" + (sub ? feedbackNote(sub) : "");
         renderFormulation(modsDone);
       } else {
-        document.getElementById("l1-capstone").innerHTML = "";
+        document.getElementById("l1-capstone").innerHTML = isScholar ? materialsHtml(1) : "";
         hideFormulationCard();
       }
     } else {
@@ -1134,12 +1223,12 @@
     /* Admin — approve Level 1 access per registered Level 0 trainee */
     document.getElementById("l1-admin-card").style.display = isAdmin ? "block" : "none";
     if (isAdmin) {
-      var level0 = ADMIN_USERS.filter(function (u) { return u.role.indexOf("Level 0") !== -1; });
+      var level0 = ADMIN_USERS.filter(function (u) { return u.role === "Member" && creditOf(u.name) === 0; });
       document.getElementById("l1-admin-rows").innerHTML = level0.map(function (u) {
         var on = l1EnabledFor(u.name);
-        return '<div class="row"><span class="grow"><b>' + esc(u.name) + "</b><small>" + esc(u.role) + (u.city ? " · " + esc(u.city) : "") + "</small></span>" +
-          (on ? '<span class="tag ok">Level 1 approved</span>' : '<span class="tag dim">Not approved</span>') +
-          '<button class="btn ' + (on ? "btn-ghost" : "btn-gold") + ' btn-xs" data-l1-toggle="' + esc(u.name) + '">' + (on ? "Revoke" : "Approve") + "</button></div>";
+        return '<div class="row"><span class="grow"><b>' + esc(u.name) + "</b><small>" + esc(statusLabel(u.name)) + (u.city ? " · " + esc(u.city) : "") + "</small></span>" +
+          (on ? '<span class="tag ok">Enrolled in Level 1</span>' : '<span class="tag dim">Not enrolled</span>') +
+          '<button class="btn ' + (on ? "btn-ghost" : "btn-gold") + ' btn-xs" data-l1-toggle="' + esc(u.name) + '">' + (on ? "Un-enrol" : "Enrol") + "</button></div>";
       }).join("");
       document.querySelectorAll("[data-l1-toggle]").forEach(function (b) {
         b.addEventListener("click", function () {
@@ -1151,42 +1240,49 @@
     }
   }
 
-  /* ---- Level 1 capstone: TIIP Case Formulation Sheet ---- */
+  /* ---- Level 1 case formulation: TIIP Case Formulation Sheet (2026) ---- */
   function filled(s) { return !!(s && String(s).trim()); }
   function fSet(obj, path, v) {
     var ks = path.split("."), last = ks.pop(), t = obj;
     for (var i = 0; i < ks.length; i++) t = t[ks[i]];
     t[last] = v;
   }
+  function itemOk(st, it) {
+    if (!st) return false;
+    if (it.free) return filled(st.note);
+    if (!st.on) return false;
+    if (it.pain) return !!(st.opts && Object.keys(st.opts).some(function (k) { return st.opts[k]; })) || filled(st.other);
+    if (it.spec) return filled(st.note);
+    return true;
+  }
+  function elementOk(f, el) { return el.items.some(function (it) { return itemOk(f.elements[el.key][it.k], it); }); }
+  function figOk(g) {
+    return filled(g.situation) && filled(g.ruh) && filled(g.aql) &&
+      (filled(g.primary) || filled(g.secondary) || filled(g.instrumental)) &&
+      (filled(g.safety) || filled(g.avoidance) || filled(g.pain));
+  }
+  function planRowOk(r) { return filled(r.goal) && filled(r.intervention) && filled(r.details); }
 
   var FORM_SECTIONS = [
-    { id: "profile", title: "Patient profile / demographics", done: function (f) { return filled(f.alias) && filled(f.profile); } },
+    { id: "profile", title: "Patient name & profile / demographics", done: function (f) { return filled(f.alias) && filled(f.profile); } },
     { id: "presenting", title: "Presenting problem / complaints", done: function (f) { return filled(f.presenting); } },
     { id: "precipitating", title: "Precipitating event", done: function (f) { return filled(f.precipitating); } },
     { id: "history", title: "Significant early or life experiences", done: function (f) { return filled(f.history); } },
     { id: "assess", title: "Assessment", done: function (f) { return FORM_RATINGS.every(function (r) { return filled(f.assess[r[0]]); }); } },
     { id: "additional", title: "Additional details", done: function (f) { return filled(f.additional); } },
     { id: "dsm", title: "Diagnosis (DSM-5)", done: function (f) { return filled(f.dsm); } },
-    { id: "elements", title: "Diagnosis (TIIP elements)", done: function (f) {
-        return TIIP_ELEMENTS.every(function (el) {
-          return el.items.some(function (it) { var st = f.elements[el.key][it[0]]; return st && st.on; });
-        });
-      } },
+    { id: "elements", title: "Diagnosis (TIIP elements)", done: function (f) { return TIIP_ELEMENTS.every(function (el) { return elementOk(f, el); }); } },
     { id: "dominant", title: "Dominant area of dysfunction", done: function (f) { return filled(f.dominant); } },
     { id: "narrative", title: "Conceptualization (narrative form)", done: function (f) { return filled(f.narrative); } },
-    { id: "plan", title: "Therapy plan", done: function (f) { return f.plan.every(function (r) { return filled(r.goal) && filled(r.intervention); }); } },
+    { id: "plan", title: "Therapy plan", done: function (f) { return PLAN_DOMAINS.every(function (d) { return f.plan.some(function (r) { return r.domain === d && planRowOk(r); }); }); } },
     { id: "prognosis", title: "Prognosis", done: function (f) { return filled(f.prognosis); } },
-    { id: "figure", title: "Figure — the vicious cycle", done: function (f) {
-        var g = f.fig;
-        return filled(g.situation) && filled(g.ruh) && filled(g.aql) && filled(g.qalb) && filled(g.primary) &&
-          (filled(g.safety) || filled(g.avoidance) || filled(g.pain));
-      } }
+    { id: "figure", title: "Figure — situations 1 & 2", done: function (f) { return figOk(f.fig) && figOk(f.fig2); } }
   ];
 
-  function fTxt(label, path, val, ph, big) {
+  function fTxt(label, path, val, ph, rows) {
     return '<div class="field"><label>' + label + "</label>" +
-      (big
-        ? '<textarea data-f="' + path + '" placeholder="' + esc(ph || "") + '">' + esc(val || "") + "</textarea>"
+      (rows
+        ? '<textarea rows="' + rows + '" data-f="' + path + '" placeholder="' + esc(ph || "") + '">' + esc(val || "") + "</textarea>"
         : '<input type="text" data-f="' + path + '" placeholder="' + esc(ph || "") + '" value="' + esc(val || "") + '" />') +
       "</div>";
   }
@@ -1195,64 +1291,78 @@
       return '<label class="pill' + (val === o ? " sel" : "") + '"><input type="radio" name="' + name + '" data-f="' + path + '" value="' + esc(o) + '"' + (val === o ? " checked" : "") + " />" + esc(o) + "</label>";
     }).join("") + "</div>";
   }
-  function figHTML(prefix, g) {
-    return '<div class="fig-grid">' +
-      '<div class="fig-full">' + fTxt("Situation / trigger", prefix + ".situation", g.situation, "A specific recent event that set the cycle in motion…", true) + "</div>" +
-      fTxt("Rūḥ — spiritual symptoms", prefix + ".ruh", g.ruh, "e.g., prayer feels hollow; distance from Allah", true) +
-      fTxt("ʿAql — thoughts", prefix + ".aql", g.aql, "Automatic thoughts / appraisals in the moment", true) +
-      '<div class="fig-full fig-qalb">' + fTxt("Qalb — state of the heart", prefix + ".qalb", g.qalb, "The resultant state of the heart at the center of the cycle", true) + "</div>" +
-      '<div><span class="flabel">Iḥsās — emotions</span>' +
-        fTxt("Primary emotion", prefix + ".primary", g.primary, "") +
-        fTxt("Secondary emotion", prefix + ".secondary", g.secondary, "") +
-        fTxt("Instrumental emotion", prefix + ".instrumental", g.instrumental, "") + "</div>" +
-      '<div><span class="flabel">Nafs — behavioral inclinations</span>' +
-        fTxt("Safety behaviors", prefix + ".safety", g.safety, "") +
-        fTxt("Avoidance behaviors", prefix + ".avoidance", g.avoidance, "") +
-        fTxt("Pain / pleasure", prefix + ".pain", g.pain, "") + "</div>" +
-      "</div>";
+  function elementItemHtml(el, it, st) {
+    var id = el.key + ":" + it.k, cls = "chk-item" + (it.wide ? " wide" : "");
+    if (it.free) return '<div class="' + cls + ' on"><span class="flabel">' + it.t + '</span><textarea class="spec" rows="3" data-eln="' + id + '" placeholder="Other ʿaqlī patterns, with an example…">' + esc(st.note || "") + "</textarea></div>";
+    var head = '<label><input type="checkbox" data-el="' + id + '"' + (st.on ? " checked" : "") + " /> <span>" + it.t + "</span></label>";
+    var body = "";
+    if (it.pain) {
+      body = '<div class="spec pain-opts">' + PAIN_OPTS.map(function (o) {
+        return '<label><input type="checkbox" data-pain="' + o[0] + '"' + (st.opts && st.opts[o[0]] ? " checked" : "") + " /> " + o[1] + "</label>";
+      }).join("") + '<label class="pain-other">Other <input type="text" data-painother="1" value="' + esc(st.other || "") + '" /></label></div>';
+    } else if (it.spec) {
+      body = '<textarea class="spec" rows="3" data-eln="' + id + '" placeholder="Specify with an example…">' + esc(st.note || "") + "</textarea>";
+    }
+    return '<div class="' + cls + (st.on ? " on" : "") + '">' + head + body + "</div>";
+  }
+  function elementsHtml(f) {
+    return '<div class="warn-banner"><b>!</b> Each part of the TIIP elements should be filled in this section. Kindly provide examples of the content of each part!</div>' +
+      TIIP_ELEMENTS.map(function (el) {
+        return '<div class="el-block"><h4>' + el.label + '</h4><div class="chkgrid">' + el.items.map(function (it) {
+          return elementItemHtml(el, it, f.elements[el.key][it.k] || {});
+        }).join("") + "</div></div>";
+      }).join("");
+  }
+  function planHtml(f) {
+    var rows = f.plan.map(function (r, i) {
+      return '<div class="plan-tr"><div class="plan-dom"><select data-plan="' + i + ':domain" aria-label="TIIP domain">' + PLAN_DOMAINS.map(function (d) { return "<option" + (r.domain === d ? " selected" : "") + ">" + d + "</option>"; }).join("") + "</select>" +
+        (i >= PLAN_DOMAINS.length ? '<button type="button" class="btn btn-ghost btn-xs" data-plan-del="' + i + '" title="Remove this row">✕</button>' : "") + "</div>" +
+        '<textarea rows="3" data-plan="' + i + ':goal" placeholder="Goal">' + esc(r.goal) + "</textarea>" +
+        '<textarea rows="3" data-plan="' + i + ':intervention" placeholder="TIIP signature intervention">' + esc(r.intervention) + "</textarea>" +
+        '<textarea rows="3" data-plan="' + i + ':details" placeholder="Details">' + esc(r.details) + "</textarea></div>";
+    }).join("");
+    return '<div class="plan-table"><div class="plan-th"><span>Domain</span><span>Goal</span><span>Intervention</span><span>Details</span></div>' +
+      '<div class="plan-tr example"><div class="plan-dom"><span class="tag gold">Example</span></div><div>' + esc(PLAN_EXAMPLE.goal) + "</div><div>" + esc(PLAN_EXAMPLE.intervention) + "</div><div>" + esc(PLAN_EXAMPLE.details) + "</div></div>" +
+      rows + "</div>" +
+      '<button type="button" class="btn btn-ghost btn-xs" id="l1f-addrow"' + (f.plan.length >= PLAN_MAX ? " disabled" : "") + ">＋ Add a row (" + f.plan.length + " / " + PLAN_MAX + ")</button>";
+  }
+  function figureHtml(prefix, g, n) {
+    return '<div class="fig-sit"><h4>Situation ' + n + "</h4>" +
+      fTxt("Specific triggering situation or event", prefix + ".situation", g.situation, "A specific event that triggered distressing thoughts, emotions and behaviors…", 2) +
+      '<div class="fig-row"><div class="fig-col"><span class="fig-chip ruh">Rūḥ / Spirit</span>' + fTxt("Spiritual symptoms", prefix + ".ruh", g.ruh, "e.g., prayer feels hollow; distance from Allah", 6) + "</div>" +
+      '<div class="fig-dia">' + SWIRL_SVG + '</div>' +
+      '<div class="fig-col"><span class="fig-chip aql">ʿAql / Thoughts</span>' + fTxt("Thoughts", prefix + ".aql", g.aql, "Automatic thoughts / appraisals in the moment", 6) + "</div></div>" +
+      '<div class="fig-row2"><div class="fig-col"><span class="fig-chip nafs">Nafs / Behavioral inclinations</span>' +
+        fTxt("Safety behaviors", prefix + ".safety", g.safety, "", 2) + fTxt("Avoidance behaviors", prefix + ".avoidance", g.avoidance, "", 2) + fTxt("Pain / pleasure", prefix + ".pain", g.pain, "", 2) + "</div>" +
+      '<div class="fig-col"><span class="fig-chip ihsas">Iḥsās / Emotions</span>' +
+        fTxt("Primary emotion", prefix + ".primary", g.primary, "", 2) + fTxt("Secondary emotion", prefix + ".secondary", g.secondary, "", 2) + fTxt("Instrumental emotion", prefix + ".instrumental", g.instrumental, "", 2) + "</div></div></div>";
   }
 
   function formSectionBody(id, f) {
-    if (id === "profile") return '<p class="hint">A concise narrative of who the patient is. Use a de-identified alias only.</p>' +
-      fTxt("Case alias (never real names)", "alias", f.alias, "e.g., Case M-42") +
-      fTxt("Profile / demographics", "profile", f.profile, "Age, gender, marital status, education, occupation, socioeconomic status…", true);
-    if (id === "presenting") return '<p class="hint">The patient’s chief complaints, in their own terms where possible.</p>' +
-      fTxt("Presenting problem / complaints", "presenting", f.presenting, "", true);
-    if (id === "precipitating") return '<p class="hint">The recent, specific incident or catalyst that triggered the current symptoms — what led the patient to seek therapy at this particular time.</p>' +
-      fTxt("Precipitating event", "precipitating", f.precipitating, "", true);
-    if (id === "history") return '<p class="hint">Upbringing; grief, loss, trauma or neglect; family of origin and structure; socioeconomic, cultural and religious background; familial mental health — linked to the current issues.</p>' +
-      fTxt("Significant early or life experiences", "history", f.history, "", true);
+    if (id === "profile") return '<p class="hint">Use a de-identified alias only — never a real name.</p>' +
+      fTxt("Patient name (de-identified alias)", "alias", f.alias, "e.g., Case M-42") +
+      '<p class="hint">Kindly provide a concise narrative outlining your patient’s profile. This profile may encompass demographic details such as age, gender, marital status, educational background, occupation, socioeconomic status, etc.</p>' +
+      fTxt("Patient profile / demographics", "profile", f.profile, "", 5);
+    if (id === "presenting") return '<p class="hint">Please describe your patient’s chief complaints.</p>' + fTxt("Presenting problem / complaints", "presenting", f.presenting, "", 5);
+    if (id === "precipitating") return '<p class="hint">The precipitating event holds significant importance in comprehending an individual’s present psychological problems. Essentially, it pertains to a recent and specific incident or catalyst that triggered or contributed to the emergence of the current psychological symptoms the individual is experiencing. In this section you are expected to explain what are the precipitating factors that led your patient to seek therapy at this particular time.</p>' +
+      fTxt("Precipitating event", "precipitating", f.precipitating, "", 6);
+    if (id === "history") return '<p class="hint">Kindly provide an account of your patient’s significant early or life experiences. These may encompass their upbringing, experiences with grief, loss, trauma and neglect, historical relationship with their parents and family of origin, family structure, historical socioeconomic background, upbringing with respect to culture and religion, parental or familial mental well-being, and more. It is critical to ensure that the mentioned experiences are linked to the case formulation and are relevant to your patient’s current issues.</p>' +
+      fTxt("Significant early or life experiences", "history", f.history, "", 9);
     if (id === "assess") return FORM_RATINGS.map(function (r) {
-        return '<span class="flabel">' + r[1] + "</span>" + pillGroup("l1f-" + r[0], "assess." + r[0], r[2], f.assess[r[0]]);
+        return '<span class="flabel">' + r[1] + '</span><p class="hint" style="margin:0 0 6px;"><em>(Mark the one that pertains to your patient below)</em></p>' + pillGroup("l1f-" + r[0], "assess." + r[0], r[2], f.assess[r[0]]);
       }).join("");
-    if (id === "additional") return '<p class="hint">Anything else relevant to the case: current medication, alcohol/drug use, suicidal ideation, etc.</p>' +
-      fTxt("Additional details", "additional", f.additional, "", true);
-    if (id === "dsm") return fTxt("Diagnosis (DSM-5)", "dsm", f.dsm, "e.g., F41.1 Generalized Anxiety Disorder", true);
-    if (id === "elements") return '<p class="hint">Fill in every TIIP element, with a concrete example for each item you mark.</p>' +
-      TIIP_ELEMENTS.map(function (el) {
-        return '<div class="el-block"><h4>' + el.label + '</h4><div class="chkgrid">' + el.items.map(function (it) {
-          var st = f.elements[el.key][it[0]] || {};
-          return '<div class="chk-item' + (st.on ? " on" : "") + '"><label><input type="checkbox" data-el="' + el.key + ":" + it[0] + '"' + (st.on ? " checked" : "") + ' /> <span>' + it[1] + "</span></label>" +
-            '<input class="spec" type="text" placeholder="Specify with an example…" data-eln="' + el.key + ":" + it[0] + '" value="' + esc(st.note || "") + '" /></div>';
-        }).join("") + "</div></div>";
-      }).join("");
-    if (id === "dominant") return '<p class="hint">Specify only one dominant area of dysfunction.</p>' +
-      pillGroup("l1f-dominant", "dominant", PLAN_DOMAINS, f.dominant);
-    if (id === "narrative") return '<p class="hint">Weave together the complaints, early experiences, precipitating factors and areas of dysfunction from a TIIP perspective — a summary encompassing all elements, their interconnections, and the specific formation that explains the vicious cycle.</p>' +
-      fTxt("Narrative conceptualization", "narrative", f.narrative, "", true);
-    if (id === "plan") return '<p class="hint">State a therapy goal, a TIIP signature intervention, and details for each of the four domains.</p>' +
-      '<div class="ex-row"><span class="tag gold">Example</span> <b>Goal:</b> Externalize and cognitively defuse negative thinking from beliefs · <b>Intervention:</b> RIDA · <b>Details:</b> Teach the client they are not their thoughts; externalize negative thinking to Shayṭān’s running narrative.</div>' +
-      f.plan.map(function (row, i) {
-        return '<div class="plan-row"><span class="tag gold">' + row.domain + "</span>" +
-          '<div class="field"><label>Goal</label><input type="text" data-plan="' + i + ':goal" value="' + esc(row.goal) + '" /></div>' +
-          '<div class="field"><label>TIIP intervention</label><input type="text" data-plan="' + i + ':intervention" placeholder="e.g., RIDA, murāqabah, two-chair…" value="' + esc(row.intervention) + '" /></div>' +
-          '<div class="field"><label>Details</label><input type="text" data-plan="' + i + ':details" value="' + esc(row.details) + '" /></div></div>';
-      }).join("");
-    if (id === "prognosis") return '<p class="hint">Your prediction of the expected outcome of treatment — how likely is full remission?</p>' +
-      fTxt("Prognosis", "prognosis", f.prognosis, "", true);
-    if (id === "figure") return '<p class="hint">Start from a specific triggering situation, then map the thoughts, emotions, behaviors and spiritual symptoms it induced — with the qalb at the center of the cycle.</p>' +
-      figHTML("fig", f.fig) +
-      '<details style="margin-top:12px;"><summary style="cursor:pointer;font-size:.82rem;color:var(--muted);">＋ Situation 2 (optional)</summary>' + figHTML("fig2", f.fig2) + "</details>";
+    if (id === "additional") return '<p class="hint">Please include any additional details that are relevant to the case that may not have been mentioned above, these may include current medication, alcohol/drug use, suicidal ideation, etc.</p>' + fTxt("Additional details", "additional", f.additional, "", 6);
+    if (id === "dsm") return fTxt("Diagnosis (DSM-5)", "dsm", f.dsm, "e.g., F41.1 Generalized Anxiety Disorder", 5);
+    if (id === "elements") return elementsHtml(f);
+    if (id === "dominant") return '<p class="hint">Remember to specify only one dominant area of dysfunction. Please make sure to choose only one.</p>' +
+      pillGroup("l1f-dominant", "dominant", ["ʿAql", "Nafs", "Rūḥ", "Iḥsās"], f.dominant);
+    if (id === "narrative") return '<p class="hint">In your conceptualization be sure to incorporate all the above information you provided regarding your patient’s complaints, early life experiences, precipitating factors, and areas of dysfunction from a TIIP perspective. You are expected to construct a narrative summary that encompasses all TIIP elements, elucidating their interconnections and delineating the specific formation that explains the vicious cycle.</p>' +
+      fTxt("Conceptualization (in narrative form)", "narrative", f.narrative, "", 12);
+    if (id === "plan") return '<p class="hint">In this part you are expected to describe your therapy plan based on the above conceptualization for each of the TIIP domains (ʿaql, iḥsās, rūḥ, nafs). You should clearly articulate your therapy goals, specify TIIP signature interventions, and provide comprehensive details that align with your plan. Cover <b>all four domains</b>; add extra rows (up to ' + PLAN_MAX + ") as needed.</p>" + planHtml(f);
+    if (id === "prognosis") return '<p class="hint">Please briefly state your prediction about the expected outcome of the treatment. How likely is it for them to achieve full remission?</p>' + fTxt("Prognosis", "prognosis", f.prognosis, "", 5);
+    if (id === "figure") return '<p class="hint">In this section, we require a detailed account of your patient’s conceptualization regarding a specific problem that is currently having a detrimental impact on their life.</p>' +
+      '<p class="hint">Please start by providing a specific triggering situation or event. Subsequently, describe the particular thoughts, emotions, behaviors, and spiritual symptoms that your patient experienced within the context of this situation. The term “situation” refers to an event(s) that serve as triggers and induce distressing thoughts, emotions, unwanted behaviors, and related experiences in your patient.</p>' +
+      figureHtml("fig", f.fig, 1) + figureHtml("fig2", f.fig2, 2);
     return "";
   }
 
@@ -1269,7 +1379,7 @@
       var left = state.learning.l1.filter(function (m) { return !m.done; }).length;
       card.removeAttribute("data-built");
       card.innerHTML = '<h3>📝 TIIP Case Formulation Sheet <span class="tag dim">🔒 Locked</span></h3>' +
-        '<p class="view-lead" style="margin-bottom:0;font-size:.85rem;">The end-of-level case conceptualization opens once every module is complete — ' + left + " module" + (left === 1 ? "" : "s") + ' to go. It follows the Khalil Center <strong>TIIP Case Formulation Sheet</strong>: no section may be left empty, and submissions are reviewed by an admin, who passes them or asks you to retry, before Level 1 is credited.</p>';
+        '<p class="view-lead" style="margin-bottom:0;font-size:.85rem;">The case formulation opens once every Level 1 module is complete — ' + left + " module" + (left === 1 ? "" : "s") + ' to go. It follows the Khalil Center <strong>TIIP Case Formulation Sheet (2026)</strong>: no section may be left empty, and an admin passes it or asks you to retry before Level 1 is certified.</p>';
       return;
     }
 
@@ -1281,9 +1391,14 @@
     card.setAttribute("data-built", "1");
 
     var doneCount = FORM_SECTIONS.filter(function (s) { return s.done(f); }).length;
-    var sub = mySub(1);
+    var sub = mySub(1), passed = sub && sub.status === "passed";
     card.innerHTML = '<h3>📝 TIIP Case Formulation Sheet' + (sub ? " " + subTags(sub) : "") + "</h3>" +
-      '<p class="view-lead" style="margin-bottom:12px;font-size:.85rem;">Complete every section — <strong>no section may be left empty</strong>. Use a de-identified case alias only. Your formulation is reviewed by an admin — who will pass it or ask you to retry — before Level 1 is credited.</p>' +
+      '<div class="guide-card"><b>Guidelines</b><ul>' +
+      "<li>All sections within the case formulation must be completed; no sections should be left empty.</li>" +
+      "<li>The case conceptualization must be presented electronically — it is not handwritten or saved as an image.</li>" +
+      "<li>Your name is included in the file name when you submit or download (Name_Surname_TIIP Level 1 Case Formulation).</li>" +
+      "<li>Submissions that do not comply with these guidelines will not be evaluated.</li></ul>" +
+      '<p style="margin:6px 0 0;">Use a de-identified alias for your patient — never real names or identifying details.</p></div>' +
       '<div class="prog"><div class="prog-head"><b>Sections complete</b><span id="l1f-count">' + doneCount + " / " + FORM_SECTIONS.length + '</span></div><div class="bar"><i id="l1f-bar" style="width:' + Math.round(doneCount / FORM_SECTIONS.length * 100) + '%"></i></div></div>' +
       FORM_SECTIONS.map(function (s, idx) {
         var ok = s.done(f);
@@ -1292,10 +1407,10 @@
           '<div class="fsec-body">' + formSectionBody(s.id, f) + "</div></details>";
       }).join("") +
       '<div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:14px;">' +
-      '<button class="btn btn-gold" id="l1f-submit"' + (doneCount === FORM_SECTIONS.length && !(sub && sub.status === "passed") ? "" : " disabled") + ">" + (sub && sub.status !== "passed" ? "Resubmit for review" : sub ? "Passed — Level 1 credited" : "Submit for admin review") + "</button>" +
+      '<button class="btn btn-gold" id="l1f-submit"' + (doneCount === FORM_SECTIONS.length && !passed ? "" : " disabled") + ">" + (sub && sub.status !== "passed" ? "Resubmit for review" : passed ? "Passed — Level 1 certified" : "Submit for admin review") + "</button>" +
       '<button class="btn btn-ghost" id="l1f-download">⬇ Download draft (.txt)</button>' +
       '<span class="tag dim">Drafts save automatically (demo · localStorage)</span></div>' +
-      '<p class="note"><b>Submission guidelines:</b> every section completed · electronic format only (no handwriting or images) · file named <em>Name_Surname_TIIP Level 1 Case Formulation</em>. Non-compliant submissions are not evaluated.</p>';
+      '<p class="note"><b>Submission:</b> every section completed · electronic format only · file named <em>Name_Surname_TIIP Level 1 Case Formulation</em>. An admin reviews it and either passes it or asks you to retry with feedback, and you are emailed the result.</p>';
 
     bindFormulation(card, f);
   }
@@ -1319,6 +1434,7 @@
   }
 
   function bindFormulation(card, f) {
+    function itemState(id) { var a = id.split(":"); return f.elements[a[0]][a[1]] || (f.elements[a[0]][a[1]] = { on: false, note: "" }); }
     /* assigned as properties (not addEventListener) so re-renders never stack handlers */
     card.oninput = function (e) {
       var t = e.target;
@@ -1327,11 +1443,8 @@
       var pl = t.getAttribute("data-plan");
       if (pl) { var a = pl.split(":"); f.plan[Number(a[0])][a[1]] = t.value; save(); updateFormulationMeta(card, f); return; }
       var en = t.getAttribute("data-eln");
-      if (en) {
-        var b = en.split(":");
-        var st = f.elements[b[0]][b[1]] || { on: true, note: "" };
-        st.note = t.value; f.elements[b[0]][b[1]] = st; save();
-      }
+      if (en) { itemState(en).note = t.value; if (en.indexOf(":other") !== -1 && en.indexOf("aql") === 0) itemState(en).on = true; save(); updateFormulationMeta(card, f); return; }
+      if (t.hasAttribute("data-painother")) { itemState("nafs:pain").other = t.value; save(); updateFormulationMeta(card, f); }
     };
     card.onchange = function (e) {
       var t = e.target;
@@ -1343,34 +1456,46 @@
         updateFormulationMeta(card, f);
       }
       if (t.type === "checkbox" && t.getAttribute("data-el")) {
-        var a = t.getAttribute("data-el").split(":");
-        var st = f.elements[a[0]][a[1]] || { on: false, note: "" };
-        st.on = t.checked; f.elements[a[0]][a[1]] = st; save();
+        var st = itemState(t.getAttribute("data-el"));
+        st.on = t.checked; save();
         t.closest(".chk-item").classList.toggle("on", t.checked);
         updateFormulationMeta(card, f);
       }
+      if (t.type === "checkbox" && t.hasAttribute("data-pain")) {
+        var ps = itemState("nafs:pain"); ps.opts = ps.opts || {};
+        ps.opts[t.getAttribute("data-pain")] = t.checked; save(); updateFormulationMeta(card, f);
+      }
+      if (t.tagName === "SELECT" && t.getAttribute("data-plan")) {
+        var a = t.getAttribute("data-plan").split(":"); f.plan[Number(a[0])][a[1]] = t.value; save(); updateFormulationMeta(card, f);
+      }
     };
     card.onclick = function (e) {
-      var id = e.target.id;
+      var b = e.target.closest("button");
+      if (!b) return;
+      var id = b.id;
+      if (id === "l1f-addrow" && f.plan.length < PLAN_MAX) { f.plan.push({ domain: PLAN_DOMAINS[f.plan.length % 4], goal: "", intervention: "", details: "" }); save(); renderLearning(); return; }
+      if (b.hasAttribute("data-plan-del")) { f.plan.splice(Number(b.getAttribute("data-plan-del")), 1); save(); renderLearning(); return; }
       if (id === "l1f-submit") {
         if (!FORM_SECTIONS.every(function (s) { return s.done(f); })) return;
-        var fname = ROLES[state.role].name.replace(/\s+/g, "_") + "_TIIP Level 1 Case Formulation";
+        var fname = viewerName().replace(/\s+/g, "_") + "_TIIP Level 1 Case Formulation";
         state.learning.l1Submission = { name: fname, at: iso(new Date()) };
+        var text = formulationText(f);
         submitConceptualization(1, f.alias, {
           presenting: f.presenting, dominant: f.dominant, narrative: f.narrative, prognosis: f.prognosis,
-          plan: f.plan.map(function (r) { return r.domain + " — " + r.goal + " (" + r.intervention + ")"; }).join("; ")
-        }, { name: fname + ".txt", size: 0, dataUrl: "" });
+          plan: f.plan.filter(planRowOk).map(function (r) { return r.domain + " — " + r.goal + " (" + r.intervention + ")"; }).join("; ")
+        }, { name: fname + ".txt", size: text.length, dataUrl: "data:text/plain;charset=utf-8," + encodeURIComponent(text) });
         renderLearning();
       }
-      if (id === "l1f-download") downloadFormulation(f);
+      if (id === "l1f-download") downloadText(viewerName().replace(/[^\w]+/g, "_") + "_TIIP_Level_1_Case_Formulation.txt", formulationText(f));
     };
   }
 
-  function downloadFormulation(f) {
+  /* the whole formulation as plain text — used for the download and attached for the reviewing admin */
+  function formulationText(f) {
     var L = [];
     function head(t) { L.push("", t.toUpperCase(), "-".repeat(t.length)); }
-    L.push("TIIP CASE FORMULATION SHEET", "Khalil Center | TIIP Level 1", "Candidate: " + ROLES[state.role].name);
-    head("Patient (alias)"); L.push(f.alias || "—");
+    L.push("TIIP CASE FORMULATION SHEET", "Khalil Center | TIIP Level 1 (2026 sheet)", "Candidate: " + viewerName());
+    head("Patient (de-identified alias)"); L.push(f.alias || "—");
     head("Patient profile / demographics"); L.push(f.profile || "—");
     head("Presenting problem / complaints"); L.push(f.presenting || "—");
     head("Precipitating event"); L.push(f.precipitating || "—");
@@ -1383,30 +1508,31 @@
     TIIP_ELEMENTS.forEach(function (el) {
       L.push(el.label + ":");
       el.items.forEach(function (it) {
-        var st = f.elements[el.key][it[0]];
-        if (st && st.on) L.push("  [x] " + it[1] + (st.note ? " — " + st.note : ""));
+        var st = f.elements[el.key][it.k];
+        if (!st) return;
+        if (it.free) { if (filled(st.note)) L.push("  Other: " + st.note); return; }
+        if (!st.on) return;
+        var extra = "";
+        if (it.pain) extra = " — " + PAIN_OPTS.filter(function (o) { return st.opts && st.opts[o[0]]; }).map(function (o) { return o[1]; }).concat(filled(st.other) ? ["Other: " + st.other] : []).join(", ");
+        else if (st.note) extra = " — " + st.note;
+        L.push("  [x] " + it.t + extra);
       });
     });
     head("Dominant area of dysfunction"); L.push(f.dominant || "—");
     head("Conceptualization (narrative form)"); L.push(f.narrative || "—");
     head("Therapy plan");
-    f.plan.forEach(function (r) { L.push(r.domain + " — Goal: " + (r.goal || "—") + " | Intervention: " + (r.intervention || "—") + " | Details: " + (r.details || "—")); });
+    f.plan.forEach(function (r) { if (filled(r.goal) || filled(r.intervention) || filled(r.details)) L.push(r.domain + " — Goal: " + (r.goal || "—") + " | Intervention: " + (r.intervention || "—") + " | Details: " + (r.details || "—")); });
     head("Prognosis"); L.push(f.prognosis || "—");
     [["Situation 1", f.fig], ["Situation 2", f.fig2]].forEach(function (p) {
       var g = p[1];
-      if (p[0] === "Situation 2" && !Object.keys(g).some(function (k) { return filled(g[k]); })) return;
       head("Figure — " + p[0]);
       L.push("Situation/trigger: " + (g.situation || "—"),
-        "Ruh/spirit: " + (g.ruh || "—"),
-        "'Aql/thoughts: " + (g.aql || "—"),
-        "Qalb/heart: " + (g.qalb || "—"),
-        "Ihsas — primary: " + (g.primary || "—") + " | secondary: " + (g.secondary || "—") + " | instrumental: " + (g.instrumental || "—"),
-        "Nafs — safety: " + (g.safety || "—") + " | avoidance: " + (g.avoidance || "—") + " | pain/pleasure: " + (g.pain || "—"));
+        "Rūḥ / spirit: " + (g.ruh || "—"),
+        "ʿAql / thoughts: " + (g.aql || "—"),
+        "Nafs — safety: " + (g.safety || "—") + " | avoidance: " + (g.avoidance || "—") + " | pain/pleasure: " + (g.pain || "—"),
+        "Iḥsās — primary: " + (g.primary || "—") + " | secondary: " + (g.secondary || "—") + " | instrumental: " + (g.instrumental || "—"));
     });
-    var a = document.createElement("a");
-    a.href = URL.createObjectURL(new Blob([L.join("\n")], { type: "text/plain" }));
-    a.download = ROLES[state.role].name.replace(/[^\w]+/g, "_") + "_TIIP_Level_1_Case_Formulation.txt";
-    a.click(); URL.revokeObjectURL(a.href);
+    return L.join("\n");
   }
 
   /* =========================================================
@@ -1488,13 +1614,13 @@
       if (!L.internal || !canInternal(n)) return;
       var v = listingView(n);
       out.push({ name: n, cred: v.credentials || DIR_LEVELS[v.level] || "", city: [v.city, v.country].filter(Boolean).join(", ") || "Location not shown", region: "", tz: "",
-        langs: v.languages, focus: v.specialties, lic: v.license || "", accepting: !!(L.referrals && standing(n) >= 2), level: v.level, member: true, bio: v.bio, email: v.contactEmail });
+        langs: v.languages, focus: v.specialties, lic: v.license || "", accepting: !!(L.referrals && creditOf(n) >= 2), level: v.level, member: true, bio: v.bio, email: v.contactEmail });
     });
     return out;
   }
   function renderDirCta() {
     var name = viewerName(), el = document.getElementById("dir-cta");
-    if (state.role === "admin") { el.innerHTML = ""; return; }
+    if (viewerKind() === "admin" || viewerKind() === "scholar") { el.innerHTML = ""; return; }
     if (canInternal(name)) {
       var L = listingOf(name);
       el.innerHTML = '<div class="jr-banner" style="margin-bottom:16px;"><span class="grow"><b>Your listing:</b> ' +
@@ -1502,7 +1628,7 @@
         (L && L.referrals ? ' <span class="tag gold">Accepting referrals</span>' : "") + "</span>" +
         '<button class="btn btn-gold btn-xs" data-go="profile">' + (L && L.internal ? "Edit my listing" : "Create my listing") + "</button></div>";
     } else {
-      el.innerHTML = '<div class="jr-banner" style="margin-bottom:16px;"><span class="grow"><b>Want to be listed?</b> Members who complete Level 1 can list themselves in this directory.</span><button class="btn btn-ghost btn-xs" data-go="certification">See my journey</button></div>';
+      el.innerHTML = '<div class="jr-banner" style="margin-bottom:16px;"><span class="grow"><b>Want to be listed?</b> Members who are <b>certified at Level 1</b> can list themselves in this directory.</span><button class="btn btn-ghost btn-xs" data-go="certification">See my journey</button></div>';
     }
   }
   function renderDirectory() {
@@ -1577,7 +1703,7 @@
     document.getElementById("prof-lead").textContent = "Build your listing for the member directory and — from Level 2 — a public profile on the main site. Every section is optional, and you choose exactly what is shown.";
     if (!allowed) {
       locked.style.display = "block"; body.style.display = "none";
-      locked.innerHTML = 'Your listing unlocks when you <strong>complete Level 1</strong> — finish the Level 1 checklist in your Certification Journey. <button class="btn btn-gold btn-xs" data-go="certification" style="margin-left:8px;">Open my journey</button>';
+      locked.innerHTML = 'Your listing unlocks when you are <strong>certified at Level 1</strong> — being enrolled in the training opens the files, but not the directory. Finish the Level 1 checklist (an admin passes your case formulation) in your Certification Journey. <button class="btn btn-gold btn-xs" data-go="certification" style="margin-left:8px;">Open my journey</button>';
       return;
     }
     locked.style.display = "none"; body.style.display = "block";
@@ -1591,7 +1717,7 @@
       return '<div class="prof-sec"><div class="prof-head"><b>' + sec.title + '</b><label class="show-toggle"><input type="checkbox" data-show="' + sec.id + '"' + (L.show[sec.id] ? " checked" : "") + " /> Show</label></div><div class=\"prof-body\">" + fields + "</div></div>";
     }).join("");
     document.getElementById("pf-internal").checked = !!L.internal;
-    var refOk = standing(name) >= 2;
+    var refOk = creditOf(name) >= 2;
     document.getElementById("pf-referrals").checked = refOk && !!L.referrals;
     document.getElementById("pf-referrals").disabled = !refOk;
     document.getElementById("pf-ref-wrap").style.opacity = refOk ? "1" : ".55";
@@ -1607,9 +1733,9 @@
     var pubOK = canPublic(name), st = L.publicStatus || "none", slug = "m-" + slugify(name);
     var h = "<h3>📍 Where you appear</h3>" +
       '<div class="rows"><div class="row"><span class="grow"><b>Members-only directory</b><small>Visible to other TIIP members</small></span>' + (L.internal ? '<span class="tag ok">Listed</span>' : '<span class="tag dim">Not listed</span>') + "</div>" +
-      '<div class="row"><span class="grow"><b>Referrals</b><small>From other members, via the directory</small></span>' + (L.referrals && standing(name) >= 2 ? '<span class="tag ok">Accepting</span>' : '<span class="tag dim">' + (standing(name) >= 2 ? "Off" : "Level 2+") + "</span>") + "</div>" +
+      '<div class="row"><span class="grow"><b>Referrals</b><small>From other members, via the directory</small></span>' + (L.referrals && creditOf(name) >= 2 ? '<span class="tag ok">Accepting</span>' : '<span class="tag dim">' + (creditOf(name) >= 2 ? "Off" : "Level 2 certified+") + "</span>") + "</div>" +
       '<div class="row"><span class="grow"><b>Public directory</b><small>On the main site — admin approval required</small></span>' +
-      (!pubOK ? '<span class="tag dim">🔒 Level 2+</span>' : st === "approved" ? '<span class="tag ok">Live</span>' : st === "pending" ? (L.publishedLive ? '<span class="tag ok">Live</span> <span class="tag warn">Edits pending review</span>' : '<span class="tag warn">Pending review</span>') : st === "changes" ? '<span class="tag retry">Changes requested</span>' : st === "declined" ? '<span class="tag bad">Declined</span>' : '<span class="tag dim">Not requested</span>') + "</div></div>";
+      (!pubOK ? '<span class="tag dim">🔒 Level 2 certified+</span>' : st === "approved" ? '<span class="tag ok">Live</span>' : st === "pending" ? (L.publishedLive ? '<span class="tag ok">Live</span> <span class="tag warn">Edits pending review</span>' : '<span class="tag warn">Pending review</span>') : st === "changes" ? '<span class="tag retry">Changes requested</span>' : st === "declined" ? '<span class="tag bad">Declined</span>' : '<span class="tag dim">Not requested</span>') + "</div></div>";
     if (pubOK) {
       if (L.publicNote && (st === "changes" || st === "declined" || st === "approved")) h += '<div class="fb-note ' + (st === "approved" ? "passed" : "retry") + '"><b>Admin note:</b> ' + esc(L.publicNote) + "</div>";
       h += '<p style="margin:12px 0 0;">' +
@@ -1623,7 +1749,7 @@
     document.getElementById("prof-status-card").innerHTML = h;
     document.getElementById("prof-preview").innerHTML = previewHtml(listingView(name));
     var refs = state.referrals.filter(function (r) { return r.to === name; });
-    document.getElementById("prof-referrals-card").style.display = (refs.length || (L.referrals && standing(name) >= 2)) ? "block" : "none";
+    document.getElementById("prof-referrals-card").style.display = (refs.length || (L.referrals && creditOf(name) >= 2)) ? "block" : "none";
     document.getElementById("prof-referrals").innerHTML = refs.length ? refs.map(function (r) {
       var tag = r.status === "accepted" ? '<span class="tag ok">Accepted</span>' : r.status === "declined" ? '<span class="tag dim">Declined</span>' : '<span class="tag warn">New</span>';
       return '<div class="row"><span class="grow"><b>From ' + esc(r.from) + " · " + esc(r.urgency) + "</b><small>" + esc(r.lang) + " · " + esc(r.at) + " — " + esc(r.note) + "</small></span>" + tag +
@@ -1636,7 +1762,7 @@
     PROFILE_KEYS.forEach(function (k) { L.data[k] = document.getElementById("pf-" + k).value.trim(); });
     PROFILE_SECTIONS.forEach(function (sec) { L.show[sec.id] = document.querySelector('[data-show="' + sec.id + '"]').checked; });
     L.internal = document.getElementById("pf-internal").checked;
-    L.referrals = standing(name) >= 2 && document.getElementById("pf-referrals").checked;
+    L.referrals = creditOf(name) >= 2 && document.getElementById("pf-referrals").checked;
     L.updated = iso(new Date());
     if (L.publicStatus === "approved") {
       L.publicStatus = "pending";
@@ -1696,10 +1822,10 @@
   }
   function renderSubCards() {
     var box = document.getElementById("sub-cards"), name = viewerName();
-    if (state.role === "admin") { box.innerHTML = ""; return; }
+    if (viewerKind() === "admin" || viewerKind() === "scholar") { box.innerHTML = ""; return; }
     var html = "";
-    if (fl(name, "l2_reg")) html += subCardHtml(name, 2);
-    if (standing(name) === 3) html += subCardHtml(name, 3);
+    if (enrolledLevel(name) === 2 || findSubmission(name, 2)) html += subCardHtml(name, 2);
+    if (enrolledLevel(name) === 3 || findSubmission(name, 3)) html += subCardHtml(name, 3);
     box.innerHTML = html;
   }
   document.getElementById("sub-cards").addEventListener("submit", function (e) {
@@ -1717,7 +1843,7 @@
 
   /* ---- Intervention vault: Signature TIIP + Supervisor-approved ---- */
   var vaultTab = "signature";
-  function canUploadVault() { return state.role === "practitioner" || state.role === "supervisor"; }
+  function canUploadVault() { return (viewerKind() === "member" || viewerKind() === "supervisor") && creditOf(viewerName()) >= 3; }
   function renderResources() {
     var q = (document.getElementById("res-q").value || "").toLowerCase();
     var lang = document.getElementById("res-lang").value;
@@ -1762,16 +1888,16 @@
     /* upload + queue */
     var can = canUploadVault(), me = viewerName();
     document.getElementById("vault-upload-card").style.display = can ? "block" : "none";
-    document.getElementById("vault-locked").style.display = (can || state.role === "admin") ? "none" : "block";
+    document.getElementById("vault-locked").style.display = (can || viewerKind() === "admin") ? "none" : "block";
     var qc = document.getElementById("vault-queue-card");
-    if (state.role === "supervisor") {
+    if (viewerKind() === "supervisor") {
       var pend = state.vault.filter(function (x) { return x.status === "pending" && x.by !== me; });
       qc.style.display = "block";
       qc.innerHTML = '<h3>✅ Awaiting your approval <span class="tag gold">Supervisor</span></h3><p class="view-lead" style="font-size:.85rem;margin-bottom:10px;">Approve uploads from fully certified clinicians so they appear in the vault.</p><div class="rows">' + (pend.length ? pend.map(function (x) {
         return '<div class="row"><span class="grow"><b>' + esc(x.title) + "</b><small>" + esc(x.type) + " · " + esc(x.lang) + " · by " + esc(x.by) + " · " + esc(x.at) + " " + (x.fileInfo ? fileLink(x.fileInfo) : x.file ? "· 📎 " + esc(x.file) : "") + "</small><small style=\"display:block;\">" + esc(x.desc) + '</small><input type="text" data-vnote="' + x.id + '" placeholder="Note (required to decline)" style="margin-top:6px;width:100%;padding:6px 10px;border:1px solid var(--line);border-radius:8px;font-size:.8rem;" /></span>' +
           '<button class="btn btn-gold btn-xs" data-v-ok="' + x.id + '">Approve</button><button class="btn btn-ghost btn-xs" data-v-no="' + x.id + '">Decline</button></div>';
       }).join("") : '<div class="empty">Nothing waiting for approval. 🌙</div>') + "</div>";
-    } else if (state.role === "practitioner") {
+    } else if (can) {
       var mine = state.vault.filter(function (x) { return x.by === me; });
       qc.style.display = "block";
       qc.innerHTML = '<h3>📁 My uploads</h3><div class="rows">' + (mine.length ? mine.map(function (x) {
@@ -1821,7 +1947,7 @@
   document.getElementById("vault-up-form").addEventListener("submit", function (e) {
     e.preventDefault();
     if (!canUploadVault()) return;
-    var me = viewerName(), isSup = state.role === "supervisor";
+    var me = viewerName(), isSup = viewerKind() === "supervisor";
     readFileInfo(document.getElementById("vu-file").files[0], function (info) {
       var item = { id: "vt" + Date.now(), title: document.getElementById("vu-title").value.trim(), type: document.getElementById("vu-type").value, lang: document.getElementById("vu-lang").value,
         tags: csv(document.getElementById("vu-tags").value), desc: document.getElementById("vu-desc").value.trim(), file: info ? info.name : "", fileInfo: info, by: me, at: iso(new Date()),
@@ -1839,6 +1965,7 @@
      Shared helpers: viewer, dates, text, files
   ========================================================= */
   function viewerName() { return ROLES[state.role].name; }
+  function viewerKind() { return ROLES[state.role].kind; }
   function isViewer(name) { return name === viewerName(); }
   function stamp() { return new Date().toISOString().slice(0, 16).replace("T", " "); }
   function fmtDate(d) {
@@ -1888,7 +2015,7 @@
     account:   { label: "Account & journey", desc: "Invitations, level changes, journey milestones", optional: false }
   };
   function prefsOf(name) { return state.prefs[name] || (state.prefs[name] = {}); }
-  function supervisorNames() { return ADMIN_USERS.filter(function (u) { return u.role === "Supervisor / Scholar"; }).map(function (u) { return u.name; }); }
+  function supervisorNames() { return ADMIN_USERS.filter(function (u) { return u.role === "Supervisor"; }).map(function (u) { return u.name; }); }
   function notify(to, cat, subject, body) {
     var member = !/@/.test(to);
     if (member && NOTIF_CATS[cat] && NOTIF_CATS[cat].optional && prefsOf(to)[cat] === false) return;
@@ -1959,12 +2086,12 @@
     function it(key, label, done, extra) { out.push({ key: key, label: label, done: ov || !!done, extra: extra || "" }); }
     var sb = findSubmission(name, n);
     if (n === 1) {
-      it("l1_reg", "Register for a Level 1 training", f.l1_reg, cohortLabel(cohortById(f.l1_reg)));
+      it("l1_reg", "Register for a Level 1 training", f.l1_reg || l1EnabledFor(name), f.l1_reg ? cohortLabel(cohortById(f.l1_reg)) : l1EnabledFor(name) ? "Enrolled by an admin" : "");
       it("l1_att", "Attend the Level 1 training", f.l1_att, "Confirmed by an admin after the training");
       var modsOk = f.l1_mod || (isViewer(name) && state.learning.l1.every(function (m) { return m.done; }));
       it("l1_mod", "Complete the Level 1 online modules", modsOk, modsOk ? "All modules complete" : isViewer(name) ? state.learning.l1.filter(function (m) { return m.done; }).length + " of " + state.learning.l1.length + " complete" : "");
     } else if (n === 2) {
-      it("l2_reg", "Register for a Level 2 training", f.l2_reg, cohortLabel(cohortById(f.l2_reg)));
+      it("l2_reg", "Register for a Level 2 training", f.l2_reg || f.l2_enr, f.l2_reg ? cohortLabel(cohortById(f.l2_reg)) : f.l2_enr ? "Enrolled by an admin" : "");
       it("l2_att", "Attend the Level 2 training", f.l2_att, "Confirmed by an admin after the training");
     } else {
       var h = hoursFor(name);
@@ -1983,27 +2110,71 @@
   }
   function levelComplete(name, n) { return reqs(name, n).every(function (r) { return r.done; }); }
   function isCertified(name) { return !!fl(name, "certified"); }
-  function standing(name) {
-    if (isCertified(name)) return 4;
-    if (levelComplete(name, 2)) return 3;
-    if (fl(name, "l2_reg")) return 2;
-    if (levelComplete(name, 1) || fl(name, "l1_reg")) return 1;
+  /* ---- Two separate things per member ----
+     CERTIFIED level (creditOf, 0–3; 3 = fully certified): earned by passing the level or credited by an admin.
+       This is what grants privileges (directory, library posting, public profile, referrals, vault…).
+     ENROLLED level (enrolledLevel): the training they are currently taking, not yet certified.
+       This only unlocks that training's files, modules and forms. */
+  function creditOf(name) {
+    if (isCertified(name)) return 3;
+    if (levelComplete(name, 2)) return 2;
+    if (levelComplete(name, 1)) return 1;
     return 0;
   }
-  function memberKind(name) { var u = ADMIN_USERS.find(function (x) { return x.name === name; }); return u ? u.role : ""; }
-  function isClinicalMember(name) { return name !== ADMIN_NAME; }
-  /* listing / profile permissions */
-  function canInternal(name) { return isClinicalMember(name) && (levelComplete(name, 1) || standing(name) >= 2); }
-  function canPublic(name) { return isClinicalMember(name) && standing(name) >= 2 && levelComplete(name, 1); }
-  function levelKeyFor(name) {
-    var st = standing(name);
-    if (st >= 4) return memberKind(name) === "Supervisor / Scholar" ? "supervisor" : "certified";
-    return st === 3 ? "level3" : st === 2 ? "level2" : "level1";
+  function enrolledLevel(name) {
+    var c = creditOf(name);
+    if (c >= 3) return 0;
+    if (c === 2) return fl(name, "l3_start") ? 3 : 0;
+    if (c === 1) return (fl(name, "l2_reg") || fl(name, "l2_enr")) ? 2 : 0;
+    return (fl(name, "l1_reg") || l1EnabledFor(name)) ? 1 : 0;
   }
-  function syncRole(name, n) {
-    var u = ADMIN_USERS.find(function (x) { return x.name === name; });
-    if (!u) { ADMIN_USERS.push({ name: name, role: ROLE_OPTIONS[n] }); return; }
-    if (ROLE_OPTIONS.indexOf(u.role) < n) u.role = ROLE_OPTIONS[n];
+  /* training files / forms for a level: enrolled in it, or already certified past it */
+  function hasLevelAccess(name, n) { return creditOf(name) >= n || enrolledLevel(name) >= n; }
+  function memberKind(name) {
+    if (name === ADMIN_NAME) return "Admin";
+    var u = ADMIN_USERS.find(function (x) { return x.name === name; }); return u ? u.role : "Member";
+  }
+  function statusLabel(name) {
+    var k = memberKind(name);
+    if (k === "Admin") return "Admin";
+    if (k === "Scholar") return "Scholar";
+    var c = creditOf(name), e = enrolledLevel(name);
+    if (c >= 3) return k === "Supervisor" ? "Supervisor · fully certified" : "Fully certified practitioner";
+    if (!c) return e ? "Level " + e + " trainee · enrolled, not yet certified" : "Level 0 · TIIP Trainee";
+    return "Level " + c + " certified" + (e ? " · Level " + e + " trainee" : "");
+  }
+  function isClinicalMember(name) { return name !== ADMIN_NAME && memberKind(name) !== "Scholar"; }
+  /* listing / profile permissions follow the CERTIFIED level */
+  function canInternal(name) { return isClinicalMember(name) && creditOf(name) >= 1; }
+  function canPublic(name) { return isClinicalMember(name) && creditOf(name) >= 2; }
+  function levelKeyFor(name) {
+    if (memberKind(name) === "Scholar") return "scholar";
+    var c = creditOf(name);
+    if (c >= 3) return memberKind(name) === "Supervisor" ? "supervisor" : "certified";
+    return c === 2 ? (fl(name, "l3_start") ? "level3" : "level2") : "level1";
+  }
+  /* admin: set the certified level exactly (0–3). Overrides the checklist and emails the member. */
+  function setCredit(name, lvl, quiet) {
+    var j = J(name), before = creditOf(name);
+    [1, 2, 3].forEach(function (n) { if (n <= lvl) j.flags["done" + n] = true; else delete j.flags["done" + n]; });
+    if (lvl >= 3) j.flags.certified = true; else delete j.flags.certified;
+    [1, 2, 3].forEach(function (n) { if (n <= lvl) j.notified["done" + n] = true; });
+    save();
+    if (!quiet && creditOf(name) !== before) {
+      var txt = creditOf(name) === 0 ? "Your certified level was set to Level 0." : creditOf(name) >= 3 ? "You are now fully certified." : "You are now certified at Level " + creditOf(name) + ".";
+      notify(name, "account", "Your certified level was updated", txt + "\nYour portal privileges now follow your certified level. Open your journey: portal.html#certification");
+    }
+  }
+  /* admin: enrol a member in a training (training files only — no privileges) or clear admin enrolment */
+  function setEnrolment(name, n) {
+    var j = J(name);
+    delete j.flags.l2_enr; delete j.flags.l3_start;
+    delete state.learning.l1EnabledUsers[name];
+    if (n === 1) state.learning.l1EnabledUsers[name] = true;
+    if (n === 2) j.flags.l2_enr = true;
+    if (n === 3) j.flags.l3_start = true;
+    save();
+    if (n) notify(name, "account", "You're enrolled in Level " + n + " training", "An admin enrolled you in Level " + n + ". Your training files and forms are now open in the portal.\nThis does not certify the level — privileges unlock when you complete and pass it.\n\nOpen your journey: portal.html#certification");
   }
   /* run after anything that could complete a level: credits it and emails the member once */
   function checkProgress(name) {
@@ -2012,7 +2183,6 @@
       var key = "done" + n;
       if (j.flags[key] || j.notified[key] || !levelComplete(name, n)) return;
       j.notified[key] = true;
-      if (n < 3) syncRole(name, n);
       var nextText = n === 1 ? "register for an upcoming Level 2 training from your Certification Journey" : n === 2 ? "begin Level 3 supervised practice" : "request your Level 3 panel presentation";
       notify(name, "account", "Level " + n + " complete — congratulations", "You have completed every Level " + n + " requirement.\nNext step: " + nextText + ".\n\nOpen your journey: portal.html#certification");
     });
@@ -2052,6 +2222,15 @@
       }).join("") + "</div></div>";
   }
 
+  function downloadMaterial(attr) {
+    var p = attr.split(":"), m = TRAINING_MATERIALS[p[0]][Number(p[1])];
+    downloadText(m[1].replace(/[^\w]+/g, "_") + ".txt", m[1] + "\n" + "=".repeat(m[1].length) + "\n\nTIIP Level " + p[0] + " training — " + m[0] + " (demo placeholder).\nIn production this downloads the actual " + m[0].toLowerCase() + " from the training.");
+  }
+  document.getElementById("l1-capstone").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-mat]");
+    if (b) downloadMaterial(b.getAttribute("data-mat"));
+  });
+
   /* ---- journey rendering ---- */
   function regControl(n) {
     var cs = state.cohorts.filter(function (c) { return c.level === n; }).sort(function (a, b) { return a.date < b.date ? -1 : 1; });
@@ -2076,15 +2255,16 @@
   function nextStep(name) {
     if (isCertified(name)) return { text: "You are fully certified — every stage is complete.", stage: 4 };
     if (!levelComplete(name, 1)) {
-      if (!fl(name, "l1_reg")) return { text: "Register for an upcoming Level 1 training.", stage: 1 };
+      if (!fl(name, "l1_reg") && !l1EnabledFor(name)) return { text: "Register for an upcoming Level 1 training.", stage: 1 };
       var r1 = reqs(name, 1).find(function (r) { return !r.done; });
       return { text: r1.label + ".", stage: 1 };
     }
     if (!levelComplete(name, 2)) {
-      if (!fl(name, "l2_reg")) return { text: "Level 1 is complete — register for an upcoming Level 2 training.", stage: 2 };
+      if (!fl(name, "l2_reg") && !fl(name, "l2_enr")) return { text: "Level 1 is certified — register for an upcoming Level 2 training.", stage: 2 };
       var r2 = reqs(name, 2).find(function (r) { return !r.done; });
       return { text: r2.label + ".", stage: 2 };
     }
+    if (!fl(name, "l3_start")) return { text: "Level 2 is certified — begin Level 3 supervised practice.", stage: 3 };
     if (!levelComplete(name, 3)) return { text: reqs(name, 3).find(function (r) { return !r.done; }).label + ".", stage: 3 };
     var pn = panelFor(name);
     if (!pn || pn.status === "notyet") return { text: "Every Level 3 requirement is done — request your panel presentation.", stage: 3 };
@@ -2109,12 +2289,12 @@
 
   function renderJourney() {
     var name = viewerName(), root = document.getElementById("journey"), sum = document.getElementById("jr-summary");
-    var isAdmin = state.role === "admin";
-    var supView = state.role === "supervisor";
+    var isAdmin = viewerKind() === "admin";
+    var supView = viewerKind() === "supervisor";
     document.getElementById("hours-section").style.display = "none";
     document.getElementById("cert-supervisor").style.display = "none";
     document.getElementById("panel-assigned").style.display = "none";
-    document.getElementById("compliance-card").style.display = (isAdmin || state.role === "explorer") ? "none" : "block";
+    document.getElementById("compliance-card").style.display = (isAdmin || creditOf(name) < 1) ? "none" : "block";
 
     if (isAdmin) {
       sum.innerHTML = '<div class="jr-banner"><span class="grow"><b>Admin view.</b> Admins do not hold a level. This is the pathway every member follows — manage individual journeys (attendance, reviews, letters, panels) in Administration.</span><button class="btn btn-gold btn-xs" data-go="admin">Open Administration</button></div>';
@@ -2124,16 +2304,17 @@
       return;
     }
 
-    var std = standing(name), cert = isCertified(name), nx = nextStep(name);
-    var stdLabel = cert ? (memberKind(name) === "Supervisor / Scholar" ? "TIIP Supervisor" : "Fully certified") : "Level " + std;
-    sum.innerHTML = '<div class="jr-banner"><span class="grow"><b>You are at ' + stdLabel + '.</b> <span style="color:var(--muted);">Next step — ' + nx.text + "</span></span>" +
-      (cert ? "" : '<button class="btn btn-gold btn-xs" data-jump="' + nx.stage + '">Go to this step</button>') + "</div>";
+    var cr = creditOf(name), en = enrolledLevel(name), cert = isCertified(name), nx = nextStep(name);
+    sum.innerHTML = '<div class="jr-banner"><span class="grow"><b>' + statusLabel(name) + '.</b> <span style="color:var(--muted);">Next step — ' + nx.text + "</span></span>" +
+      (cert ? "" : '<button class="btn btn-gold btn-xs" data-jump="' + nx.stage + '">Go to this step</button>') + "</div>" +
+      '<p class="jr-explain"><b>Trainee vs certified.</b> Enrolling in a level opens its <em>training files</em> (slides, readings, modules, forms). A level only becomes <em>certified</em> — and unlocks its privileges — when an admin credits it or passes your case conceptualization. ' +
+      (cr >= 1 ? "You are certified at " + (cr >= 3 ? "every level" : "Level " + cr) + (en ? " and currently a Level " + en + " trainee" : "") + "." : en ? "You are a Level " + en + " trainee: files open, privileges not yet." : "") + "</p>";
 
     /* ----- Level 0 ----- */
-    var l0watched = std >= 1 || (isViewer(name) && state.learning.l0.every(function (m) { return m.done; }));
+    var l0watched = cr >= 1 || en >= 1 || (isViewer(name) && state.learning.l0.every(function (m) { return m.done; }));
     var s0 = jrItem({ done: true, label: "Create your free account", extra: "" }) +
       jrItem({ done: l0watched, label: "Watch the six-part introductory series", extra: "Recommended before Level 1 — in Resources & Modules" }, l0watched ? "" : '<button class="btn btn-ghost btn-xs" data-go="learning">Open</button>');
-    var l0next = (!fl(name, "l1_reg") && !levelComplete(name, 1))
+    var l0next = (en === 0 && cr === 0)
       ? '<div class="jr-next"><b>Next step:</b> register for an upcoming <b>Level 1</b> training.<div class="jr-act">' + regControl(1) + "</div></div>" : "";
     var html = stageCard(0, "Level 0 · TIIP Trainee", "Open to everyone — starter modules, events, and forums.", "done", statusTag(true), '<ul class="jr-list">' + s0 + "</ul>" + l0next);
 
@@ -2146,32 +2327,34 @@
         var act = "";
         if (!locked && !r.done) {
           if (r.key === "l" + n + "_reg") act = regControl(n);
-          else if (r.key === "l" + n + "_att") act = fl(name, "l" + n + "_reg") ? demoBtn(name, r.key, "mark attended") : "";
-          else if (r.key === "l1_mod") act = fl(name, "l1_reg") ? '<button class="btn btn-ghost btn-xs" data-go="learning">Open modules</button>' : "";
-          else if (r.key === "l" + n + "_sub") act = (n === 1 ? fl(name, "l1_reg") : fl(name, "l2_reg")) ? '<button class="btn btn-ghost btn-xs" data-go="learning">Open</button>' : "";
+          else if (r.key === "l" + n + "_att") act = hasLevelAccess(name, n) ? demoBtn(name, r.key, "mark attended") : "";
+          else if (r.key === "l1_mod") act = hasLevelAccess(name, 1) ? '<button class="btn btn-ghost btn-xs" data-go="learning">Open modules</button>' : "";
+          else if (r.key === "l" + n + "_sub") act = hasLevelAccess(name, n) ? '<button class="btn btn-ghost btn-xs" data-go="learning">Open</button>' : "";
         }
         var sb = findSubmission(name, n), below = "";
         if (r.key === "l" + n + "_pass" && sb) below = feedbackNote(sb);
         return jrItem(r, act, below);
       }).join("");
-      var done = complete ? '<div class="jr-done-banner">✓ Level ' + n + " complete</div>" : "";
+      var done = complete ? '<div class="jr-done-banner">✓ Level ' + n + " certified</div>" : "";
       var nextReg = "";
-      if (complete && n === 1 && !fl(name, "l2_reg") && !levelComplete(name, 2)) nextReg = '<div class="jr-next"><b>Next step:</b> register for an upcoming <b>Level 2</b> training.<div class="jr-act">' + regControl(2) + "</div></div>";
+      if (complete && n === 1 && en < 2 && cr === 1) nextReg = '<div class="jr-next"><b>Next step:</b> register for an upcoming <b>Level 2</b> training.<div class="jr-act">' + regControl(2) + "</div></div>";
       if (complete && n === 2) nextReg = '<div class="jr-next"><b>Next step:</b> Level 3 — supervised practice begins. Log hours, complete cases, and prepare your written case conceptualization and scholar letter.</div>';
-      var showMat = !locked && (fl(name, "l" + n + "_reg") || complete || std > n);
+      var showMat = !locked && hasLevelAccess(name, n);
       html += stageCard(n, "Level " + n + " · " + (n === 1 ? "Foundations" : "Intermediate"),
         n === 1 ? "Foundations coursework, the online modules, and your first case conceptualization." : "Advanced seminars, applied skills, and your second case conceptualization.",
-        (complete ? "done" : locked ? "locked" : "current"), statusTag(complete, started, locked),
+        (complete ? "done" : locked ? "locked" : "current"), statusTag(complete, started, locked) + (!complete && !locked && en === n ? ' <span class="tag teal">Enrolled · training files open</span>' : ""),
         '<ul class="jr-list">' + list + "</ul>" + done + nextReg + (showMat ? materialsHtml(n) : ""));
     });
 
     /* ----- Level 3 ----- */
     (function () {
       var n = 3, rs = reqs(name, 3), complete = cert, locked = !levelComplete(name, 2);
+      var started3 = !!fl(name, "l3_start") || cert, beginBox = "";
       var ready = rs.every(function (r) { return r.done; });
+      if (!locked && !started3) beginBox = '<div class="jr-next"><b>Next step:</b> begin Level 3 supervised practice. Starting enrols you as a Level 3 trainee — your hours log and checklist open; your Level 2 privileges stay as they are.<div class="jr-act"><button class="btn btn-gold btn-xs" data-l3-start="1">Begin Level 3</button></div></div>';
       var list = rs.map(function (r) {
         var act = "", below = "";
-        if (!locked && !r.done) {
+        if (!locked && started3 && !r.done) {
           if (r.key === "l3_hours" || r.key === "l3_cases") act = demoBtn(name, r.key, "mark complete") + (state.role === "trainee" && r.key === "l3_hours" ? '<button class="btn btn-ghost btn-xs" data-jump="hours">Log hours ↓</button>' : "");
           else if (r.key === "l3_sub") act = '<button class="btn btn-ghost btn-xs" data-go="learning">Open</button>';
           else if (r.key === "l3_letter") {
@@ -2183,10 +2366,11 @@
         if (r.key === "l3_pass") { var sb3 = findSubmission(name, 3); if (sb3) below = feedbackNote(sb3); }
         if (r.key === "l3_letter" && J(name).letter && J(name).letter.info) below = '<div style="margin-top:4px;font-size:.8rem;">' + fileLink(J(name).letter.info) + "</div>" + below;
         return jrItem(r, act, below);
-      }).join("") + (locked ? "" : panelItemHtml(name, ready && !locked));
+      }).join("") + (locked || !started3 ? "" : panelItemHtml(name, ready && !locked));
+      if (!started3) list = "";
       html += stageCard(3, "Level 3 · Supervised Practice", "200 supervised hours, 10 cases, a written case conceptualization, a scholar's letter, then a panel presentation.",
-        (complete ? "done" : locked ? "locked" : "current"), statusTag(complete, rs.some(function (r) { return r.done; }), locked),
-        '<ul class="jr-list">' + list + "</ul>" + (locked ? '<p class="jr-sub">Unlocks when Level 2 is complete.</p>' : ""));
+        (complete ? "done" : locked ? "locked" : "current"), statusTag(complete, rs.some(function (r) { return r.done; }), locked) + (!complete && started3 ? ' <span class="tag teal">Enrolled · in practice</span>' : ""),
+        (list ? '<ul class="jr-list">' + list + "</ul>" : "") + beginBox + (locked ? '<p class="jr-sub">Unlocks when Level 2 is certified.</p>' : ""));
     })();
 
     /* ----- Fully certified ----- */
@@ -2195,9 +2379,9 @@
     root.innerHTML = html;
 
     /* ----- Level 3 tools ----- */
-    if (state.role === "trainee") { document.getElementById("hours-section").style.display = "block"; renderHours(); }
+    if (state.role === "trainee" && fl(name, "l3_start")) { document.getElementById("hours-section").style.display = "block"; renderHours(); }
     if (supView) { document.getElementById("cert-supervisor").style.display = "block"; renderSupervisorQueue(); renderAssignedPanels(); }
-    if (!isAdmin && state.role !== "explorer") renderVault();
+    if (!isAdmin && cr >= 1) renderVault();
   }
 
   function renderHours() {
@@ -2271,14 +2455,18 @@
     if (b.hasAttribute("data-reg-go")) {
       var sel = b.parentNode.querySelector("select");
       if (sel && sel.value) { registerForTraining(name, sel.value); renderJourney(); }
+    } else if (b.hasAttribute("data-l3-start")) {
+      setFl(name, "l3_start", true);
+      notify(ADMIN_NAME, "training", "Level 3 supervised practice started — " + name, name + " began Level 3 (supervised practice).");
+      notify(name, "account", "You've begun Level 3", "Level 3 supervised practice is open: log hours, complete cases, upload your scholar letter and submit your written case conceptualization.\n\nOpen your journey: portal.html#certification");
+      renderJourney();
     } else if (b.hasAttribute("data-demo")) demoMark(b.getAttribute("data-demo"));
     else if (b.hasAttribute("data-go")) show(b.getAttribute("data-go"));
     else if (b.hasAttribute("data-jump")) {
       var id = b.getAttribute("data-jump") === "hours" ? "hours-section" : "jr-stage-" + b.getAttribute("data-jump");
       var el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
     } else if (b.hasAttribute("data-mat")) {
-      var p = b.getAttribute("data-mat").split(":"), m = TRAINING_MATERIALS[p[0]][Number(p[1])];
-      downloadText(m[1].replace(/[^\w]+/g, "_") + ".txt", m[1] + "\n" + "=".repeat(m[1].length) + "\n\nTIIP Level " + p[0] + " training — " + m[0] + " (demo placeholder).\nIn production this downloads the actual " + m[0].toLowerCase() + " from the training.");
+      downloadMaterial(b.getAttribute("data-mat"));
     } else if (b.hasAttribute("data-letter-go")) {
       var file = document.getElementById("jr-letter-file").files[0], who = document.getElementById("jr-letter-scholar").value.trim();
       if (!file || !who) { alert("Please add the scholar's name and choose the letter file."); return; }
@@ -2335,7 +2523,7 @@
 
   /* ---- Case sandbox ---- */
   function renderSandbox() {
-    var isSup = state.role === "supervisor";
+    var isSup = viewerKind() === "supervisor";
     document.getElementById("case-list-title").textContent = isSup ? "📁 Cases shared with me" : "📁 My cases";
     document.getElementById("case-form").closest(".card").style.display = isSup ? "none" : "block";
     var list = isSup ? state.cases.filter(function (c) { return c.shared; }) : state.cases;
@@ -2383,7 +2571,7 @@
   /* ---- Fatwa desk ---- */
   var openTicketId = null;
   function renderFatwa() {
-    var isScholar = state.role === "supervisor";
+    var isScholar = viewerKind() === "scholar";
     document.getElementById("fatwa-list-title").textContent = isScholar ? "🎫 Scholar queue" : "🎫 My consultations";
     document.getElementById("fatwa-new-card").style.display = isScholar ? "none" : "block";
     document.getElementById("ticket-list").innerHTML = state.tickets.slice().reverse().map(function (t) {
@@ -2429,7 +2617,7 @@
   var LIB_CATS = ["Foundations & ontology", "Clinical interventions", "Spiritual care & tazkiyah", "Trauma & grief", "Family & marriage",
     "Youth & identity", "Fiqh & mental health", "Research & evidence", "Practitioner wellbeing", "Other"];
   var libOpen = {};
-  function libCanInteract() { return state.role !== "explorer"; }
+  function libCanInteract() { return canParticipate(); }
   function safeUrl(u) { return /^https?:\/\//i.test(u || "") ? u : ""; }
 
   function renderLibrary() {
@@ -2608,7 +2796,7 @@
     });
 
     /* Propose an event — Level 1 and above (everyone except Level 0). */
-    var canPropose = state.role !== "explorer";
+    var canPropose = canParticipate();
     document.getElementById("event-form").style.display = canPropose ? "block" : "none";
     document.getElementById("propose-locked").style.display = canPropose ? "none" : "block";
     document.getElementById("propose-note").textContent = canPropose

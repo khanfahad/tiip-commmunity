@@ -32,9 +32,31 @@ The site's nav CTA is **Sign Up/Login** (→ `join.html`). Every TIIP logo links
 
 The portal is a complete, clickable front-end prototype of the practitioner
 platform. It runs entirely in the browser (state persists to `localStorage`)
-and includes a **role switcher** to demonstrate role-based access control
-across **seven access levels**: **Level 0, Level 1, Level 2, Level 3,
-Fully Certified, Supervisor/Scholar, and Admin**.
+and includes a **role switcher** (10 personas) to demonstrate access control.
+
+**Trainee (enrolled) status is separate from certified level.** Each member
+has two independent facts:
+
+* **Enrolled level** — the training they are currently taking. Gives that
+  level's *training files only* (slides, readings, modules, the Level 1 case
+  formulation form). Set when they register for a training or when an admin
+  enrols them.
+* **Certified level** (0, 1, 2, or fully certified) — earned by completing the
+  level (attendance + admin passes the case conceptualization) or credited by an
+  admin. This is what unlocks **privileges**: Level 1 certified → member
+  directory, Case Sandbox, Scholar Desk, library posting, event proposals,
+  Intervention Vault (view); Level 2 certified → accept referrals and request a
+  public profile; fully certified → upload to the vault.
+
+Admins set both on **Administration → Members** (enrolled / certified selects),
+tick **"Level certified"** when adding/inviting someone in the registry (unticked
+= enrolled trainee), and "Approve & certify" a verified level-change request.
+
+**Scholar vs Supervisor.** Supervisors are fully certified clinicians: they sit
+on Level 3 panels, approve hours and vault uploads, and see shared cases.
+Scholars answer the Scholar Desk and have access to the **Level 0 and Level 1
+materials** (reference only) but do **not** go through the training, so they have
+no Certification Journey, Case Sandbox, vault, or profile/listing.
 
 Registration is open to everyone: new members start as a **TIIP Trainee at
 Level 0** (starter modules, events, and forums only — no consultations, no
@@ -44,16 +66,16 @@ the member's current stage.
 
 | Module | Spec area | What the prototype demonstrates |
 |--------|-----------|--------------------------------|
-| Directory (members-only) | Network | Everyone who has **completed Level 1 or above** can create a listing visible only to other TIIP members; **Level 2+** can also **accept referrals** (members send a de-identified referral from the directory, the provider accepts/declines and the sender is emailed) and **request a public profile** for the main site. Filters for TIIP level, language, timezone, focus, licensure, and "accepting referrals" |
-| Administration (admin only) | User architecture | Tabs for **Reviews & letters** (case conceptualizations — pass or ask to retry, optionally **uploading a graded / commented PDF or Word copy**; verify farḍ al-ʿayn scholar letters), **Trainings & registry** (post a Level 1/2 training and email eligible members; confirm attendance; registry of completed/registered levels with year & location and filtered/bulk invitations), **Directory requests** (approve, request changes, or decline public-profile requests; unpublish), **Level 3 panels** (schedule with 3+ supervisors, record the outcome), **Members** (level-change requests, name search, roles), and the **Email log** |
+| Directory (members-only) | Network | Everyone **certified at Level 1 or above** can create a listing visible only to other TIIP members; **Level 2 certified+** can also **accept referrals** (members send a de-identified referral from the directory, the provider accepts/declines and the sender is emailed) and **request a public profile** for the main site. Filters for TIIP level, language, timezone, focus, licensure, and "accepting referrals" |
+| Administration (admin only) | User architecture | Tabs for **Reviews & letters** (case conceptualizations — pass or ask to retry, optionally **uploading a graded / commented PDF or Word copy**; verify farḍ al-ʿayn scholar letters), **Trainings & registry** (post a Level 1/2 training and email eligible members; confirm attendance; registry of completed/registered levels with year & location and filtered/bulk invitations), **Directory requests** (approve, request changes, or decline public-profile requests; unpublish), **Level 3 panels** (schedule with 3+ supervisors, record the outcome), **Members** (level-change requests, name search, account type, enrolled & certified level), and the **Email log** |
 | My Profile & Listing | Network | Optional sections (bio, credentials, location, languages, specialties, formats, gender, contact, offerings) — **tick "Show" on exactly what others may see**; toggles for the members-only directory and referrals; live preview; request/track a public profile |
-| Certification Journey | Certification | Replaces the old Certification Pathway **and** Compliance Vault. A timeline with checkboxes per level: **Level 0 → register for an upcoming Level 1 training**; Level 1 (register · attend · modules · submit & pass case conceptualization — then **register for Level 2**); Level 2 (same); Level 3 (200 hours · 10 cases · written case conceptualization · **scholar letter on farḍ al-ʿayn** → **request a panel presentation to 3+ supervisors**) → fully certified. Registering **unlocks that level's slides & readings**. Compliance records (CEUs / farḍ al-ʿayn) live at the bottom |
+| Certification Journey | Certification | Replaces the old Certification Pathway **and** Compliance Vault. A timeline with checkboxes per level: **Level 0 → register for an upcoming Level 1 training**; Level 1 (register · attend · modules · submit & pass case conceptualization — then **register for Level 2**); Level 2 (same); Level 3 (200 hours · 10 cases · written case conceptualization · **scholar letter on farḍ al-ʿayn** → **request a panel presentation to 3+ supervisors**) → fully certified. Registering **enrols you** and unlocks that level's slides & readings (privileges come with certification); Level 3 starts with a **Begin Level 3** step. Compliance records (CEUs / farḍ al-ʿayn) live at the bottom |
 | Case Sandbox | Clinical | Conceptualization forms mapped to ʿAql/Nafs/Rūḥ/Iḥsās domains, share-with-supervisor flow, supervisor read view |
 | Scholar Desk | Clinical | Threaded consultation tickets with required anonymization confirmation, scholar routing, answered/closed states |
 | Intervention Vault | Research/resources | **Two sections:** *Signature TIIP* interventions from the TIIP creators, and *Supervisor-approved* interventions. **Only fully certified clinicians can upload**; each upload waits for a TIIP supervisor's approval (supervisors' own uploads are auto-approved). Search, language/type filters, downloads |
-| Research Library | Research/resources | Categorized library of articles, books, and posts on Islamic psychology. **Level 1+ can post/upload** (title, type, category, summary, link or file); members can **like and comment**; filter by category/type, search, sort by newest/most liked/most discussed; admins can remove posts. Level 0 can browse only |
+| Research Library | Research/resources | Categorized library of articles, books, and posts on Islamic psychology. **Level 1 certified+ can post/upload** (title, type, category, summary, link or file); members can **like and comment**; filter by category/type, search, sort by newest/most liked/most discussed; admins can remove posts. Level 0 and enrolled trainees can browse only |
 | Notifications | Community | An email inbox per member (demo outbox) with per-category preferences. Emails fire for new trainings (to members who completed the previous level), registration/attendance, case-conceptualization results (with feedback + graded copy), scholar letters, panel scheduling and outcome, listing & vault decisions, referrals, invitations, library comments, and event decisions |
-| Events Calendar | Community | Month calendar, automatic local-timezone conversion (`Intl`), RSVP tracking, join links, real `.ics` export; **Level 1+ members can propose events**, which enter an **admin approval queue** before appearing on the calendar |
+| Events Calendar | Community | Month calendar, automatic local-timezone conversion (`Intl`), RSVP tracking, join links, real `.ics` export; **Level 1 certified+ members can propose events**, which enter an **admin approval queue** before appearing on the calendar |
 | Tazkiyah Forums | Community | Boards → threads → posts with reply and new-thread forms |
 
 ### What requires a real backend before launch
@@ -128,3 +150,13 @@ This is a **demonstration mock-up**. Statistics, publications, events, and membe
 content are illustrative placeholders. Replace them with authoritative copy,
 the official TIIP curriculum/bibliography, real event listings, and a real
 backend for the member portal before launch.
+
+### Level 1 case formulation
+
+The Level 1 capstone follows the Khalil Center **TIIP Case Formulation Sheet
+(2026)**: 13 sections (profile, presenting problem, precipitating event, early
+experiences, assessment ratings, additional details, DSM-5, TIIP elements with
+"Specify" boxes and Pain/Pleasure options, dominant area, narrative, therapy-plan
+table covering all four domains, prognosis, and the two-situation figure with the
+heart-and-petals diagram). No section may be empty. It is submitted as a full-text
+attachment for the admin's pass / retry review, and can be downloaded as a draft.

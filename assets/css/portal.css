@@ -415,29 +415,71 @@ strong { color: var(--cream); }
 .chk-item .spec:focus { outline: none; border-color: var(--gold-400); background: #fff; }
 .chk-item.on .spec { display: block; }
 
-.ex-row { font-size: 0.78rem; color: var(--muted); background: var(--bg-2); border-radius: 10px; padding: 9px 12px; margin: 0 0 6px; }
-.ex-row b { color: var(--cream); }
-.plan-row {
-  display: grid; grid-template-columns: 74px 1.1fr 1fr 1.3fr; gap: 10px; align-items: start;
-  padding: 12px 0 4px; border-bottom: 1px solid var(--line-soft);
-}
-.plan-row:last-of-type { border-bottom: 0; }
-.plan-row .field { margin-bottom: 4px; }
-.plan-row > .tag { margin-top: 23px; justify-self: start; }
+/* guidelines + warning banners on the sheet */
+.guide-card { border: 1px solid rgba(58, 88, 156, 0.28); background: var(--bg-3); border-radius: 12px; padding: 12px 16px; margin: 6px 0 14px; font-size: 0.82rem; color: var(--cream-dim); }
+.guide-card b { color: var(--cream); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.guide-card ul { margin: 6px 0 0; padding-left: 18px; display: grid; gap: 3px; }
+.warn-banner { display: flex; gap: 10px; align-items: flex-start; background: rgba(235, 184, 48, 0.16); border: 1px solid rgba(190, 140, 10, 0.4); color: #5b4300; border-radius: 10px; padding: 9px 13px; font-size: 0.8rem; margin: 0 0 14px; }
+.warn-banner b { display: grid; place-items: center; flex: 0 0 20px; height: 20px; border-radius: 50%; background: #ebb830; color: #3d2d00; font-size: 0.72rem; }
 
-.fig-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 14px; }
-.fig-grid .fig-full { grid-column: 1 / -1; }
-.fig-grid .fig-qalb {
-  background: rgba(58, 88, 156, 0.06);
-  border: 1px dashed rgba(58, 88, 156, 0.3);
-  border-radius: 12px; padding: 10px 12px 2px;
-}
+/* TIIP elements (ʿaql / nafs / iḥsās / rūḥ) */
+.el-block { padding-bottom: 6px; }
+.el-block h4 { color: var(--gold-300); font-size: 0.95rem; }
+.chk-item.wide { grid-column: 1 / -1; }
+.chk-item > .flabel { margin: 0 0 4px; }
+.chk-item textarea.spec { min-height: 66px; resize: vertical; }
+.chk-item.wide .spec { width: calc(100% - 24px); }
+.chk-item .flabel + .spec { display: block; width: 100%; margin-left: 0; }
+.spec.pain-opts { gap: 4px 16px; flex-wrap: wrap; padding: 6px 10px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 8px; }
+.chk-item.on .spec.pain-opts { display: flex; }
+.pain-opts label { display: inline-flex; align-items: center; gap: 6px; font-size: 0.78rem; }
+.pain-opts .pain-other input[type="text"] { width: 150px; padding: 3px 8px; border: 1px solid var(--line); border-radius: 6px; font-size: 0.76rem; background: #fff; }
+
+/* therapy plan table */
+.plan-table { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: #fff; margin: 0 0 10px; }
+.plan-th, .plan-tr { display: grid; grid-template-columns: 96px 1fr 1fr 1.3fr; gap: 10px; padding: 9px 12px; align-items: start; }
+.plan-th { background: var(--grad-gold); color: #fff; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
+.plan-tr { border-top: 1px solid var(--line-soft); }
+.plan-tr.example { background: var(--bg-2); font-size: 0.76rem; color: var(--muted); border-top: 0; }
+.plan-tr textarea { width: 100%; min-height: 76px; resize: vertical; padding: 7px 9px; border: 1px solid var(--line); border-radius: 8px; font: inherit; font-size: 0.8rem; color: var(--cream); }
+.plan-tr textarea:focus, .plan-dom select:focus { outline: none; border-color: var(--gold-400); }
+.plan-dom { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+.plan-dom select { width: 100%; padding: 6px 4px; border: 1px solid var(--line); border-radius: 8px; background: #fff; font: inherit; font-size: 0.82rem; font-weight: 650; color: var(--gold-300); }
+
+/* the figure: heart-and-petals diagram with the four domains around it */
+.fig-sit { border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px 6px; margin: 0 0 14px; background: linear-gradient(180deg, #fff, var(--bg-0)); }
+.fig-sit > h4 { color: var(--gold-300); margin: 0 0 6px; font-size: 1rem; }
+.fig-row { display: grid; grid-template-columns: 1fr minmax(170px, 230px) 1fr; gap: 14px; align-items: start; margin-top: 8px; }
+.fig-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; margin-top: 4px; }
+.fig-col { min-width: 0; }
+.fig-col .field { margin-bottom: 8px; }
+.fig-col textarea { width: 100%; resize: vertical; }
+.fig-dia { align-self: center; justify-self: center; width: 100%; max-width: 230px; filter: drop-shadow(0 6px 14px rgba(17, 38, 75, 0.18)); }
+.fig-dia svg { display: block; width: 100%; height: auto; }
+.fig-chip { display: inline-block; padding: 3px 11px; border-radius: 999px; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px; color: #fff; }
+.fig-chip.ruh { background: #11264b; }
+.fig-chip.aql { background: #1b67b0; }
+.fig-chip.nafs { background: #ebb830; color: #3d2d00; }
+.fig-chip.ihsas { background: #e6e5e4; color: #11264b; border: 1px solid rgba(17, 38, 75, 0.25); }
 
 @media (max-width: 860px) {
   .chkgrid { grid-template-columns: 1fr; }
-  .plan-row { grid-template-columns: 1fr; padding-top: 8px; }
-  .plan-row > .tag { margin-top: 0; }
-  .fig-grid { grid-template-columns: 1fr; }
+  .plan-th { display: none; }
+  .plan-tr { grid-template-columns: 1fr; }
+  .plan-tr.example { display: none; }
+  .fig-row, .fig-row2 { grid-template-columns: 1fr; }
+  .fig-dia { order: -1; max-width: 200px; margin: 0 auto; }
+}
+
+/* trainee (enrolled) vs certified */
+.jr-explain { margin: 8px 0 18px; font-size: 0.8rem; color: var(--muted); max-width: 760px; }
+.jr-explain b { color: var(--cream); }
+.member-row { flex-wrap: wrap; row-gap: 8px; }
+.member-row small { display: block; }
+.mini { display: inline-flex; flex-direction: column; gap: 2px; font-size: 0.6rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted-2); }
+.mini select { background: var(--bg-2); color: var(--cream); border: 1px solid var(--line); border-radius: 8px; padding: 5px 8px; font-size: 0.78rem; font-weight: 500; letter-spacing: 0; text-transform: none; }
+.chk-line { display: flex !important; align-items: flex-start; gap: 8px; text-transform: none !important; letter-spacing: 0 !important; font-size: 0.84rem !important; font-weight: 500 !important; color: var(--cream-dim) !important; cursor: pointer; }
+.chk-line input { margin-top: 3px; accent-color: #1e3468; }
 }
 
 

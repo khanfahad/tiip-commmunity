@@ -14,7 +14,7 @@
   <meta property="og:title" content="Sign Up / Login — TIIP Community" />
   <meta property="og:description" content="Log in to the TIIP member portal, or register free to join the TIIP community." />
   <meta property="og:site_name" content="TIIP Community" />
-  <link rel="stylesheet" href="assets/css/style.css?v=4" />
+  <link rel="stylesheet" href="assets/css/style.css?v=5" />
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
 </head>
 <body>
@@ -86,12 +86,12 @@
               <div class="field"><label for="jr-pass">Password</label><input type="password" id="jr-pass" placeholder="••••••••" required /></div>
 
               <div class="field">
-                <label for="jr-level">Have you already completed a TIIP level training?</label>
+                <label for="jr-level">Are you already certified at a TIIP level?</label>
                 <select id="jr-level">
-                  <option value="">No — I have not completed a level yet (start at Level 0)</option>
-                  <option value="1">Yes — Level 1 (Foundations)</option>
-                  <option value="2">Yes — Level 2 (Intermediate)</option>
-                  <option value="3">Yes — Level 3 (Supervised Practice)</option>
+                  <option value="">No — I am not certified at any level yet (start at Level 0)</option>
+                  <option value="1">Yes — I am certified at Level 1</option>
+                  <option value="2">Yes — I am certified at Level 2</option>
+                  <option value="3">Yes — I am fully certified (Level 3)</option>
                 </select>
               </div>
 
@@ -99,7 +99,7 @@
               <div class="field" id="jr-cert-field" hidden>
                 <label for="jr-cert">Upload your Level <span id="jr-cert-lvl"></span> certificate <em>(required)</em></label>
                 <input type="file" id="jr-cert" accept=".pdf,.png,.jpg,.jpeg" />
-                <p class="hint">Accepted: PDF, PNG, or JPG. An admin verifies your certificate before your level is applied to your account.</p>
+                <p class="hint">Accepted: PDF, PNG, or JPG. An admin verifies your certificate before that level is certified on your account — until then you start as a trainee.</p>
               </div>
 
               <button class="btn btn-gold" type="submit">Register — Start free</button>
@@ -143,7 +143,7 @@
     </div>
   </footer>
 
-  <script src="assets/js/main.js?v=4"></script>
+  <script src="assets/js/main.js?v=5"></script>
   <script>
     (function () {
       "use strict";

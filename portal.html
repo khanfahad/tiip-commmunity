@@ -10,7 +10,7 @@
   <meta name="description" content="TIIP Community member portal prototype: referral directory, certification tracking, compliance vault, case conceptualization, scholarly consultation, resource libraries, events, and peer forums." />
   <meta name="theme-color" content="#fcfaf5" />
   <meta name="robots" content="noindex" />
-  <link rel="stylesheet" href="assets/css/portal.css?v=4" />
+  <link rel="stylesheet" href="assets/css/portal.css?v=5" />
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
 </head>
 <body>
@@ -25,27 +25,27 @@
     </a>
     <a class="dev-at-portal" href="https://khalilcenter.com" target="_blank" rel="noopener">Developed at Khalil Center ↗</a>
     <nav class="p-nav" id="p-nav">
-      <button data-view="dashboard" data-roles="all"><span class="ico">◈</span> Dashboard</button>
-      <button data-view="notifications" data-roles="all"><span class="ico">✉️</span> Notifications <span class="nav-badge" id="notif-badge" style="display:none;"></span></button>
-      <button data-view="admin" data-roles="admin"><span class="ico">🛡</span> Administration</button>
+      <button data-view="dashboard"><span class="ico">◈</span> Dashboard</button>
+      <button data-view="notifications"><span class="ico">✉️</span> Notifications <span class="nav-badge" id="notif-badge" style="display:none;"></span></button>
+      <button data-view="admin"><span class="ico">🛡</span> Administration</button>
 
       <div class="group-label">Learning</div>
-      <button data-view="learning" data-roles="all"><span class="ico">🎬</span> Resources &amp; Modules</button>
-      <button data-view="certification" data-roles="all"><span class="ico">🎓</span> Certification Journey</button>
+      <button data-view="learning"><span class="ico">🎬</span> Resources &amp; Modules</button>
+      <button data-view="certification"><span class="ico">🎓</span> Certification Journey</button>
 
       <div class="group-label">Network</div>
-      <button data-view="directory" data-roles="level1,level2,trainee,practitioner,supervisor,admin"><span class="ico">🗺</span> Directory</button>
-      <button data-view="profile" data-roles="explorer,level1,level2,trainee,practitioner,supervisor"><span class="ico">🪪</span> My Profile &amp; Listing</button>
-      <button data-view="events" data-roles="all"><span class="ico">🗓</span> Events &amp; Training</button>
-      <button data-view="forums" data-roles="all"><span class="ico">💬</span> Tazkiyah Forums</button>
+      <button data-view="directory"><span class="ico">🗺</span> Directory</button>
+      <button data-view="profile"><span class="ico">🪪</span> My Profile &amp; Listing</button>
+      <button data-view="events"><span class="ico">🗓</span> Events &amp; Training</button>
+      <button data-view="forums"><span class="ico">💬</span> Tazkiyah Forums</button>
 
       <div class="group-label">Clinical</div>
-      <button data-view="sandbox" data-roles="level1,level2,trainee,practitioner,supervisor"><span class="ico">🧭</span> Case Sandbox</button>
-      <button data-view="fatwa" data-roles="level1,level2,trainee,practitioner,supervisor,admin"><span class="ico">🕌</span> Scholar Desk</button>
+      <button data-view="sandbox"><span class="ico">🧭</span> Case Sandbox</button>
+      <button data-view="fatwa"><span class="ico">🕌</span> Scholar Desk</button>
 
       <div class="group-label">Research &amp; Resources</div>
-      <button data-view="library" data-roles="all"><span class="ico">📖</span> Research Library</button>
-      <button data-view="resources" data-roles="level1,level2,trainee,practitioner,supervisor,admin"><span class="ico">📚</span> Intervention Vault</button>
+      <button data-view="library"><span class="ico">📖</span> Research Library</button>
+      <button data-view="resources"><span class="ico">📚</span> Intervention Vault</button>
     </nav>
     <div class="side-foot">
       <a href="index.html">← Back to public site</a>
@@ -62,12 +62,19 @@
       <div class="role-switch">
         <label for="role-select">Viewing as</label>
         <select id="role-select" aria-label="Switch demo role">
-          <option value="explorer">Level 0 — TIIP Trainee</option>
-          <option value="level1">Level 1 — Trainee</option>
-          <option value="level2">Level 2 — Trainee</option>
-          <option value="trainee">Level 3 — Trainee (supervised practice)</option>
-          <option value="practitioner">Fully Certified Practitioner</option>
-          <option value="supervisor">Supervisor / Scholar</option>
+          <optgroup label="Members — trainee (enrolled) vs certified">
+            <option value="explorer">Level 0 — TIIP Trainee</option>
+            <option value="enrolled1">Level 1 trainee — enrolled, not yet certified</option>
+            <option value="level1">Level 1 certified</option>
+            <option value="enrolled2">Level 2 trainee — enrolled, not yet certified</option>
+            <option value="level2">Level 2 certified</option>
+            <option value="trainee">Level 3 trainee — supervised practice</option>
+            <option value="practitioner">Fully certified practitioner</option>
+          </optgroup>
+          <optgroup label="Faculty">
+            <option value="supervisor">Supervisor (fully certified)</option>
+            <option value="scholar">Scholar</option>
+          </optgroup>
           <option value="admin">Admin</option>
         </select>
       </div>
@@ -153,7 +160,7 @@
             </div>
             <div class="field-row">
               <div class="field"><label>Training level</label><select id="rg-level"><option value="0">No level yet (Level 0)</option><option value="1" selected>Level 1</option><option value="2">Level 2</option><option value="3">Level 3</option></select></div>
-              <div class="field"><label>Status</label><select id="rg-status"><option>Registered</option><option>Completed</option></select></div>
+              <div class="field chk-field"><label>Certification</label><label class="chk-line"><input type="checkbox" id="rg-cert" /> <span>Level certified — grants this level's privileges</span></label><p class="hint" style="margin:4px 0 0;">Leave unticked for a trainee who is only enrolled: they get the training files, not the level's privileges.</p></div>
               <div class="field"><label>Year</label><input type="number" id="rg-year" min="2000" max="2100" /></div>
               <div class="field"><label>Location (city)</label><input type="text" id="rg-loc" placeholder="e.g., Chicago, US" /></div>
             </div>
@@ -165,7 +172,7 @@
           <div class="filters">
             <div class="field wide"><label>Search</label><input type="search" id="rf-q" placeholder="Name or email…" /></div>
             <div class="field"><label>Level</label><select id="rf-level"><option value="">Any</option><option value="0">Level 0</option><option value="1">Level 1</option><option value="2">Level 2</option><option value="3">Level 3</option></select></div>
-            <div class="field"><label>Status</label><select id="rf-status"><option value="">Any</option><option>Registered</option><option>Completed</option></select></div>
+            <div class="field"><label>Status</label><select id="rf-status"><option value="">Any</option><option value="Registered">Trainee (enrolled)</option><option value="Completed">Certified</option></select></div>
             <div class="field"><label>Year</label><select id="rf-year"></select></div>
             <div class="field"><label>Location</label><select id="rf-loc"></select></div>
             <div class="field"><label>Invitation</label><select id="rf-inv"><option value="">Any</option><option value="none">Not invited</option><option value="invited">Invited</option><option value="joined">Joined</option></select></div>
@@ -250,15 +257,15 @@
         <div id="sub-cards"></div>
 
         <div class="card" id="l1-admin-card" style="display:none;">
-          <h3>🔐 Level 1 access approvals <span class="tag gold">Admin only</span></h3>
-          <p class="view-lead" style="margin-bottom:10px;font-size:.85rem;">Level 1 is <strong>not listed publicly</strong> and is invisible to trainees by default — only approved trainees and members already at Level 2 and beyond can see it. Approve access per registered Level 0 trainee below; the curriculum appears in that trainee's portal only after approval.</p>
+          <h3>🔐 Level 1 enrolment <span class="tag gold">Admin only</span></h3>
+          <p class="view-lead" style="margin-bottom:10px;font-size:.85rem;">Level 1 is <strong>not listed publicly</strong> and is invisible to Level 0 members by default. Enrolling a member makes them a <strong>Level 1 trainee</strong>: the modules, slides, readings and the case formulation open for them — but they are <strong>not certified</strong> and do not get Level 1 privileges until an admin passes their case formulation (or credits the level in Administration → Members).</p>
           <div class="rows" id="l1-admin-rows"></div>
         </div>
       </section>
 
       <!-- ==== DIRECTORY ==== -->
       <section class="view" data-view="directory">
-        <p class="view-lead">The members-only directory. Anyone who has <strong>completed Level 1 or beyond</strong> can list themselves here, visible only to other TIIP members. Level 2 and above can also <strong>accept referrals</strong> and request a <strong>public profile</strong> on the main site.</p>
+        <p class="view-lead">The members-only directory. Anyone <strong>certified at Level 1 or beyond</strong> can list themselves here, visible only to other TIIP members. Members certified at Level 2 and above can also <strong>accept referrals</strong> and request a <strong>public profile</strong> on the main site. Trainees who are still enrolled (not yet certified) get the training files only.</p>
         <div id="dir-cta"></div>
         <div class="filters">
           <div class="field wide"><label>Search</label><input type="search" id="dir-q" placeholder="Name, focus, city…" /></div>
@@ -515,7 +522,7 @@
                 <button class="btn btn-gold" type="submit">Post to library</button>
               </form>
             </div>
-            <div class="locked-note" id="lib-locked" style="display:none;">Posting, liking, and commenting require <strong>Level 1</strong> or above. You can browse everything in the library now.</div>
+            <div class="locked-note" id="lib-locked" style="display:none;">Posting, liking, and commenting require being <strong>certified at Level 1</strong> or above (enrolled trainees can browse). You can browse everything in the library now.</div>
             <div class="card" style="margin-top:16px;"><h3>🗂 Categories</h3><div class="chip-wrap" id="lib-cats"></div></div>
             <p class="note" id="lib-upload-note"><b>Demo note:</b> file uploads record the file name only; in production files are stored in encrypted object storage with malware scanning, and copyrighted works are shared by link or excerpt.</p>
           </div>
@@ -550,7 +557,7 @@
               <div class="field"><label>Joining / info link</label><input type="url" id="ef-link" placeholder="https://…" /></div>
               <button class="btn btn-gold" type="submit">Submit for approval</button>
             </form>
-            <div class="locked-note" id="propose-locked" style="display:none;">Proposing events requires <strong>Level 1</strong> or above. Enroll in Level 1 to add events to the community calendar.</div>
+            <div class="locked-note" id="propose-locked" style="display:none;">Proposing events requires being <strong>certified at Level 1</strong> or above. Complete Level 1 to add events to the community calendar.</div>
           </div>
           <div class="card" id="my-events-card">
             <h3>🗓 My submissions</h3>
@@ -592,6 +599,6 @@
   </div>
 </div>
 
-<script src="assets/js/portal.js?v=4"></script>
+<script src="assets/js/portal.js?v=5"></script>
 </body>
 </html>
