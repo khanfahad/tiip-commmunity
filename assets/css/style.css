@@ -829,6 +829,58 @@ a.hero-badge:hover { color: #fff; border-color: rgba(255,255,255,.34); backgroun
   .pc-foot { justify-content: center; }
 }
 
+/* directory cards open the full profile */
+.pc-photo { display: block; }
+.pc-body h3 a { color: inherit; }
+.pc-body h3 a:hover { color: var(--emerald-600); }
+.provider-card.is-link { cursor: pointer; }
+
+/* ---- Provider profile page ---- */
+.pf-hero { padding: 40px 0 110px; }
+.pf-head { display: flex; gap: 32px; align-items: center; }
+@media (max-width: 720px) { .pf-head { flex-direction: column; align-items: flex-start; gap: 20px; } }
+.pf-photo { width: 148px; height: 148px; flex-shrink: 0; border-radius: 50%; padding: 4px; background: rgba(255,255,255,.2); box-shadow: 0 0 0 2px rgba(143,196,191,.55), var(--shadow-lg); }
+.pf-photo img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 4px solid #fff; background: var(--emerald-50); }
+.pf-hero h1 { font-size: clamp(2rem, 4vw, 3rem); margin: .25em 0 .1em; }
+.pf-cred { color: rgba(234,240,250,.86); margin: 0 0 6px; font-weight: 600; }
+.pf-loc { color: rgba(234,240,250,.82); margin: 0 0 18px; font-size: .95rem; }
+.pf-status { background: rgba(143,196,191,.22); border: 1px solid rgba(143,196,191,.45); padding: .15em .7em; border-radius: 999px; font-size: .78rem; font-weight: 700; color: var(--gold-300); }
+.pf-badge { display: inline-block; padding: .34em .95em; border-radius: 999px; font-size: .68rem; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
+.pf-badge.lv-supervisor { background: var(--grad-gold); color: #fff; }
+.pf-badge.lv-certified { background: rgba(255,255,255,.94); color: var(--emerald-700); }
+.pf-badge.lv-3 { background: var(--emerald-100); color: var(--emerald-800); }
+.pf-cta { display: flex; flex-wrap: wrap; gap: 12px; }
+
+.pf-layout { display: grid; grid-template-columns: 1fr 330px; gap: 44px; align-items: start; }
+@media (max-width: 940px) { .pf-layout { grid-template-columns: 1fr; } .pf-side { order: -1; } }
+.pf-side { position: sticky; top: 100px; }
+@media (max-width: 940px) { .pf-side { position: static; } }
+.pf-section { margin-bottom: 46px; scroll-margin-top: 100px; }
+.pf-section h2 { font-size: 1.6rem; margin-bottom: .55em; }
+.pf-section p { color: var(--ink-700); }
+.pf-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.pf-list li { padding: 12px 16px; background: var(--cream-50); border: 1px solid var(--cream-200); border-radius: 12px; font-size: .95rem; }
+.pf-list b { color: var(--ink-950); }
+.pf-facts { margin: 0 0 14px; }
+.pf-facts dt { font-size: .68rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-400); margin-top: 12px; }
+.pf-facts dd { margin: 2px 0 0; font-size: .92rem; color: var(--ink-800); }
+.pf-offers { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+@media (max-width: 720px) { .pf-offers { grid-template-columns: 1fr; } }
+.pf-offer { display: flex; flex-direction: column; background: #fff; border: 1px solid var(--cream-200); border-radius: var(--radius); padding: 20px 22px; box-shadow: var(--shadow-xs); transition: .25s; }
+.pf-offer:hover { border-color: var(--emerald-300); box-shadow: var(--shadow-md); transform: translateY(-3px); }
+.pf-offer-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 10px; }
+.pf-offer-meta { font-size: .8rem; color: var(--ink-400); font-weight: 600; }
+.pf-offer h3 { font-size: 1.12rem; margin-bottom: .35em; }
+.pf-offer p { font-size: .9rem; color: var(--ink-500); margin-bottom: 14px; flex: 1; }
+.pf-offer-foot { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; font-size: .78rem; color: var(--ink-500); line-height: 1.6; border-top: 1px solid var(--cream-200); padding-top: 12px; }
+.pf-tabs { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 22px; }
+.pf-form { background: var(--cream-50); border: 1px solid var(--cream-200); border-radius: var(--radius-lg); padding: 26px 28px; }
+.pf-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 620px) { .pf-row { grid-template-columns: 1fr; } }
+.join-form .pf-check { display: flex; gap: 10px; align-items: flex-start; font-size: .86rem; font-weight: 500; color: var(--ink-700); margin-bottom: 18px; }
+.join-form .pf-check input { width: auto; padding: 0; margin-top: 4px; appearance: auto; accent-color: var(--emerald-700); }
+.join-form .pf-form [hidden], .pf-form [hidden] { display: none !important; }
+
 .dir-empty {
   text-align: center; padding: 56px 24px;
   background: rgba(255,255,255,.7); border: 1px dashed var(--cream-300);

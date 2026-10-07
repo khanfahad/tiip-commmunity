@@ -14,10 +14,11 @@ This site serves three audiences and goals:
 
 | Page | File | What it shows |
 |------|------|---------------|
-| Home | `index.html` | Overview of the model and community, the open **certification pathway** (Level 0 → full certification), plus the public **TIIP Provider Directory** — searchable by country → state/province → city, specialty, TIIP level, gender (male/female), and free text. The public directory lists only **fully certified clinicians, TIIP supervisors, and Level 3 trainees**; Levels 1–2 appear only in the members-only portal directory (demo profiles in `assets/js/directory.js`) |
+| Home | `index.html` | Overview of the model and community, the open **certification pathway** (Level 0 → full certification), plus the public **TIIP Provider Directory** — searchable by country → state/province → city, specialty, TIIP level, gender (male/female), and free text. The public directory lists only **fully certified clinicians, TIIP supervisors, and Level 3 trainees**; Levels 1–2 appear only in the members-only portal directory. Each card opens that provider's **full profile page** (`provider.html`); demo data lives in `assets/js/providers.js` |
 | The Model | `model.html` | Interactive diagram of the soul's faculties, intervention domains (tabs), the therapeutic process (steps), and FAQ |
 | Community | `community.html` | An interactive member-portal preview (feed, forums, case consultation, directory, library) + how to join |
 | Sign Up / Login | `join.html` | Member login **and** free registration in one place: benefits of membership, plus a registration form that asks whether a TIIP level (1/2/3) is already completed and, if so, requires a certificate upload for admin verification. Includes the Level 0 practice-scope disclaimer |
+| Provider profile | `provider.html?p=<slug>` | Full profile per provider (`assets/js/provider.js`): about, specialties & approach, training & credentials, **workshops / seminars / events they can conduct**, and a **request form** — either *request as my provider* or *request for an event or workshop* (demo; nothing is sent) |
 | Events | `events.html` | Featured conference, upcoming events with **List / Calendar views** (`assets/js/events.js`), type filters, and a host-a-training CTA |
 | TIIP Trainings | `trainings.html` | The structured training **curriculum** — Level 0 series through Levels 1–3 and the supervisor track — distinct from the dated gatherings on the Events page |
 | Resources | `resources.html` | Redirects to the member portal's Resources & Modules area |
@@ -32,8 +33,8 @@ The site's nav CTA is **Sign Up/Login** (→ `join.html`). Every TIIP logo links
 The portal is a complete, clickable front-end prototype of the practitioner
 platform. It runs entirely in the browser (state persists to `localStorage`)
 and includes a **role switcher** to demonstrate role-based access control
-across five permission levels: **Admin, Supervisor/Scholar, Certified
-Practitioner, Trainee (Levels I–III), and TIIP Trainee (Level 0)**.
+across **seven access levels**: **Level 0, Level 1, Level 2, Level 3,
+Fully Certified, Supervisor/Scholar, and Admin**.
 
 Registration is open to everyone: new members start as a **TIIP Trainee at
 Level 0** (starter modules, events, and forums only — no consultations, no
@@ -44,13 +45,13 @@ the member's current stage.
 | Module | Spec area | What the prototype demonstrates |
 |--------|-----------|--------------------------------|
 | Referral Directory | User architecture | Members-only directory including **every level (1–2 as well)**; search + filters for TIIP level, language (Arabic/Urdu/Turkish/English), timezone region, clinical focus, licensure (PSYPACT, US state, Canada, UK/EU, international); live local-time display per practitioner |
-| User & Role Administration | User architecture | Admin-only: approve members' **level-change requests** (with certificate attachment), **search members by name** to change their level, and **invite unregistered people by email** at a chosen starting level |
+| Administration (admin only) | User architecture | **Training registry** — who has *completed* or is *registered for* each level, with the **year and location** of the training; filter it (e.g. Level 1 · Chicago · 2026) and **invite one person or everyone who matches** to the portal. **Case conceptualization reviews** — Level 1 & 2 attendees submit through the portal; the admin **passes** (credits the level) or **asks them to retry** with feedback, and the member resubmits. Also: approve **level-change requests**, and **search members by name** to change their level |
 | Certification Pathway | Certification | Full Level 0 → 1 → 2 → 3 → certification stepper with "you are here" marker; Level 0 starter modules; 200-hour + 10-case progress bars with dynamic percentages, hour-logging form, supervisor approval/decline queue |
 | Compliance Vault | Certification | Dual categories (state CEUs vs. farḍ al-ʿayn), credit totals, expiration status with 60-day reminder badges |
 | Case Sandbox | Clinical | Conceptualization forms mapped to ʿAql/Nafs/Rūḥ/Iḥsās domains, share-with-supervisor flow, supervisor read view |
 | Scholar Desk | Clinical | Threaded consultation tickets with required anonymization confirmation, scholar routing, answered/closed states |
 | Intervention Vault | Research/resources | Search, language/type filters, metadata tags, version badges with history, per-asset downloads |
-| Publication Incubator | Research/resources | Project stages (draft → submission-ready), APA 7 checklist, planned Janeway API/webhook pipeline |
+| Research Library | Research/resources | Categorized library of articles, books, and posts on Islamic psychology. **Level 1+ can post/upload** (title, type, category, summary, link or file); members can **like and comment**; filter by category/type, search, sort by newest/most liked/most discussed; admins can remove posts. Level 0 can browse only |
 | Events Calendar | Community | Month calendar, automatic local-timezone conversion (`Intl`), RSVP tracking, join links, real `.ics` export; **Level 1+ members can propose events**, which enter an **admin approval queue** before appearing on the calendar |
 | Tazkiyah Forums | Community | Boards → threads → posts with reply and new-thread forms |
 
@@ -70,8 +71,11 @@ The prototype intentionally stops where a static site must. Production needs:
   scheduled job + email service (e.g., Postmark/SES).
 - **Video conferencing** — event join links should come from a Zoom/Meet
   integration rather than static URLs.
-- **Peer-review pipeline** — the Janeway API/webhook integration sketched
-  in the incubator.
+- **File storage** — library uploads and case-conceptualization attachments
+  currently record file names only; production needs encrypted object
+  storage with malware scanning.
+- **Invitations & requests** — registry invitations and the provider request
+  form are demo-only; production needs transactional email and a queue.
 
 ## Tech
 

@@ -21,12 +21,15 @@
      Roles (RBAC demo)
   --------------------------------------------------------- */
   var ROLES = {
-    explorer:     { label: "TIIP Trainee · Level 0", name: "Zaid Mahmood" },
-    trainee:      { label: "Trainee · Level III", name: "Amina Yusuf" },
-    practitioner: { label: "Certified Practitioner", name: "Dr. Bilal Rahman" },
-    supervisor:   { label: "Supervisor / Scholar", name: "Dr. Hana Qadri" },
-    admin:        { label: "Admin", name: "Musa Adem" }
+    explorer:     { label: "Level 0 · TIIP Trainee", short: "Trainee", name: "Zaid Mahmood" },
+    level1:       { label: "Level 1 · Trainee", short: "Trainee", name: "Nadia Bouchard" },
+    level2:       { label: "Level 2 · Trainee", short: "Trainee", name: "Zayd Ibrahim" },
+    trainee:      { label: "Level 3 · Trainee", short: "Trainee", name: "Amina Yusuf" },
+    practitioner: { label: "Fully Certified Practitioner", short: "Practitioner", name: "Dr. Bilal Rahman" },
+    supervisor:   { label: "Supervisor / Scholar", short: "Supervisor", name: "Dr. Hana Qadri" },
+    admin:        { label: "Admin", short: "Admin", name: "Musa Adem" }
   };
+
 
   /* ---------------------------------------------------------
      Certification pathway — the full journey from open
@@ -40,7 +43,7 @@
     { num: "✓", name: "Certified", title: "Full Certification", desc: "Full clinical & consultation privileges · supervisor track." }
   ];
   /* index into PATHWAY for each demo role (4 = fully certified) */
-  var ROLE_STAGE = { explorer: 0, trainee: 3, practitioner: 4, supervisor: 4, admin: 3 };
+  var ROLE_STAGE = { explorer: 0, level1: 1, level2: 2, trainee: 3, practitioner: 4, supervisor: 4, admin: 3 };
 
   /* ---------------------------------------------------------
      Level 1 capstone — the Khalil Center "TIIP Case
@@ -183,9 +186,63 @@
         { id: "me-seed1", title: "Community Halaqah: Grief & the Heart", date: iso(today(9)), time: "18:30", mins: 90, mode: "Community", link: "https://meet.example.org/halaqah-grief", by: "Amina Yusuf", status: "approved" },
         { id: "me-seed2", title: "Peer Practicum: Two-Chair Technique", date: iso(today(15)), time: "17:00", mins: 120, mode: "Practicum", link: "https://meet.example.org/two-chair", by: "Dr. Bilal Rahman", status: "pending" }
       ],
-      pubs: [
-        { title: "TIIP for adjustment disorder with anger features: a case series", type: "Case study", stage: "Internal review", authors: "Yusuf, Qadri", updated: iso(today(-8)) },
-        { title: "Validation of a murāqabah-based emotion regulation protocol", type: "Empirical study", stage: "Draft", authors: "Rahman et al.", updated: iso(today(-19)) }
+      /* ---- Members, level-change requests, training registry ---- */
+      users: [
+        { name: "Zaid Mahmood", role: "TIIP Trainee (Level 0)" },
+        { name: "Hafsa Karim", role: "TIIP Trainee (Level 0)", city: "Lahore, PK" },
+        { name: "Imran Baig", role: "Trainee (Level I)", city: "Karachi, PK" },
+        { name: "Nadia Bouchard", role: "Trainee (Level I)", city: "Montreal, CA" },
+        { name: "Zayd Ibrahim", role: "Trainee (Level II)", city: "Melbourne, AU" },
+        { name: "Yusuf Chaudhry", role: "Trainee (Level II)", city: "Lahore, PK" },
+        { name: "Amina Yusuf", role: "Trainee (Level III)" },
+        { name: "Dr. Bilal Rahman", role: "Certified Practitioner" },
+        { name: "Sarah Abdullah", role: "Certified Practitioner" },
+        { name: "Dr. Hana Qadri", role: "Supervisor / Scholar" },
+        { name: "Shaykh Idris Kamal", role: "Supervisor / Scholar" }
+      ],
+      levelRequests: [
+        { name: "Hafsa Karim", from: "TIIP Trainee (Level 0)", to: "Trainee (Level I)", note: "Completed Foundations of TIIP", cert: "Hafsa_Karim_Level1_certificate.pdf" },
+        { name: "Amina Yusuf", from: "Trainee (Level III)", to: "Certified Practitioner", note: "200 supervised hours & 10 cases approved", cert: "Amina_Yusuf_Level3_completion.pdf" }
+      ],
+      /* Who has completed / is registered for each level, with year & location.
+         inv: none | invited | joined */
+      registry: [
+        { id: "rg1", name: "Omar Siddiqui", email: "omar.siddiqui@example.org", level: 1, status: "Registered", year: 2026, loc: "Chicago, US", inv: "none" },
+        { id: "rg2", name: "Layla Haddad", email: "layla.haddad@example.org", level: 1, status: "Registered", year: 2026, loc: "Chicago, US", inv: "none" },
+        { id: "rg3", name: "Yasir Anwar", email: "yasir.anwar@example.org", level: 1, status: "Registered", year: 2026, loc: "Chicago, US", inv: "none" },
+        { id: "rg4", name: "Maha Ali", email: "maha.ali@example.org", level: 1, status: "Completed", year: 2025, loc: "Chicago, US", inv: "invited" },
+        { id: "rg5", name: "Sana Qureshi", email: "sana.qureshi@example.org", level: 1, status: "Completed", year: 2025, loc: "Houston, US", inv: "none" },
+        { id: "rg6", name: "Farah Nadeem", email: "farah.nadeem@example.org", level: 1, status: "Registered", year: 2026, loc: "Houston, US", inv: "none" },
+        { id: "rg7", name: "Idris Mahmoud", email: "idris.mahmoud@example.org", level: 2, status: "Registered", year: 2026, loc: "Toronto, CA", inv: "none" },
+        { id: "rg8", name: "Hamza Sheikh", email: "hamza.sheikh@example.org", level: 2, status: "Registered", year: 2026, loc: "Chicago, US", inv: "none" },
+        { id: "rg9", name: "Tariq Mansour", email: "tariq.mansour@example.org", level: 2, status: "Completed", year: 2025, loc: "Dubai, AE", inv: "none" },
+        { id: "rg10", name: "Yasmin Karim", email: "yasmin.karim@example.org", level: 3, status: "Completed", year: 2024, loc: "London, UK", inv: "joined" }
+      ],
+      /* Level 1 & 2 case conceptualizations. status: pending | passed | retry */
+      submissions: [
+        { id: "sb1", member: "Imran Baig", level: 1, alias: "Case R-27", file: "", at: iso(today(-3)), status: "pending", attempts: 1, feedback: "", history: [],
+          summary: { presenting: "Adult male, panic episodes and avoidance of crowded places after a workplace incident.", dominant: "Nafs", narrative: "Perceived threat (trigger) → catastrophic appraisal (ʿaql) → racing heart and fear (iḥsās) → avoidance and safety behaviours (nafs) → withdrawal from congregational prayer (rūḥ), which maintains the cycle.", plan: "Interoceptive exposure, graded return to the masjid, dhikr-paced breathing.", prognosis: "Good with consistent practice." } },
+        { id: "sb2", member: "Yusuf Chaudhry", level: 2, alias: "Case K-14", file: "K14_conceptualization.pdf", at: iso(today(-2)), status: "pending", attempts: 2, feedback: "",
+          history: [{ at: iso(today(-12)), status: "retry", feedback: "Please tie the dominant area of dysfunction directly to the vicious-cycle narrative." }],
+          summary: { presenting: "Young adult with depressive symptoms and a sense of spiritual distance.", dominant: "Rūḥ", narrative: "Unmet attachment needs (iḥsās) fuel harsh self-appraisals (ʿaql); withdrawal and neglect of worship (nafs) deepen the sense of distance from Allah (rūḥ), which feeds low mood.", plan: "Behavioural activation anchored in small acts of worship; compassion-focused reframing.", prognosis: "Fair to good; depends on engagement." } }
+      ],
+      /* Research library — contributed by Level 1+ members. */
+      library: [
+        { id: "lb1", title: "Scrupulosity and waswasah: a clinician’s primer", kind: "Article", category: "Clinical interventions", author: "Dr. Hana Qadri", by: "Dr. Hana Qadri", at: iso(today(-6)),
+          summary: "A practical walk-through of telling clinical OCD apart from waswasah, with ERP framing that stays faith-consistent.", link: "https://example.org/waswasah-primer", file: "",
+          likes: ["Dr. Bilal Rahman", "Amina Yusuf"], comments: [{ author: "Amina Yusuf", role: "Trainee", text: "The part on limiting repetition as an exposure target was exactly what I needed.", at: iso(today(-4)) }] },
+        { id: "lb2", title: "The three states of the nafs as a formulation lens", kind: "Post", category: "Foundations & ontology", author: "Dr. Bilal Rahman", by: "Dr. Bilal Rahman", at: iso(today(-9)),
+          summary: "A short post on using ammārah, lawwāmah, and muṭmaʾinnah to think about readiness for change and relapse risk.", link: "", file: "",
+          likes: ["Amina Yusuf"], comments: [] },
+        { id: "lb3", title: "Annotated reading list: classical sources on the diseases of the heart", kind: "Book", category: "Spiritual care & tazkiyah", author: "Compiled by Shaykh Idris Kamal", by: "Shaykh Idris Kamal", at: iso(today(-14)),
+          summary: "A starter list for clinicians new to the classical literature on the heart. Add your own suggestions in the comments.", link: "", file: "Heart-diseases-reading-list.pdf",
+          likes: ["Dr. Hana Qadri", "Dr. Bilal Rahman", "Amina Yusuf"], comments: [{ author: "Dr. Hana Qadri", role: "Supervisor", text: "Wonderful — I’ll share this with my supervision group.", at: iso(today(-12)) }] },
+        { id: "lb4", title: "Grief after perinatal loss: faith-informed care", kind: "Article", category: "Trauma & grief", author: "Amina Yusuf", by: "Amina Yusuf", at: iso(today(-20)),
+          summary: "Notes from practice on sabr, permission to grieve, and avoiding premature spiritual bypassing.", link: "https://example.org/perinatal-grief", file: "",
+          likes: [], comments: [] },
+        { id: "lb5", title: "Designing a small-N study of dhikr-based regulation", kind: "Article", category: "Research & evidence", author: "Dr. Bilal Rahman", by: "Dr. Bilal Rahman", at: iso(today(-26)),
+          summary: "Single-case designs as a feasible way for clinicians to build evidence for murāqabah and dhikr protocols.", link: "", file: "SCED-dhikr-design.pdf",
+          likes: ["Dr. Hana Qadri"], comments: [] }
       ],
       forum: [
         {
@@ -220,6 +277,11 @@
   if (!state.learning) state.learning = seedState().learning; /* migrate pre-learning saves */
   if (!state.learning.l1Formulation) state.learning.l1Formulation = seedFormulation(); /* migrate pre-formulation saves */
   if (!state.memberEvents) state.memberEvents = seedState().memberEvents; /* migrate pre-member-events saves */
+  var _seed = null; /* lazily-built defaults for migrating older saved states */
+  ["users", "levelRequests", "registry", "submissions", "library"].forEach(function (k) {
+    if (!state[k]) { _seed = _seed || seedState(); state[k] = _seed[k]; }
+  });
+  delete state.pubs; /* the Publication Incubator was replaced by the Research Library */
   if (!ROLES[state.role]) state.role = "trainee";
   function save() { try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) {} }
 
@@ -277,27 +339,10 @@
     { id: "ev5", title: "Murāqabah Practicum for Clinicians", when: today(26), mins: 75, mode: "Practicum", link: "https://meet.example.org/muraqabah" }
   ];
 
-  var ADMIN_USERS = [
-    { name: "Zaid Mahmood", role: "TIIP Trainee (Level 0)" },
-    { name: "Hafsa Karim", role: "TIIP Trainee (Level 0)", city: "Lahore, PK" },
-    { name: "Imran Baig", role: "TIIP Trainee (Level 0)", city: "Karachi, PK" },
-    { name: "Amina Yusuf", role: "Trainee (Level III)" },
-    { name: "Yusuf Chaudhry", role: "Trainee (Level II)" },
-    { name: "Dr. Bilal Rahman", role: "Certified Practitioner" },
-    { name: "Sarah Abdullah", role: "Certified Practitioner" },
-    { name: "Dr. Hana Qadri", role: "Supervisor / Scholar" },
-    { name: "Shaykh Idris Kamal", role: "Supervisor / Scholar" }
-  ];
-
-  /* Members' pending requests to change their TIIP level, awaiting admin
-     approval. Demo-only (in-memory, resets on reload). */
-  var LEVEL_REQUESTS = [
-    { name: "Hafsa Karim", from: "TIIP Trainee (Level 0)", to: "Trainee (Level I)", note: "Completed Foundations of TIIP", cert: "Hafsa_Karim_Level1_certificate.pdf" },
-    { name: "Yusuf Chaudhry", from: "Trainee (Level II)", to: "Trainee (Level III)", note: "Finished Level 2 applied-skills assessment", cert: "Yusuf_Chaudhry_Level2_certificate.pdf" },
-    { name: "Amina Yusuf", from: "Trainee (Level III)", to: "Certified Practitioner", note: "200 supervised hours & 10 cases approved", cert: "Amina_Yusuf_Level3_completion.pdf" }
-  ];
-  /* Admin-issued invitations to unregistered people (demo-only). */
-  var INVITES = [];
+  /* Members and level requests live in `state` (persisted); these aliases
+     are re-pointed whenever state is replaced (e.g., demo reset). */
+  var ADMIN_USERS = state.users;
+  var LEVEL_REQUESTS = state.levelRequests;
 
   /* ---------------------------------------------------------
      Shell: role switching, nav, router
@@ -308,9 +353,9 @@
   var roleSelect = document.getElementById("role-select");
 
   var VIEW_TITLES = {
-    dashboard: "Dashboard", learning: "Resources & Modules", directory: "Global Referral Directory", certification: "Certification Pathway",
+    dashboard: "Dashboard", admin: "Administration", learning: "Resources & Modules", directory: "Global Referral Directory", certification: "Certification Pathway",
     vault: "Dual-Compliance Vault", sandbox: "TIIP Conceptualization Sandbox", fatwa: "Scholarly Consultation Desk",
-    resources: "Multilingual Intervention Vault", incubator: "Publication Incubator", events: "Events & Training Calendar",
+    resources: "Multilingual Intervention Vault", library: "Islamic Psychology Research Library", events: "Events & Training Calendar",
     forums: "Tazkiyah & Peer Forums"
   };
 
@@ -362,7 +407,7 @@
   document.getElementById("reset-demo").addEventListener("click", function () {
     if (confirm("Reset all demo data in this browser?")) {
       localStorage.removeItem(LS_KEY);
-      state = seedState(); save(); applyRole(); show("dashboard");
+      state = seedState(); ADMIN_USERS = state.users; LEVEL_REQUESTS = state.levelRequests; save(); applyRole(); show("dashboard");
     }
   });
 
@@ -375,16 +420,16 @@
     document.getElementById("side-scrim").classList.remove("show");
   });
 
-  /* Admin member-search + invitation bindings (elements always present) */
+  /* Administration bindings (elements always present in the DOM) */
   var adminSearchEl = document.getElementById("admin-user-search");
-  if (adminSearchEl) adminSearchEl.addEventListener("input", function () { renderAdminUsers(adminSearchEl.value); });
-  var inviteFormEl = document.getElementById("admin-invite-form");
-  if (inviteFormEl) inviteFormEl.addEventListener("submit", function (e) {
-    e.preventDefault();
-    INVITES.push({ email: document.getElementById("ai-email").value, level: document.getElementById("ai-level").value });
-    e.target.reset();
-    renderAdmin();
+  adminSearchEl.addEventListener("input", function () { renderAdminUsers(adminSearchEl.value); });
+  ["rf-q", "rf-level", "rf-status", "rf-year", "rf-loc", "rf-inv"].forEach(function (id) {
+    document.getElementById(id).addEventListener("input", renderRegistry);
   });
+  document.getElementById("rg-level").addEventListener("change", syncRegForm);
+  document.getElementById("reg-form").addEventListener("submit", function (e) { e.preventDefault(); addRegistryRecord(true); });
+  document.getElementById("rg-add").addEventListener("click", function () { addRegistryRecord(false); });
+  document.getElementById("reg-bulk").addEventListener("click", bulkInvite);
 
   /* ---------------------------------------------------------
      Renderers
@@ -398,7 +443,8 @@
     if (view === "sandbox") renderSandbox();
     if (view === "fatwa") renderFatwa();
     if (view === "resources") renderResources();
-    if (view === "incubator") renderPubs();
+    if (view === "library") renderLibrary();
+    if (view === "admin") renderAdmin();
     if (view === "events") renderEvents();
     if (view === "forums") renderForums();
   }
@@ -417,6 +463,8 @@
     var expiring = state.certs.filter(function (c) { return certStatus(c) !== "ok"; }).length;
     var leads = {
       explorer: "As-salāmu ʿalaykum, Zaid. Welcome — you're a TIIP Trainee at Level 0. Watch the starter modules and follow the community; the full pathway to certification starts whenever you're ready.",
+      level1: "As-salāmu ʿalaykum, Nadia. You're in Level 1 — work through the modules, then submit your case conceptualization through the portal for review.",
+      level2: "As-salāmu ʿalaykum, Zayd. You're in Level 2 — submit your case conceptualization through the portal; an admin will pass it or ask you to retry.",
       trainee: "As-salāmu ʿalaykum, Amina. Your Level III pathway, compliance items, and cohort activity at a glance.",
       practitioner: "As-salāmu ʿalaykum, Dr. Rahman. Referrals, compliance, and consultation activity at a glance.",
       supervisor: "As-salāmu ʿalaykum, Dr. Qadri. Trainee approvals and scholar-desk queries awaiting you.",
@@ -435,6 +483,17 @@
         { n: EVENTS.length, l: "Upcoming events" },
         { n: 4, l: "Stages to certification" }
       ];
+    } else if (state.role === "level1" || state.role === "level2") {
+      var lvN = state.role === "level1" ? 1 : 2;
+      var mySb = mySub(lvN);
+      var sbWord = mySb ? { pending: "Under review", passed: "Passed", retry: "Retry" }[mySb.status] : "Not started";
+      var sbTile = { n: '<span style="font-size:1.15rem;">' + sbWord + "</span>", l: "Case conceptualization" };
+      tiles = lvN === 1
+        ? [{ n: "L1", l: "Current level" },
+           { n: state.learning.l1.filter(function (m) { return m.done; }).length + "<i>/" + state.learning.l1.length + "</i>", l: "Modules complete" },
+           sbTile, { n: allEvents().length, l: "Upcoming events" }]
+        : [{ n: "L2", l: "Current level" }, sbTile,
+           { n: expiring, l: "Compliance alerts" }, { n: allEvents().length, l: "Upcoming events" }];
     } else if (state.role === "supervisor") {
       tiles = [
         { n: pendingEntries().length, l: "Hours awaiting approval" },
@@ -445,8 +504,8 @@
     } else if (state.role === "admin") {
       tiles = [
         { n: ADMIN_USERS.length, l: "Active members" },
-        { n: DIRECTORY.length, l: "Directory listings" },
-        { n: RESOURCES.length, l: "Vault resources" },
+        { n: state.submissions.filter(function (x) { return x.status === "pending"; }).length, l: "Reviews awaiting you" },
+        { n: state.registry.filter(function (r) { return r.inv === "none"; }).length, l: "Registry — not invited" },
         { n: openTickets, l: "Open scholar queries" }
       ];
     } else {
@@ -463,10 +522,12 @@
 
     var actions = {
       explorer: [["learning", "Watch the six-part series"], ["certification", "View my pathway"], ["events", "Browse events"], ["forums", "Join the forums"]],
+      level1: [["learning", "Open Level 1 modules"], ["library", "Browse the research library"], ["directory", "Referral directory"], ["events", "Browse events"]],
+      level2: [["learning", "Submit case conceptualization"], ["sandbox", "Draft a conceptualization"], ["library", "Research library"], ["fatwa", "Ask a scholar"]],
       trainee: [["learning", "Open resources & modules"], ["certification", "Log supervised hours"], ["sandbox", "Draft a conceptualization"], ["fatwa", "Ask a scholar"]],
-      practitioner: [["directory", "Find a referral"], ["vault", "Update CE records"], ["incubator", "Open research workspace"], ["fatwa", "Ask a scholar"]],
+      practitioner: [["directory", "Find a referral"], ["vault", "Update CE records"], ["library", "Browse the research library"], ["fatwa", "Ask a scholar"]],
       supervisor: [["certification", "Review pending hours"], ["sandbox", "Review shared cases"], ["fatwa", "Answer scholar queries"], ["events", "Schedule a clinic"]],
-      admin: [["directory", "Audit directory"], ["resources", "Publish a resource"], ["events", "Manage events"], ["forums", "Moderate forums"]]
+      admin: [["admin", "Administration & invitations"], ["events", "Approve events"], ["library", "Moderate the library"], ["resources", "Publish a resource"]]
     };
     document.getElementById("dash-actions").innerHTML = actions[state.role].map(function (a) {
       return '<button class="btn btn-ghost btn-xs" style="margin:4px 6px 4px 0;" data-go="' + a[0] + '">' + a[1] + "</button>";
@@ -478,17 +539,191 @@
     document.getElementById("dash-events").innerHTML = allEvents().slice(0, 3).map(function (ev) {
       return '<div class="row"><span class="grow"><b>' + esc(ev.title) + "</b><small>" + fmtLocal(ev.when) + '</small></span><span class="tag">' + ev.mode + "</span></div>";
     }).join("");
-
-    var adminCard = document.getElementById("dash-admin-card");
-    adminCard.style.display = state.role === "admin" ? "block" : "none";
-    if (state.role === "admin") renderAdmin();
   }
 
-  /* ---- Admin: level-change requests, member search, invitations ---- */
+  /* ---- Case-conceptualization submissions (Level 1 & 2) ---- */
+  var SUB_LABEL = { pending: "Awaiting admin review", passed: "Passed", retry: "Retry requested" };
+  function findSubmission(member, level) {
+    return state.submissions.find(function (x) { return x.member === member && x.level === level; }) || null;
+  }
+  function mySub(level) { return findSubmission(ROLES[state.role].name, level); }
+  function subTags(sb) {
+    var cls = sb.status === "passed" ? "ok" : sb.status === "retry" ? "retry" : "warn";
+    var txt = sb.status === "passed" ? "Passed · Level " + sb.level + " credited" : SUB_LABEL[sb.status];
+    return '<span class="tag ' + cls + '">' + txt + '</span><span class="tag dim">Attempt ' + (sb.attempts || 1) + " · " + esc(sb.at) + "</span>";
+  }
+  function feedbackNote(sb) {
+    if (sb.status === "retry") return '<div class="fb-note retry"><b>Admin feedback — please revise and resubmit:</b> ' + esc(sb.feedback) + "</div>";
+    if (sb.status === "passed" && sb.feedback) return '<div class="fb-note passed"><b>Admin feedback:</b> ' + esc(sb.feedback) + "</div>";
+    return "";
+  }
+  /* create or update (resubmit) the member's submission for a level */
+  function submitConceptualization(level, alias, summary, file) {
+    var member = ROLES[state.role].name;
+    var sb = findSubmission(member, level);
+    if (sb) {
+      sb.alias = alias; sb.summary = summary; sb.file = file || sb.file || "";
+      sb.at = iso(new Date()); sb.status = "pending"; sb.attempts = (sb.attempts || 1) + 1; sb.feedback = "";
+    } else {
+      state.submissions.push({ id: "sb" + Date.now(), member: member, level: level, alias: alias, file: file || "", at: iso(new Date()),
+        status: "pending", attempts: 1, feedback: "", history: [], summary: summary });
+    }
+    save();
+  }
+
+  /* ---- Administration ---- */
   var ROLE_OPTIONS = ["TIIP Trainee (Level 0)", "Trainee (Level I)", "Trainee (Level II)", "Trainee (Level III)", "Certified Practitioner", "Supervisor / Scholar", "Admin"];
 
   function renderAdmin() {
-    /* 1) Pending level-change requests */
+    renderReviews();
+    syncRegForm();
+    renderRegistry();
+    renderRequests();
+    renderAdminUsers(document.getElementById("admin-user-search").value || "");
+  }
+
+  /* credited level moves the member up to that level (never down) */
+  function creditLevel(name, level) {
+    var u = ADMIN_USERS.find(function (x) { return x.name === name; });
+    if (!u) { ADMIN_USERS.push({ name: name, role: ROLE_OPTIONS[level] }); return; }
+    if (ROLE_OPTIONS.indexOf(u.role) < level) u.role = ROLE_OPTIONS[level];
+  }
+
+  /* -- case conceptualization reviews -- */
+  var SUMMARY_LABELS = [["presenting", "Presenting problem"], ["dominant", "Dominant area of dysfunction"], ["narrative", "Conceptualization (narrative)"], ["plan", "Therapy plan"], ["prognosis", "Prognosis"]];
+  function renderReviews() {
+    var el = document.getElementById("admin-reviews");
+    var pend = state.submissions.filter(function (x) { return x.status === "pending"; });
+    document.getElementById("rev-count").textContent = pend.length + " awaiting";
+    var ordered = state.submissions.slice().sort(function (a, b) {
+      if ((a.status === "pending") !== (b.status === "pending")) return a.status === "pending" ? -1 : 1;
+      return a.at < b.at ? 1 : -1;
+    });
+    el.innerHTML = ordered.length ? ordered.map(function (sb) {
+      var body = SUMMARY_LABELS.filter(function (l) { return filled(sb.summary && sb.summary[l[0]]); }).map(function (l) {
+        return "<p><strong>" + l[1] + ":</strong> " + esc(sb.summary[l[0]]) + "</p>";
+      }).join("") || "<p>No written summary attached.</p>";
+      var hist = (sb.history || []).map(function (h) {
+        return '<div class="fb-note ' + (h.status === "retry" ? "retry" : "passed") + '"><b>' + esc(h.at) + " · " + (h.status === "retry" ? "Retry requested" : "Passed") + ":</b> " + esc(h.feedback || "—") + "</div>";
+      }).join("");
+      var decide = sb.status === "pending"
+        ? '<div class="rv-form"><div class="field"><label>Feedback to the member</label><textarea data-fb="' + sb.id + '" placeholder="Required if you ask for a retry — say what to revise"></textarea></div>' +
+          '<div class="rv-btns"><button class="btn btn-gold btn-xs" data-pass="' + sb.id + '">Pass — credit Level ' + sb.level + '</button>' +
+          '<button class="btn btn-ghost btn-xs" data-retry="' + sb.id + '">Ask to retry</button></div></div>'
+        : "";
+      return '<div class="review-item"><div class="rv-head"><span class="grow"><b>' + esc(sb.member) + " — Level " + sb.level + " case conceptualization</b><small>" +
+        esc(sb.alias || "Untitled case") + " · submitted " + esc(sb.at) + (sb.file ? " · 📎 " + esc(sb.file) : "") + "</small></span>" + subTags(sb) + "</div>" +
+        "<details" + (sb.status === "pending" ? "" : "") + "><summary>View submission &amp; history</summary><div class='rv-body'>" + body + hist + "</div></details>" + decide + "</div>";
+    }).join("") : '<div class="empty">No case conceptualizations have been submitted yet.</div>';
+
+    function decideOn(id, status) {
+      var sb = state.submissions.find(function (x) { return x.id === id; });
+      var ta = el.querySelector('[data-fb="' + id + '"]');
+      var fb = ta ? ta.value.trim() : "";
+      if (!sb) return;
+      if (status === "retry" && !fb) {
+        ta.focus(); ta.style.borderColor = "#b64d4d"; ta.placeholder = "Please add feedback so the member knows what to revise";
+        return;
+      }
+      sb.history = sb.history || [];
+      sb.history.push({ at: iso(new Date()), status: status, feedback: fb });
+      sb.status = status; sb.feedback = fb;
+      if (status === "passed") creditLevel(sb.member, sb.level);
+      save(); renderAdmin();
+    }
+    el.querySelectorAll("[data-pass]").forEach(function (b) { b.addEventListener("click", function () { decideOn(b.getAttribute("data-pass"), "passed"); }); });
+    el.querySelectorAll("[data-retry]").forEach(function (b) { b.addEventListener("click", function () { decideOn(b.getAttribute("data-retry"), "retry"); }); });
+  }
+
+  /* -- training registry & invitations -- */
+  function levelText(n) { return n ? "Level " + n : "No level yet"; }
+  function setOptions(id, first, values) {
+    var sel = document.getElementById(id), cur = sel.value;
+    sel.innerHTML = '<option value="">' + first + "</option>" + values.map(function (v) { return "<option>" + esc(v) + "</option>"; }).join("");
+    if (values.map(String).indexOf(cur) !== -1) sel.value = cur;
+  }
+  function filteredRegistry() {
+    var q = (document.getElementById("rf-q").value || "").trim().toLowerCase();
+    var lvl = document.getElementById("rf-level").value, st = document.getElementById("rf-status").value;
+    var yr = document.getElementById("rf-year").value, loc = document.getElementById("rf-loc").value, inv = document.getElementById("rf-inv").value;
+    return state.registry.filter(function (r) {
+      if (q && (r.name + " " + r.email).toLowerCase().indexOf(q) === -1) return false;
+      if (lvl !== "" && String(r.level) !== lvl) return false;
+      if (st && r.status !== st) return false;
+      if (yr && String(r.year) !== yr) return false;
+      if (loc && r.loc !== loc) return false;
+      if (inv && r.inv !== inv) return false;
+      return true;
+    });
+  }
+  function renderRegistry() {
+    var years = [], locs = [];
+    state.registry.forEach(function (r) {
+      if (r.year && years.indexOf(String(r.year)) === -1) years.push(String(r.year));
+      if (r.loc && locs.indexOf(r.loc) === -1) locs.push(r.loc);
+    });
+    setOptions("rf-year", "Any", years.sort().reverse());
+    setOptions("rf-loc", "Any", locs.sort());
+
+    var list = filteredRegistry();
+    var eligible = list.filter(function (r) { return r.inv === "none"; });
+    document.getElementById("reg-count").textContent = list.length + (list.length === 1 ? " record" : " records") + " · " + eligible.length + " not yet invited";
+    var bulk = document.getElementById("reg-bulk");
+    bulk.textContent = "Invite all " + eligible.length + " matching";
+    bulk.disabled = !eligible.length;
+
+    var tagFor = { none: '<span class="tag dim">Not invited</span>', invited: '<span class="tag warn">Invited · pending</span>', joined: '<span class="tag ok">Joined</span>' };
+    document.getElementById("reg-rows").innerHTML = list.length ? list.map(function (r) {
+      return '<div class="row"><span class="grow"><b>' + esc(r.name) + "</b><small>" + esc(r.email) + " · " + levelText(r.level) +
+        (r.level ? " · " + esc(r.status) : "") + (r.loc ? " · " + esc(r.loc) : "") + (r.year ? " · " + r.year : "") + "</small></span>" +
+        tagFor[r.inv] +
+        (r.inv === "none" ? '<button class="btn btn-gold btn-xs" data-inv="' + r.id + '">Invite</button>' : "") + "</div>";
+    }).join("") : '<div class="empty">No one in the registry matches those filters.</div>';
+    document.querySelectorAll("#reg-rows [data-inv]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var r = state.registry.find(function (x) { return x.id === b.getAttribute("data-inv"); });
+        if (r) { r.inv = "invited"; r.invitedAt = iso(new Date()); save(); renderRegistry(); }
+      });
+    });
+  }
+  function bulkInvite() {
+    var eligible = filteredRegistry().filter(function (r) { return r.inv === "none"; });
+    if (!eligible.length) return;
+    if (!confirm("Send portal invitations to " + eligible.length + " " + (eligible.length === 1 ? "person" : "people") + "?")) return;
+    eligible.forEach(function (r) { r.inv = "invited"; r.invitedAt = iso(new Date()); });
+    save(); renderRegistry();
+    document.getElementById("reg-note").innerHTML = '<p class="invite-sent">✓ ' + eligible.length + " invitation" + (eligible.length === 1 ? "" : "s") + " sent (demo — no email is actually sent).</p>";
+  }
+  /* level 0 has no status / year / location requirement */
+  function syncRegForm() {
+    var hasLevel = Number(document.getElementById("rg-level").value) > 0;
+    document.getElementById("rg-status").disabled = !hasLevel;
+    document.getElementById("rg-year").required = hasLevel;
+    document.getElementById("rg-loc").required = hasLevel;
+  }
+  function addRegistryRecord(invite) {
+    var form = document.getElementById("reg-form");
+    if (!form.checkValidity()) { form.reportValidity(); return; }
+    var email = document.getElementById("rg-email").value.trim();
+    var note = document.getElementById("reg-note");
+    if (state.registry.some(function (r) { return r.email.toLowerCase() === email.toLowerCase(); })) {
+      note.innerHTML = '<p class="invite-sent" style="color:var(--red-400);">That email is already in the registry.</p>';
+      return;
+    }
+    var lvl = Number(document.getElementById("rg-level").value);
+    state.registry.unshift({
+      id: "rg" + Date.now(), name: document.getElementById("rg-name").value.trim(), email: email, level: lvl,
+      status: lvl ? document.getElementById("rg-status").value : "—",
+      year: lvl ? Number(document.getElementById("rg-year").value) : (Number(document.getElementById("rg-year").value) || null),
+      loc: document.getElementById("rg-loc").value.trim(),
+      inv: invite ? "invited" : "none", invitedAt: invite ? iso(new Date()) : ""
+    });
+    save(); form.reset(); syncRegForm(); renderRegistry();
+    note.innerHTML = '<p class="invite-sent">✓ Added to the registry' + (invite ? " and invitation sent (demo — no email is actually sent)." : ".") + "</p>";
+  }
+
+  /* -- level-change requests -- */
+  function renderRequests() {
     var reqEl = document.getElementById("admin-requests");
     reqEl.innerHTML = LEVEL_REQUESTS.length ? LEVEL_REQUESTS.map(function (r, i) {
       return '<div class="row"><span class="grow"><b>' + esc(r.name) + '</b><small>' + esc(r.from) + " → " + esc(r.to) +
@@ -498,30 +733,18 @@
     }).join("") : '<div class="empty">No level-change requests pending. 🌙</div>';
     reqEl.querySelectorAll("[data-req-ok]").forEach(function (b) {
       b.addEventListener("click", function () {
-        var r = LEVEL_REQUESTS[Number(b.getAttribute("data-req-ok"))];
+        var i = Number(b.getAttribute("data-req-ok")), r = LEVEL_REQUESTS[i];
         var u = ADMIN_USERS.find(function (x) { return x.name === r.name; });
         if (u) u.role = r.to; else ADMIN_USERS.push({ name: r.name, role: r.to });
-        LEVEL_REQUESTS.splice(Number(b.getAttribute("data-req-ok")), 1);
-        renderAdmin();
+        LEVEL_REQUESTS.splice(i, 1); save(); renderAdmin();
       });
     });
     reqEl.querySelectorAll("[data-req-no]").forEach(function (b) {
-      b.addEventListener("click", function () {
-        LEVEL_REQUESTS.splice(Number(b.getAttribute("data-req-no")), 1);
-        renderAdmin();
-      });
+      b.addEventListener("click", function () { LEVEL_REQUESTS.splice(Number(b.getAttribute("data-req-no")), 1); save(); renderAdmin(); });
     });
-
-    /* 2) Member list with name search */
-    renderAdminUsers(document.getElementById("admin-user-search").value || "");
-
-    /* 3) Invitations already sent this session */
-    var invEl = document.getElementById("admin-invites");
-    invEl.innerHTML = INVITES.map(function (iv) {
-      return '<div class="row"><span class="grow"><b>✉ ' + esc(iv.email) + "</b><small>Invited as " + esc(iv.level) + '</small></span><span class="tag warn">Invitation sent · pending</span></div>';
-    }).join("");
   }
 
+  /* -- member list with name search -- */
   function renderAdminUsers(filter) {
     var q = filter.trim().toLowerCase();
     var matched = ADMIN_USERS.filter(function (u) { return !q || u.name.toLowerCase().indexOf(q) !== -1; });
@@ -534,14 +757,14 @@
         "</select></div>";
     }).join("");
     usersEl.querySelectorAll(".admin-role").forEach(function (sel) {
-      sel.addEventListener("change", function () { ADMIN_USERS[Number(sel.getAttribute("data-i"))].role = sel.value; });
+      sel.addEventListener("change", function () { ADMIN_USERS[Number(sel.getAttribute("data-i"))].role = sel.value; save(); });
     });
 
-    /* If a search finds nobody, prompt the admin to invite them instead. */
+    /* If a search finds nobody, point the admin to the registry to invite them. */
     var noMatch = document.getElementById("admin-no-match");
     if (q && !matched.length) {
       noMatch.style.display = "block";
-      noMatch.innerHTML = '<div class="empty">No member matches “' + esc(filter.trim()) + '”. They may not be registered yet — invite them by email below.</div>';
+      noMatch.innerHTML = '<div class="empty">No member matches “' + esc(filter.trim()) + '”. They may not be registered yet — add them to the registry above and send an invitation.</div>';
     } else {
       noMatch.style.display = "none";
       noMatch.innerHTML = "";
@@ -572,7 +795,7 @@
        approved and members already at Level 2 and beyond. Nobody else
        even sees that the card exists. */
     var stage = ROLE_STAGE[state.role] != null ? ROLE_STAGE[state.role] : 0;
-    var approved = l1EnabledFor(ROLES[state.role].name);
+    var approved = l1EnabledFor(ROLES[state.role].name) || state.role === "level1";
     var isAdmin = state.role === "admin";
     var showTrack = !isAdmin && (approved || stage >= 2);
     var takingL1 = showTrack && stage < 2; /* actually working through it */
@@ -599,17 +822,17 @@
         var modsDone = l1.every(function (m) { return m.done; });
         var f = state.learning.l1Formulation;
         var doneCount = FORM_SECTIONS.filter(function (s) { return s.done(f); }).length;
-        var sub = state.learning.l1Submission;
+        var sub = mySub(1);
         var capTag = sub
-          ? '<span class="tag ok">Submitted · pending supervisor review</span><span class="tag dim">' + esc(sub.name) + " · " + sub.at + "</span>"
+          ? subTags(sub)
           : !modsDone
             ? '<span class="tag dim" id="l1-cap-tag">🔒 Unlocks when all modules are complete</span>'
             : '<span class="tag warn" id="l1-cap-tag">' + doneCount + " / " + FORM_SECTIONS.length + " sections complete</span>";
         document.getElementById("l1-capstone").innerHTML =
           '<div class="row" style="border-top:1px solid var(--line); padding-top:14px;"><span class="grow">' +
           "<b>📤 Capstone: TIIP Case Formulation Sheet</b>" +
-          "<small>At the end of your modules, complete the Khalil Center case formulation below — every section filled, reviewed by a supervisor before Level 1 is credited.</small></span>" +
-          capTag + "</div>";
+          "<small>At the end of your modules, complete the Khalil Center case formulation below — every section filled, reviewed by an admin before Level 1 is credited.</small></span>" +
+          capTag + "</div>" + (sub ? feedbackNote(sub) : "");
         renderFormulation(modsDone);
       } else {
         document.getElementById("l1-capstone").innerHTML = "";
@@ -621,6 +844,8 @@
       document.getElementById("l1-capstone").innerHTML = "";
       hideFormulationCard();
     }
+
+    renderLevel2Card();
 
     /* Admin — approve Level 1 access per registered Level 0 trainee */
     document.getElementById("l1-admin-card").style.display = isAdmin ? "block" : "none";
@@ -760,7 +985,7 @@
       var left = state.learning.l1.filter(function (m) { return !m.done; }).length;
       card.removeAttribute("data-built");
       card.innerHTML = '<h3>📝 TIIP Case Formulation Sheet <span class="tag dim">🔒 Locked</span></h3>' +
-        '<p class="view-lead" style="margin-bottom:0;font-size:.85rem;">The end-of-level case conceptualization opens once every module is complete — ' + left + " module" + (left === 1 ? "" : "s") + ' to go. It follows the Khalil Center <strong>TIIP Case Formulation Sheet</strong>: no section may be left empty, and submissions are reviewed by a supervisor before Level 1 is credited.</p>';
+        '<p class="view-lead" style="margin-bottom:0;font-size:.85rem;">The end-of-level case conceptualization opens once every module is complete — ' + left + " module" + (left === 1 ? "" : "s") + ' to go. It follows the Khalil Center <strong>TIIP Case Formulation Sheet</strong>: no section may be left empty, and submissions are reviewed by an admin, who passes them or asks you to retry, before Level 1 is credited.</p>';
       return;
     }
 
@@ -772,9 +997,9 @@
     card.setAttribute("data-built", "1");
 
     var doneCount = FORM_SECTIONS.filter(function (s) { return s.done(f); }).length;
-    var sub = state.learning.l1Submission;
-    card.innerHTML = '<h3>📝 TIIP Case Formulation Sheet' + (sub ? ' <span class="tag ok">Submitted</span>' : "") + "</h3>" +
-      '<p class="view-lead" style="margin-bottom:12px;font-size:.85rem;">Complete every section — <strong>no section may be left empty</strong>. Use a de-identified case alias only. Your formulation is reviewed by a supervisor before Level 1 is credited.</p>' +
+    var sub = mySub(1);
+    card.innerHTML = '<h3>📝 TIIP Case Formulation Sheet' + (sub ? " " + subTags(sub) : "") + "</h3>" +
+      '<p class="view-lead" style="margin-bottom:12px;font-size:.85rem;">Complete every section — <strong>no section may be left empty</strong>. Use a de-identified case alias only. Your formulation is reviewed by an admin — who will pass it or ask you to retry — before Level 1 is credited.</p>' +
       '<div class="prog"><div class="prog-head"><b>Sections complete</b><span id="l1f-count">' + doneCount + " / " + FORM_SECTIONS.length + '</span></div><div class="bar"><i id="l1f-bar" style="width:' + Math.round(doneCount / FORM_SECTIONS.length * 100) + '%"></i></div></div>' +
       FORM_SECTIONS.map(function (s, idx) {
         var ok = s.done(f);
@@ -783,7 +1008,7 @@
           '<div class="fsec-body">' + formSectionBody(s.id, f) + "</div></details>";
       }).join("") +
       '<div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:14px;">' +
-      '<button class="btn btn-gold" id="l1f-submit"' + (doneCount === FORM_SECTIONS.length ? "" : " disabled") + ">" + (sub ? "Resubmit for review" : "Submit for supervisor review") + "</button>" +
+      '<button class="btn btn-gold" id="l1f-submit"' + (doneCount === FORM_SECTIONS.length && !(sub && sub.status === "passed") ? "" : " disabled") + ">" + (sub && sub.status !== "passed" ? "Resubmit for review" : sub ? "Passed — Level 1 credited" : "Submit for admin review") + "</button>" +
       '<button class="btn btn-ghost" id="l1f-download">⬇ Download draft (.txt)</button>' +
       '<span class="tag dim">Drafts save automatically (demo · localStorage)</span></div>' +
       '<p class="note"><b>Submission guidelines:</b> every section completed · electronic format only (no handwriting or images) · file named <em>Name_Surname_TIIP Level 1 Case Formulation</em>. Non-compliant submissions are not evaluated.</p>';
@@ -800,9 +1025,10 @@
     });
     card.querySelector("#l1f-count").textContent = done + " / " + FORM_SECTIONS.length;
     card.querySelector("#l1f-bar").style.width = Math.round(done / FORM_SECTIONS.length * 100) + "%";
-    card.querySelector("#l1f-submit").disabled = done !== FORM_SECTIONS.length;
+    var _sb = mySub(1);
+    card.querySelector("#l1f-submit").disabled = done !== FORM_SECTIONS.length || !!(_sb && _sb.status === "passed");
     var cap = document.getElementById("l1-cap-tag");
-    if (cap && !state.learning.l1Submission) {
+    if (cap && !mySub(1)) {
       cap.className = "tag warn";
       cap.textContent = done + " / " + FORM_SECTIONS.length + " sections complete";
     }
@@ -844,11 +1070,13 @@
       var id = e.target.id;
       if (id === "l1f-submit") {
         if (!FORM_SECTIONS.every(function (s) { return s.done(f); })) return;
-        state.learning.l1Submission = {
-          name: ROLES[state.role].name.replace(/\s+/g, "_") + "_TIIP Level 1 Case Formulation",
-          at: iso(new Date())
-        };
-        save(); renderLearning();
+        var fname = ROLES[state.role].name.replace(/\s+/g, "_") + "_TIIP Level 1 Case Formulation";
+        state.learning.l1Submission = { name: fname, at: iso(new Date()) };
+        submitConceptualization(1, f.alias, {
+          presenting: f.presenting, dominant: f.dominant, narrative: f.narrative, prognosis: f.prognosis,
+          plan: f.plan.map(function (r) { return r.domain + " — " + r.goal + " (" + r.intervention + ")"; }).join("; ")
+        }, fname);
+        renderLearning();
       }
       if (id === "l1f-download") downloadFormulation(f);
     };
@@ -930,6 +1158,58 @@
     document.getElementById(id).addEventListener("input", renderDirectory);
   });
 
+  /* ---- Level 2: case conceptualization submission ---- */
+  function renderLevel2Card() {
+    var card = document.getElementById("l2-card");
+    if (state.role !== "level2") { card.style.display = "none"; card.innerHTML = ""; return; }
+    card.style.display = "block";
+    var sb = mySub(2), sm = (sb && sb.summary) || {};
+    var passed = sb && sb.status === "passed";
+    var DOMAINS = ["Iḥsās", "ʿAql", "Nafs", "Rūḥ"];
+    card.innerHTML = '<h3>📝 Level 2 — Case Conceptualization ' + (sb ? subTags(sb) : '<span class="tag dim">Not submitted</span>') + "</h3>" +
+      '<p class="view-lead" style="margin-bottom:12px;font-size:.85rem;">Submit a de-identified case conceptualization through the portal. An admin will <strong>pass</strong> it to credit Level 2, or <strong>ask you to retry</strong> with feedback — you can then revise and resubmit here.</p>' +
+      (sb ? feedbackNote(sb) : "") +
+      (passed
+        ? '<p class="note"><b>Level 2 credited.</b> Your conceptualization was passed — well done.</p>'
+        : '<form id="l2-form" style="margin-top:14px;">' +
+          '<div class="field-row"><div class="field"><label>Case alias (never real names)</label><input type="text" id="l2-alias" required value="' + esc(sb ? sb.alias : "") + '" placeholder="e.g., Case K-14" /></div>' +
+          '<div class="field"><label>Dominant area of dysfunction</label><select id="l2-dom">' + DOMAINS.map(function (d) { return "<option" + (sm.dominant === d ? " selected" : "") + ">" + d + "</option>"; }).join("") + "</select></div></div>" +
+          '<div class="field"><label>Presenting problem</label><textarea id="l2-pres" required>' + esc(sm.presenting || "") + "</textarea></div>" +
+          '<div class="field"><label>Conceptualization (narrative)</label><textarea id="l2-narr" required placeholder="How do ʿaql, nafs, iḥsās and rūḥ interlock to maintain the problem?">' + esc(sm.narrative || "") + "</textarea></div>" +
+          '<div class="field"><label>Therapy plan</label><textarea id="l2-plan">' + esc(sm.plan || "") + "</textarea></div>" +
+          '<div class="field-row"><div class="field"><label>Prognosis</label><input type="text" id="l2-prog" value="' + esc(sm.prognosis || "") + '" /></div>' +
+          '<div class="field"><label>Attach a document <span style="text-transform:none;letter-spacing:0;font-weight:500;">(optional)</span></label><input type="file" id="l2-file" accept=".pdf,.doc,.docx" /></div></div>' +
+          '<div class="check"><input type="checkbox" id="l2-anon" required /> <span>This case is fully de-identified <em>(required)</em></span></div>' +
+          '<button class="btn btn-gold" type="submit">' + (sb ? "Resubmit for review" : "Submit for admin review") + "</button></form>");
+    var form = document.getElementById("l2-form");
+    if (form) form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var file = document.getElementById("l2-file").files[0];
+      submitConceptualization(2, document.getElementById("l2-alias").value.trim(), {
+        presenting: document.getElementById("l2-pres").value, dominant: document.getElementById("l2-dom").value,
+        narrative: document.getElementById("l2-narr").value, plan: document.getElementById("l2-plan").value, prognosis: document.getElementById("l2-prog").value
+      }, file ? file.name : "");
+      renderLearning();
+    });
+  }
+
+  /* ---- Certification pathway: Level 1 / Level 2 members ---- */
+  function renderEarlyCert() {
+    var lvl = state.role === "level1" ? 1 : 2;
+    var sb = mySub(lvl);
+    var done = state.learning.l1.filter(function (m) { return m.done; }).length;
+    var rows = lvl === 1
+      ? '<div class="row"><span class="grow"><b>Foundations modules</b><small>Eight online modules</small></span><span class="tag ' + (done === state.learning.l1.length ? "ok" : "warn") + '">' + done + " / " + state.learning.l1.length + " complete</span></div>"
+      : '<div class="row"><span class="grow"><b>Applied-skills seminars &amp; practicum entry</b><small>Attend the Level 2 seminars and begin practicum work</small></span><span class="tag warn">In progress</span></div>';
+    rows += '<div class="row"><span class="grow"><b>Case conceptualization</b><small>Submitted through the portal and reviewed by an admin</small></span>' +
+      (sb ? subTags(sb) : '<span class="tag dim">Not submitted</span>') + "</div>" +
+      '<div class="row"><span class="grow"><b>Next: ' + (lvl === 1 ? "Level 2 — Intermediate" : "Level 3 — Supervised Practice") + '</b><small>Unlocks once Level ' + lvl + " is credited</small></span><span class=\"tag dim\">🔒 Locked</span></div>";
+    document.getElementById("cert-early-card").innerHTML = '<h3>' + (lvl === 1 ? "📘 Level 1 — Foundations" : "📗 Level 2 — Intermediate") + ' <span class="tag gold">In progress</span></h3>' +
+      '<div class="rows">' + rows + "</div>" + (sb ? feedbackNote(sb) : "") +
+      '<p style="margin:14px 0 0;"><button class="btn btn-gold btn-xs" id="early-go">' + (lvl === 1 ? "Open Level 1 modules" : "Submit case conceptualization") + "</button></p>";
+    document.getElementById("early-go").addEventListener("click", function () { show("learning"); });
+  }
+
   /* ---- Certification pathway ---- */
   function renderPathway() {
     var stage = ROLE_STAGE[state.role] != null ? ROLE_STAGE[state.role] : 0;
@@ -974,9 +1254,13 @@
     var s = document.getElementById("cert-supervisor");
     var c = document.getElementById("cert-certified");
     x.style.display = t.style.display = s.style.display = c.style.display = "none";
+    document.getElementById("cert-early").style.display = "none";
     if (state.role === "explorer") {
       x.style.display = "block";
       renderModules();
+    } else if (state.role === "level1" || state.role === "level2") {
+      document.getElementById("cert-early").style.display = "block";
+      renderEarlyCert();
     } else if (state.role === "practitioner") {
       c.style.display = "block";
     } else if (state.role === "trainee" || state.role === "admin") {
@@ -1136,7 +1420,7 @@
       (t.status !== "closed" ? '<button class="btn btn-ghost btn-xs" type="button" id="ticket-close">Mark resolved</button>' : "") + "</form>";
     document.getElementById("ticket-reply").addEventListener("submit", function (e) {
       e.preventDefault();
-      t.thread.push({ author: ROLES[state.role].name, role: isScholar ? "Scholar" : ROLES[state.role].label.split(" ")[0], text: document.getElementById("tr-body").value, at: iso(new Date()) });
+      t.thread.push({ author: ROLES[state.role].name, role: isScholar ? "Scholar" : ROLES[state.role].short, text: document.getElementById("tr-body").value, at: iso(new Date()) });
       if (isScholar) t.status = "answered";
       save(); renderFatwa();
     });
@@ -1148,7 +1432,7 @@
     var id = Date.now();
     state.tickets.push({
       id: id, subject: document.getElementById("tf-subject").value, cat: document.getElementById("tf-cat").value, status: "open",
-      thread: [{ author: ROLES[state.role].name, role: ROLES[state.role].label.split(" ")[0], text: document.getElementById("tf-body").value, at: iso(new Date()) }]
+      thread: [{ author: ROLES[state.role].name, role: ROLES[state.role].short, text: document.getElementById("tf-body").value, at: iso(new Date()) }]
     });
     openTicketId = id;
     save(); e.target.reset(); renderFatwa();
@@ -1188,29 +1472,121 @@
     document.getElementById(id).addEventListener("input", renderResources);
   });
 
-  /* ---- Publication incubator ---- */
-  function renderPubs() {
-    var STAGES = ["Draft", "Internal review", "Formatting", "Submission-ready"];
-    document.getElementById("pub-rows").innerHTML = state.pubs.map(function (p, i) {
-      var si = STAGES.indexOf(p.stage);
-      return '<div class="thread" style="cursor:default;"><div class="t-head"><b>' + esc(p.title) + '</b><span class="tag ' + (si >= 3 ? "ok" : si >= 1 ? "warn" : "dim") + '">' + p.stage + "</span></div>" +
-        '<div class="t-sub">' + p.type + " · " + esc(p.authors) + " · updated " + p.updated + "</div>" +
-        '<div class="prog" style="margin-top:8px;"><div class="bar"><i style="width:' + ((si + 1) / STAGES.length * 100) + '%"></i></div></div>' +
-        (si < 3 ? '<button class="btn btn-ghost btn-xs" style="margin-top:8px;" data-advance="' + i + '">Advance to ' + STAGES[si + 1] + "</button>" : '<span class="tag ok" style="margin-top:8px;">Ready for Janeway submission</span>') +
-        "</div>";
-    }).join("");
-    document.querySelectorAll("[data-advance]").forEach(function (b) {
-      b.addEventListener("click", function () {
-        var p = state.pubs[Number(b.getAttribute("data-advance"))];
-        p.stage = STAGES[STAGES.indexOf(p.stage) + 1]; p.updated = iso(new Date());
-        save(); renderPubs();
-      });
+  /* ---- Research library ---- */
+  var LIB_CATS = ["Foundations & ontology", "Clinical interventions", "Spiritual care & tazkiyah", "Trauma & grief", "Family & marriage",
+    "Youth & identity", "Fiqh & mental health", "Research & evidence", "Practitioner wellbeing", "Other"];
+  var libOpen = {};
+  function libCanInteract() { return state.role !== "explorer"; }
+  function safeUrl(u) { return /^https?:\/\//i.test(u || "") ? u : ""; }
+
+  function renderLibrary() {
+    var catSel = document.getElementById("lib-cat"), formCat = document.getElementById("lf-cat");
+    if (!catSel.options.length) {
+      catSel.innerHTML = '<option value="">All categories</option>' + LIB_CATS.map(function (c) { return "<option>" + esc(c) + "</option>"; }).join("");
+      formCat.innerHTML = LIB_CATS.map(function (c) { return "<option>" + esc(c) + "</option>"; }).join("");
+    }
+    var can = libCanInteract(), me = ROLES[state.role].name;
+    document.getElementById("lib-post-card").style.display = can ? "block" : "none";
+    document.getElementById("lib-locked").style.display = can ? "none" : "block";
+
+    var q = (document.getElementById("lib-q").value || "").trim().toLowerCase();
+    var cat = catSel.value, kind = document.getElementById("lib-kind").value, sort = document.getElementById("lib-sort").value;
+    var list = state.library.filter(function (it) {
+      if (cat && it.category !== cat) return false;
+      if (kind && it.kind !== kind) return false;
+      if (q && (it.title + " " + it.author + " " + it.summary + " " + it.category).toLowerCase().indexOf(q) === -1) return false;
+      return true;
     });
+    list.sort(function (a, b) {
+      if (sort === "liked") return b.likes.length - a.likes.length || (a.at < b.at ? 1 : -1);
+      if (sort === "discussed") return b.comments.length - a.comments.length || (a.at < b.at ? 1 : -1);
+      return a.at < b.at ? 1 : a.at > b.at ? -1 : 0;
+    });
+    document.getElementById("lib-empty").style.display = list.length ? "none" : "block";
+
+    document.getElementById("lib-list").innerHTML = list.map(function (it) {
+      var liked = it.likes.indexOf(me) !== -1;
+      var href = safeUrl(it.link);
+      var comments = libOpen[it.id]
+        ? '<div class="lib-comments">' + (it.comments.length ? it.comments.map(function (c) {
+            return '<div class="msg"><span class="avatar">' + initials(c.author) + '</span><div class="m-body"><div class="m-who"><b>' + esc(c.author) + "</b> · " + esc(c.role) + " · " + esc(c.at) + "</div><p>" + esc(c.text) + "</p></div></div>";
+          }).join("") : '<div class="empty" style="padding:12px;">No comments yet.</div>') +
+          (libCanInteract() ? '<form data-comment-form="' + it.id + '"><input type="text" required maxlength="500" placeholder="Add a comment…" aria-label="Add a comment" /><button class="btn btn-gold btn-xs" type="submit">Comment</button></form>' : "") + "</div>"
+        : "";
+      return '<article class="lib-item"><div class="lib-tags"><span class="tag gold">' + esc(it.kind) + '</span><span class="tag">' + esc(it.category) + "</span></div>" +
+        "<h4>" + esc(it.title) + "</h4>" +
+        '<div class="lib-meta">By ' + esc(it.author) + " · shared by " + esc(it.by) + " · " + esc(it.at) + "</div>" +
+        '<p class="lib-sum">' + esc(it.summary) + "</p>" +
+        ((href || it.file) ? '<div class="lib-tags">' + (href ? '<a class="tag dim" href="' + esc(href) + '" target="_blank" rel="noopener noreferrer">🔗 Open link</a>' : "") + (it.file ? '<span class="tag dim">📎 ' + esc(it.file) + "</span>" : "") + "</div>" : "") +
+        '<div class="lib-actions">' +
+        '<button class="btn btn-ghost btn-xs btn-like' + (liked ? " liked" : "") + '" data-like="' + it.id + '"' + (can ? "" : ' disabled title="Level 1+ can like"') + ">" + (liked ? "♥" : "♡") + " " + it.likes.length + "</button>" +
+        '<button class="btn btn-ghost btn-xs" data-toggle-comments="' + it.id + '">💬 ' + it.comments.length + (libOpen[it.id] ? " · hide" : "") + "</button>" +
+        '<span class="spacer"></span>' +
+        ((state.role === "admin" || it.by === me) ? '<button class="btn btn-ghost btn-xs" data-lib-del="' + it.id + '">Remove</button>' : "") +
+        "</div>" + comments + "</article>";
+    }).join("");
+
+    /* category chips with counts */
+    var counts = {};
+    state.library.forEach(function (it) { counts[it.category] = (counts[it.category] || 0) + 1; });
+    document.getElementById("lib-cats").innerHTML = LIB_CATS.map(function (c) {
+      return '<button type="button" class="cat-chip' + (cat === c ? " sel" : "") + '" data-cat="' + esc(c) + '">' + esc(c) + "<i>" + (counts[c] || 0) + "</i></button>";
+    }).join("");
   }
-  document.getElementById("pub-form").addEventListener("submit", function (e) {
+
+  /* delegated handlers (bound once) */
+  document.getElementById("lib-list").addEventListener("click", function (e) {
+    var t = e.target.closest("button");
+    if (!t) return;
+    var me = ROLES[state.role].name;
+    var id = t.getAttribute("data-like") || t.getAttribute("data-toggle-comments") || t.getAttribute("data-lib-del");
+    var it = state.library.find(function (x) { return x.id === id; });
+    if (!it) return;
+    if (t.hasAttribute("data-like") && libCanInteract()) {
+      var i = it.likes.indexOf(me);
+      if (i === -1) it.likes.push(me); else it.likes.splice(i, 1);
+      save(); renderLibrary();
+    } else if (t.hasAttribute("data-toggle-comments")) {
+      libOpen[id] = !libOpen[id]; renderLibrary();
+    } else if (t.hasAttribute("data-lib-del")) {
+      if (confirm("Remove “" + it.title + "” from the library?")) {
+        state.library = state.library.filter(function (x) { return x.id !== id; });
+        save(); renderLibrary();
+      }
+    }
+  });
+  document.getElementById("lib-list").addEventListener("submit", function (e) {
+    var id = e.target.getAttribute("data-comment-form");
+    if (!id) return;
     e.preventDefault();
-    state.pubs.unshift({ title: document.getElementById("pf-title").value, type: document.getElementById("pf-type").value, stage: "Draft", authors: ROLES[state.role].name, updated: iso(new Date()) });
-    save(); e.target.reset(); renderPubs();
+    var it = state.library.find(function (x) { return x.id === id; });
+    var input = e.target.querySelector("input");
+    if (!it || !input.value.trim() || !libCanInteract()) return;
+    it.comments.push({ author: ROLES[state.role].name, role: ROLES[state.role].short, text: input.value.trim(), at: iso(new Date()) });
+    libOpen[id] = true; save(); renderLibrary();
+  });
+  document.getElementById("lib-cats").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-cat]");
+    if (!b) return;
+    var sel = document.getElementById("lib-cat");
+    sel.value = sel.value === b.getAttribute("data-cat") ? "" : b.getAttribute("data-cat");
+    renderLibrary();
+  });
+  ["lib-q", "lib-cat", "lib-kind", "lib-sort"].forEach(function (id) {
+    document.getElementById(id).addEventListener("input", renderLibrary);
+  });
+  document.getElementById("lib-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!libCanInteract()) return;
+    var me = ROLES[state.role].name;
+    var file = document.getElementById("lf-file").files[0];
+    state.library.unshift({
+      id: "lb" + Date.now(), title: document.getElementById("lf-title").value.trim(), kind: document.getElementById("lf-kind").value,
+      category: document.getElementById("lf-cat").value, author: document.getElementById("lf-author").value.trim() || me, by: me, at: iso(new Date()),
+      summary: document.getElementById("lf-summary").value.trim(), link: document.getElementById("lf-link").value.trim(), file: file ? file.name : "",
+      likes: [], comments: []
+    });
+    save(); e.target.reset(); renderLibrary();
   });
 
   /* ---- Events ---- */
@@ -1379,7 +1755,7 @@
     e.preventDefault();
     var topic = state.forum.find(function (t) { return t.id === activeTopic; });
     var th = topic.threads.find(function (x) { return x.id === activeThread; });
-    th.posts.push({ author: ROLES[state.role].name, role: ROLES[state.role].label.split(" ")[0], text: document.getElementById("rf-body").value, at: iso(new Date()) });
+    th.posts.push({ author: ROLES[state.role].name, role: ROLES[state.role].short, text: document.getElementById("rf-body").value, at: iso(new Date()) });
     save(); e.target.reset(); renderForums();
   });
 

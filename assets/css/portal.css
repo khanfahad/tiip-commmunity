@@ -440,6 +440,52 @@ strong { color: var(--cream); }
   .fig-grid { grid-template-columns: 1fr; }
 }
 
+
+/* ---------------------------------------------------------
+   Research library
+--------------------------------------------------------- */
+.lib-item { border: 1px solid var(--line-soft); border-radius: var(--radius); background: #fff; box-shadow: 0 2px 8px rgba(10, 18, 38, 0.06); padding: 18px 20px; margin-bottom: 14px; }
+.lib-item h4 { font-family: var(--font-body); font-size: 1rem; font-weight: 700; margin: 8px 0 4px; color: var(--cream); line-height: 1.3; }
+.lib-item .lib-meta { font-size: 0.76rem; color: var(--muted-2); margin-bottom: 8px; }
+.lib-item .lib-sum { font-size: 0.88rem; color: var(--cream-dim); margin: 0 0 10px; }
+.lib-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.lib-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line-soft); }
+.lib-actions .spacer { flex: 1; }
+.btn-like.liked { background: var(--red-bg); border-color: rgba(182, 77, 77, 0.4); color: var(--red-400); }
+.lib-comments { margin-top: 12px; padding-top: 4px; border-top: 1px dashed var(--line); }
+.lib-comments form { display: flex; gap: 8px; margin-top: 10px; }
+.lib-comments form input { flex: 1; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--line); font-family: var(--font-body); font-size: 0.86rem; }
+.lib-comments form input:focus { outline: none; border-color: var(--gold-400); }
+.chip-wrap { display: flex; flex-wrap: wrap; gap: 7px; }
+.cat-chip { padding: 5px 12px; border-radius: 999px; border: 1px solid var(--line); background: #fff; color: var(--muted); font-size: 0.76rem; font-weight: 650; cursor: pointer; font-family: var(--font-body); transition: border-color 0.2s ease, background 0.2s ease; }
+.cat-chip:hover { border-color: var(--gold-400); }
+.cat-chip.sel { background: rgba(58, 88, 156, 0.1); border-color: rgba(58, 88, 156, 0.45); color: var(--gold-300); }
+.cat-chip i { font-style: normal; opacity: 0.6; margin-left: 4px; }
+
+/* ---------------------------------------------------------
+   Administration: registry + reviews
+--------------------------------------------------------- */
+.reg-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: 4px 0 6px; }
+.reg-bar #reg-count { font-size: 0.82rem; font-weight: 700; color: var(--gold-400); }
+.review-item { border: 1px solid var(--line-soft); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; background: #fff; }
+.review-item .rv-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.review-item .rv-head .grow { flex: 1; min-width: 200px; }
+.review-item .rv-head b { color: var(--cream); font-size: 0.92rem; display: block; }
+.review-item .rv-head small { color: var(--muted-2); font-size: 0.76rem; }
+.review-item details { margin-top: 10px; }
+.review-item summary { cursor: pointer; font-size: 0.8rem; font-weight: 700; color: var(--gold-400); }
+.rv-body { margin: 10px 0 0; font-size: 0.85rem; color: var(--cream-dim); }
+.rv-body p { margin: 0 0 8px; }
+.rv-body strong { color: var(--cream); }
+.rv-form { margin-top: 12px; }
+.rv-form textarea { min-height: 60px; }
+.rv-form .rv-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.fb-note { border-left: 3px solid var(--gold-500); background: rgba(58, 88, 156, 0.06); border-radius: 0 10px 10px 0; padding: 10px 14px; font-size: 0.84rem; color: var(--cream-dim); margin: 12px 0 0; }
+.fb-note.retry { border-left-color: #d9873b; background: rgba(217, 135, 59, 0.08); }
+.fb-note.passed { border-left-color: var(--green-400); background: var(--green-bg); }
+.fb-note b { color: var(--cream); }
+.tag.retry { color: #a8610f; border-color: rgba(217, 135, 59, 0.45); background: rgba(217, 135, 59, 0.1); }
+
 /* Mobile shell */
 .p-menu-btn { display: none; background: none; border: 1px solid var(--line); border-radius: 10px; color: var(--cream); width: 38px; height: 38px; cursor: pointer; font-size: 1rem; }
 @media (max-width: 900px) {
@@ -457,3 +503,6 @@ strong { color: var(--cream); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.001s !important; transition-duration: 0.001s !important; }
 }
+
+/* cards placed side by side in a grid shouldn't inherit the stacked-card gap */
+.grid-2 > .card + .card, .grid-3 > .card + .card { margin-top: 0; }

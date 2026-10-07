@@ -10,7 +10,7 @@
   <meta name="description" content="TIIP Community member portal prototype: referral directory, certification tracking, compliance vault, case conceptualization, scholarly consultation, resource libraries, events, and peer forums." />
   <meta name="theme-color" content="#fcfaf5" />
   <meta name="robots" content="noindex" />
-  <link rel="stylesheet" href="assets/css/portal.css" />
+  <link rel="stylesheet" href="assets/css/portal.css?v=3" />
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
 </head>
 <body>
@@ -26,26 +26,27 @@
     <a class="dev-at-portal" href="https://khalilcenter.com" target="_blank" rel="noopener">Developed at Khalil Center ↗</a>
     <nav class="p-nav" id="p-nav">
       <button data-view="dashboard" data-roles="all"><span class="ico">◈</span> Dashboard</button>
+      <button data-view="admin" data-roles="admin"><span class="ico">🛡</span> Administration</button>
 
       <div class="group-label">Learning</div>
       <button data-view="learning" data-roles="all"><span class="ico">🎬</span> Resources &amp; Modules</button>
 
       <div class="group-label">Network</div>
-      <button data-view="directory" data-roles="trainee,practitioner,supervisor,admin"><span class="ico">🗺</span> Referral Directory</button>
+      <button data-view="directory" data-roles="level1,level2,trainee,practitioner,supervisor,admin"><span class="ico">🗺</span> Referral Directory</button>
       <button data-view="events" data-roles="all"><span class="ico">🗓</span> Events &amp; Training</button>
       <button data-view="forums" data-roles="all"><span class="ico">💬</span> Tazkiyah Forums</button>
 
       <div class="group-label">Certification &amp; Compliance</div>
       <button data-view="certification" data-roles="all"><span class="ico">🎓</span> Certification Pathway</button>
-      <button data-view="vault" data-roles="practitioner,trainee,supervisor,admin"><span class="ico">🗄</span> Compliance Vault</button>
+      <button data-view="vault" data-roles="level1,level2,trainee,practitioner,supervisor,admin"><span class="ico">🗄</span> Compliance Vault</button>
 
       <div class="group-label">Clinical</div>
-      <button data-view="sandbox" data-roles="trainee,practitioner,supervisor"><span class="ico">🧭</span> Case Sandbox</button>
-      <button data-view="fatwa" data-roles="trainee,practitioner,supervisor,admin"><span class="ico">🕌</span> Scholar Desk</button>
+      <button data-view="sandbox" data-roles="level1,level2,trainee,practitioner,supervisor"><span class="ico">🧭</span> Case Sandbox</button>
+      <button data-view="fatwa" data-roles="level1,level2,trainee,practitioner,supervisor,admin"><span class="ico">🕌</span> Scholar Desk</button>
 
       <div class="group-label">Research &amp; Resources</div>
-      <button data-view="resources" data-roles="trainee,practitioner,supervisor,admin"><span class="ico">📚</span> Intervention Vault</button>
-      <button data-view="incubator" data-roles="practitioner,supervisor,admin"><span class="ico">✍️</span> Publication Incubator</button>
+      <button data-view="library" data-roles="all"><span class="ico">📖</span> Research Library</button>
+      <button data-view="resources" data-roles="level1,level2,trainee,practitioner,supervisor,admin"><span class="ico">📚</span> Intervention Vault</button>
     </nav>
     <div class="side-foot">
       <a href="index.html">← Back to public site</a>
@@ -62,9 +63,11 @@
       <div class="role-switch">
         <label for="role-select">Viewing as</label>
         <select id="role-select" aria-label="Switch demo role">
-          <option value="explorer">TIIP Trainee (Level 0)</option>
-          <option value="trainee">Trainee (Level III)</option>
-          <option value="practitioner">Certified Practitioner</option>
+          <option value="explorer">Level 0 — TIIP Trainee</option>
+          <option value="level1">Level 1 — Trainee</option>
+          <option value="level2">Level 2 — Trainee</option>
+          <option value="trainee">Level 3 — Trainee (supervised practice)</option>
+          <option value="practitioner">Fully Certified Practitioner</option>
           <option value="supervisor">Supervisor / Scholar</option>
           <option value="admin">Admin</option>
         </select>
@@ -93,38 +96,66 @@
           <div class="card"><h3>📌 Quick actions</h3><div id="dash-actions"></div></div>
           <div class="card"><h3>🗓 Next events</h3><div class="rows" id="dash-events"></div></div>
         </div>
-        <div class="card" id="dash-admin-card" style="margin-top:16px; display:none;">
-          <h3>👥 User &amp; role administration <span class="tag gold">Admin only</span></h3>
-          <p class="view-lead" style="margin-bottom:10px;">Role-based access control governs every module. Approve members' level-change requests, search for a member to change their level, or invite someone who isn't registered yet (demo only).</p>
+      </section>
 
-          <div class="admin-subhead">Level-change requests</div>
-          <div class="rows" id="admin-requests"></div>
+      <!-- ==== ADMINISTRATION (admin only) ==== -->
+      <section class="view" data-view="admin">
+        <p class="view-lead">Member administration: review case conceptualizations, keep the registry of who has completed or registered for each level (with year and location), invite people to the portal, and manage roles.</p>
 
-          <div class="admin-subhead">All members</div>
-          <div class="field admin-search">
-            <label for="admin-user-search">Find a member by name</label>
-            <input type="search" id="admin-user-search" placeholder="Type a name to find someone…" />
-          </div>
-          <div class="rows" id="admin-users"></div>
-          <div id="admin-no-match" style="display:none;"></div>
+        <div class="card" id="admin-reviews-card">
+          <h3>📝 Case conceptualization reviews <span class="tag gold">Admin only</span> <span class="tag" id="rev-count"></span></h3>
+          <p class="view-lead" style="margin-bottom:10px;font-size:.85rem;">Level 1 and Level 2 attendees submit their case conceptualization through the portal. <strong>Pass</strong> a submission to credit the level, or <strong>ask the member to retry</strong> with feedback — they resubmit in the portal.</p>
+          <div id="admin-reviews"></div>
+        </div>
 
-          <div class="admin-subhead">Invite a new member</div>
-          <p class="view-lead" style="margin-bottom:10px;font-size:.85rem;">Not registered yet? Invite them by email to join the TIIP community at a starting level.</p>
-          <form id="admin-invite-form">
+        <div class="card" id="admin-registry-card">
+          <h3>🎓 Training registry &amp; invitations <span class="tag gold">Admin only</span></h3>
+          <p class="view-lead" style="margin-bottom:12px;font-size:.85rem;">A record of who has <strong>completed</strong> or is <strong>registered for</strong> each level, with the <strong>year</strong> and <strong>location</strong> of the training. Filter the registry, then invite one person or everyone who matches — for example, everyone registered for Level 1 in Chicago in 2026.</p>
+
+          <form id="reg-form">
+            <div class="admin-subhead" style="margin-top:0;">Add a person &amp; invite</div>
             <div class="field-row">
-              <div class="field"><label>Email address</label><input type="email" id="ai-email" placeholder="name@example.com" required /></div>
-              <div class="field"><label>Invite at level</label><select id="ai-level">
-                <option value="TIIP Trainee (Level 0)">TIIP Trainee (Level 0)</option>
-                <option value="Trainee (Level I)">Trainee (Level I)</option>
-                <option value="Trainee (Level II)">Trainee (Level II)</option>
-                <option value="Trainee (Level III)">Trainee (Level III)</option>
-                <option value="Certified Practitioner">Certified Practitioner</option>
-                <option value="Supervisor / Scholar">Supervisor / Scholar</option>
-              </select></div>
+              <div class="field"><label>Full name</label><input type="text" id="rg-name" required placeholder="e.g., Maha Ali" /></div>
+              <div class="field"><label>Email address</label><input type="email" id="rg-email" required placeholder="name@example.com" /></div>
             </div>
-            <button class="btn btn-gold btn-xs" type="submit">Send invitation</button>
+            <div class="field-row">
+              <div class="field"><label>Training level</label><select id="rg-level"><option value="0">No level yet (Level 0)</option><option value="1" selected>Level 1</option><option value="2">Level 2</option><option value="3">Level 3</option></select></div>
+              <div class="field"><label>Status</label><select id="rg-status"><option>Registered</option><option>Completed</option></select></div>
+              <div class="field"><label>Year</label><input type="number" id="rg-year" min="2000" max="2100" /></div>
+              <div class="field"><label>Location (city)</label><input type="text" id="rg-loc" placeholder="e.g., Chicago, US" /></div>
+            </div>
+            <button class="btn btn-gold btn-xs" type="submit" id="rg-invite">Add &amp; send invitation</button>
+            <button class="btn btn-ghost btn-xs" type="button" id="rg-add">Add to registry only</button>
           </form>
-          <div class="rows" id="admin-invites"></div>
+
+          <div class="admin-subhead">Registry</div>
+          <div class="filters">
+            <div class="field wide"><label>Search</label><input type="search" id="rf-q" placeholder="Name or email…" /></div>
+            <div class="field"><label>Level</label><select id="rf-level"><option value="">Any</option><option value="0">Level 0</option><option value="1">Level 1</option><option value="2">Level 2</option><option value="3">Level 3</option></select></div>
+            <div class="field"><label>Status</label><select id="rf-status"><option value="">Any</option><option>Registered</option><option>Completed</option></select></div>
+            <div class="field"><label>Year</label><select id="rf-year"></select></div>
+            <div class="field"><label>Location</label><select id="rf-loc"></select></div>
+            <div class="field"><label>Invitation</label><select id="rf-inv"><option value="">Any</option><option value="none">Not invited</option><option value="invited">Invited</option><option value="joined">Joined</option></select></div>
+          </div>
+          <div class="reg-bar"><span id="reg-count" role="status"></span><button class="btn btn-gold btn-xs" id="reg-bulk" type="button"></button></div>
+          <div class="rows" id="reg-rows"></div>
+          <div id="reg-note"></div>
+        </div>
+
+        <div class="grid-2" style="align-items:start;">
+          <div class="card">
+            <h3>🔁 Level-change requests <span class="tag gold">Admin only</span></h3>
+            <div class="rows" id="admin-requests"></div>
+          </div>
+          <div class="card">
+            <h3>👥 All members <span class="tag gold">Admin only</span></h3>
+            <div class="field admin-search">
+              <label for="admin-user-search">Find a member by name</label>
+              <input type="search" id="admin-user-search" placeholder="Type a name to find someone…" />
+            </div>
+            <div class="rows" id="admin-users"></div>
+            <div id="admin-no-match" style="display:none;"></div>
+          </div>
         </div>
       </section>
 
@@ -143,7 +174,7 @@
              Never shown publicly or as a teaser. -->
         <div class="card" id="l1-online-card" style="display:none;">
           <h3>🔐 Level 1 — Foundations Curriculum <span class="tag gold" id="l1-why"></span></h3>
-          <p class="view-lead" style="margin-bottom:10px;font-size:.85rem;">The Level 1 modules: the foundations of TIIP, the role of the TIIP clinician, assessment &amp; conceptualization, the elements of the psyche — <em>ʿaql</em>, <em>nafs</em>, <em>iḥsās</em>, <em>rūḥ</em> — and Islamic virtues. Work through every module, then complete the required <strong>TIIP Case Formulation Sheet</strong> — the end-of-level case conceptualization, reviewed by a supervisor before Level 1 is credited.</p>
+          <p class="view-lead" style="margin-bottom:10px;font-size:.85rem;">The Level 1 modules: the foundations of TIIP, the role of the TIIP clinician, assessment &amp; conceptualization, the elements of the psyche — <em>ʿaql</em>, <em>nafs</em>, <em>iḥsās</em>, <em>rūḥ</em> — and Islamic virtues. Work through every module, then complete the required <strong>TIIP Case Formulation Sheet</strong> — the end-of-level case conceptualization, reviewed by an admin — who passes it or asks you to retry — before Level 1 is credited.</p>
           <div class="rows" id="l1-rows"></div>
           <div id="l1-capstone" style="margin-top:14px;"></div>
         </div>
@@ -153,6 +184,9 @@
              approved trainees actually taking the level; locked until
              every module is complete. -->
         <div class="card" id="l1-formulation-card" style="display:none;"></div>
+
+        <!-- Level 2 — case conceptualization submission (Level 2 members only). -->
+        <div class="card" id="l2-card" style="display:none;"></div>
 
         <div class="card" id="l1-admin-card" style="display:none;">
           <h3>🔐 Level 1 access approvals <span class="tag gold">Admin only</span></h3>
@@ -209,6 +243,8 @@
             <p class="view-lead" style="margin-bottom:0;">You hold full TIIP certification — every stage of the pathway is complete. Full clinical and consultation privileges are active, and the TIIP Supervisor track is open to you.</p>
           </div>
         </div>
+
+        <div id="cert-early" style="display:none;"><div class="card" id="cert-early-card"></div></div>
 
         <div id="cert-trainee">
           <p class="view-lead">You are at <strong>Level 3 — supervised practice</strong>: the final stage before full certification. It requires <strong>200 supervised practice hours</strong> and <strong>10 completed cases</strong>. Logged hours are routed to your assigned supervisor for approval.</p>
@@ -339,38 +375,40 @@
         <p class="note" id="res-upload-note"><b>Uploads:</b> new assets are contributed by supervisors/admins with required metadata (language, type, tags, version notes). Every revision is retained in version history.</p>
       </section>
 
-      <!-- ==== INCUBATOR ==== -->
-      <section class="view" data-view="incubator">
-        <p class="view-lead">A collaborative space for compiling case studies and empirical research, with shared formatting standards and a planned pipeline into external peer-review systems.</p>
-        <div class="grid-2">
+      <!-- ==== RESEARCH LIBRARY ==== -->
+      <section class="view" data-view="library">
+        <p class="view-lead">A shared library of articles, books, and posts on Islamic psychology — contributed by members. Everyone can browse; members at <strong>Level 1 and above</strong> can post or upload, like, and comment.</p>
+        <div class="filters">
+          <div class="field wide"><label>Search</label><input type="search" id="lib-q" placeholder="Title, author, keyword…" /></div>
+          <div class="field"><label>Category</label><select id="lib-cat"></select></div>
+          <div class="field"><label>Type</label><select id="lib-kind"><option value="">Any</option><option>Article</option><option>Book</option><option>Post</option></select></div>
+          <div class="field"><label>Sort</label><select id="lib-sort"><option value="new">Newest</option><option value="liked">Most liked</option><option value="discussed">Most discussed</option></select></div>
+        </div>
+        <div class="grid-2" style="grid-template-columns: 1.7fr 1fr; align-items:start;">
           <div>
-            <div class="card"><h3>🧪 Active projects</h3><div id="pub-rows"></div></div>
-            <div class="card">
-              <h3>➕ Propose a project</h3>
-              <form id="pub-form">
-                <div class="field"><label>Working title</label><input type="text" id="pf-title" required /></div>
-                <div class="field"><label>Type</label><select id="pf-type"><option>Case study</option><option>Empirical study</option><option>Review article</option><option>Measure validation</option></select></div>
-                <button class="btn btn-gold" type="submit">Create workspace</button>
-              </form>
-            </div>
+            <div id="lib-list"></div>
+            <div class="empty" id="lib-empty" style="display:none;">Nothing matches those filters yet.</div>
           </div>
           <div>
-            <div class="card">
-              <h3>📐 APA 7th formatting checklist</h3>
-              <div class="rows" style="font-size:.85rem;">
-                <div class="row"><span class="grow"><b>Title page &amp; running head</b><small>Bold centered title; author note with ORCID</small></span><span class="tag ok">Template</span></div>
-                <div class="row"><span class="grow"><b>Abstract ≤ 250 words</b><small>With 3–5 keywords, incl. “Islamic psychology”</small></span><span class="tag ok">Template</span></div>
-                <div class="row"><span class="grow"><b>Level 1–3 headings</b><small>TIIP domain terms italicized with diacritics</small></span><span class="tag ok">Template</span></div>
-                <div class="row"><span class="grow"><b>References &amp; DOIs</b><small>Hanging indent, live DOI links</small></span><span class="tag ok">Template</span></div>
-                <div class="row"><span class="grow"><b>De-identification audit</b><small>Case material must pass the anonymization checklist</small></span><span class="tag warn">Required</span></div>
-              </div>
+            <div class="card" id="lib-post-card" style="margin-top:0;">
+              <h3>➕ Share with the library</h3>
+              <form id="lib-form">
+                <div class="field"><label>Title</label><input type="text" id="lf-title" required placeholder="Title of the article, book, or post" /></div>
+                <div class="field-row">
+                  <div class="field"><label>Type</label><select id="lf-kind"><option>Article</option><option>Book</option><option>Post</option></select></div>
+                  <div class="field"><label>Category</label><select id="lf-cat"></select></div>
+                </div>
+                <div class="field"><label>Author / source</label><input type="text" id="lf-author" placeholder="Who wrote it (leave blank if it’s yours)" /></div>
+                <div class="field"><label>Summary / your note</label><textarea id="lf-summary" required placeholder="What is it, and why does it matter for practice?"></textarea></div>
+                <div class="field"><label>Link <span style="text-transform:none;letter-spacing:0;font-weight:500;">(optional)</span></label><input type="url" id="lf-link" placeholder="https://…" /></div>
+                <div class="field"><label>Upload a file <span style="text-transform:none;letter-spacing:0;font-weight:500;">(optional · PDF, DOCX, EPUB)</span></label><input type="file" id="lf-file" accept=".pdf,.doc,.docx,.epub" /></div>
+                <div class="check"><input type="checkbox" id="lf-rights" required /> <span>I have the right to share this, and it contains no patient information <em>(required)</em></span></div>
+                <button class="btn btn-gold" type="submit">Post to library</button>
+              </form>
             </div>
-            <div class="card">
-              <h3>🔌 Peer-review pipeline <span class="tag dim">Planned</span></h3>
-              <p class="view-lead" style="margin-bottom:10px;font-size:.85rem;">API/webhook integration with external submission systems (e.g., <strong>Janeway</strong>) will push formatted manuscripts and sync reviewer status back into each workspace.</p>
-              <div class="field"><label>Janeway endpoint</label><input type="text" value="https://journal.example.org/api/submissions" disabled /></div>
-              <div class="field"><label>Webhook — status updates</label><input type="text" value="POST /hooks/janeway/status" disabled /></div>
-            </div>
+            <div class="locked-note" id="lib-locked" style="display:none;">Posting, liking, and commenting require <strong>Level 1</strong> or above. You can browse everything in the library now.</div>
+            <div class="card" style="margin-top:16px;"><h3>🗂 Categories</h3><div class="chip-wrap" id="lib-cats"></div></div>
+            <p class="note" id="lib-upload-note"><b>Demo note:</b> file uploads record the file name only; in production files are stored in encrypted object storage with malware scanning, and copyrighted works are shared by link or excerpt.</p>
           </div>
         </div>
       </section>
@@ -445,6 +483,6 @@
   </div>
 </div>
 
-<script src="assets/js/portal.js"></script>
+<script src="assets/js/portal.js?v=3"></script>
 </body>
 </html>
