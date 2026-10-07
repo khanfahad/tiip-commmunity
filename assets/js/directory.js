@@ -11,7 +11,7 @@
   var TIIP = window.TIIP;
   var PROVIDERS = TIIP.PROVIDERS;
   var LEVELS = TIIP.LEVELS;
-  var PUBLIC_LEVELS = { supervisor: 1, certified: 1, level3: 1 };
+  var PUBLIC_LEVELS = { supervisor: 1, certified: 1, level3: 1, level2: 1 }; /* level2 only once an admin approves a member's public profile */
 
   /* ------------------------------------------------------------------
      World-map reference (equirectangular, 1000×500). A dotted landmass
@@ -26,7 +26,7 @@
     "Minneapolis": [44.98, -93.27], "Dearborn": [42.32, -83.18], "Vancouver": [49.28, -123.12],
     "Sydney": [-33.87, 151.21], "Houston": [29.76, -95.37], "Birmingham": [52.49, -1.89],
     "Durban": [-29.86, 31.02], "Montreal": [45.50, -73.57], "Kuala Lumpur": [3.14, 101.69],
-    "Melbourne": [-37.81, 144.96]
+    "Melbourne": [-37.81, 144.96], "Lahore": [31.52, 74.36], "Istanbul": [41.01, 28.98], "Cairo": [30.04, 31.24]
   };
   var CONTINENTS = {
     NAmerica: [[-168,66],[-160,71],[-140,70],[-125,71],[-100,73],[-82,73],[-62,66],[-64,60],[-78,63],[-95,68],[-90,58],[-79,54],[-64,52],[-56,51],[-60,47],[-67,44],[-70,42],[-74,40],[-76,35],[-81,31],[-80,25],[-90,29],[-97,28],[-97,22],[-106,23],[-105,20],[-96,16],[-88,15],[-84,10],[-83,8],[-91,14],[-96,16],[-105,20],[-110,23],[-117,32],[-124,40],[-124,48],[-133,54],[-141,60],[-150,59],[-165,60],[-168,66]],

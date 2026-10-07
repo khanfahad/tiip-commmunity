@@ -10,7 +10,7 @@
   <meta name="description" content="TIIP Community member portal prototype: referral directory, certification tracking, compliance vault, case conceptualization, scholarly consultation, resource libraries, events, and peer forums." />
   <meta name="theme-color" content="#fcfaf5" />
   <meta name="robots" content="noindex" />
-  <link rel="stylesheet" href="assets/css/portal.css?v=3" />
+  <link rel="stylesheet" href="assets/css/portal.css?v=4" />
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
 </head>
 <body>
@@ -26,19 +26,18 @@
     <a class="dev-at-portal" href="https://khalilcenter.com" target="_blank" rel="noopener">Developed at Khalil Center ↗</a>
     <nav class="p-nav" id="p-nav">
       <button data-view="dashboard" data-roles="all"><span class="ico">◈</span> Dashboard</button>
+      <button data-view="notifications" data-roles="all"><span class="ico">✉️</span> Notifications <span class="nav-badge" id="notif-badge" style="display:none;"></span></button>
       <button data-view="admin" data-roles="admin"><span class="ico">🛡</span> Administration</button>
 
       <div class="group-label">Learning</div>
       <button data-view="learning" data-roles="all"><span class="ico">🎬</span> Resources &amp; Modules</button>
+      <button data-view="certification" data-roles="all"><span class="ico">🎓</span> Certification Journey</button>
 
       <div class="group-label">Network</div>
-      <button data-view="directory" data-roles="level1,level2,trainee,practitioner,supervisor,admin"><span class="ico">🗺</span> Referral Directory</button>
+      <button data-view="directory" data-roles="level1,level2,trainee,practitioner,supervisor,admin"><span class="ico">🗺</span> Directory</button>
+      <button data-view="profile" data-roles="explorer,level1,level2,trainee,practitioner,supervisor"><span class="ico">🪪</span> My Profile &amp; Listing</button>
       <button data-view="events" data-roles="all"><span class="ico">🗓</span> Events &amp; Training</button>
       <button data-view="forums" data-roles="all"><span class="ico">💬</span> Tazkiyah Forums</button>
-
-      <div class="group-label">Certification &amp; Compliance</div>
-      <button data-view="certification" data-roles="all"><span class="ico">🎓</span> Certification Pathway</button>
-      <button data-view="vault" data-roles="level1,level2,trainee,practitioner,supervisor,admin"><span class="ico">🗄</span> Compliance Vault</button>
 
       <div class="group-label">Clinical</div>
       <button data-view="sandbox" data-roles="level1,level2,trainee,practitioner,supervisor"><span class="ico">🧭</span> Case Sandbox</button>
@@ -100,12 +99,46 @@
 
       <!-- ==== ADMINISTRATION (admin only) ==== -->
       <section class="view" data-view="admin">
-        <p class="view-lead">Member administration: review case conceptualizations, keep the registry of who has completed or registered for each level (with year and location), invite people to the portal, and manage roles.</p>
+        <p class="view-lead">Member administration: case-conceptualization reviews, trainings and the registry, directory listing requests, Level 3 panels, roles, and the email log.</p>
+        <div class="chip-wrap" id="admin-tabs" style="margin-bottom:16px;"></div>
 
+        <div class="admin-pane" data-pane="reviews">
         <div class="card" id="admin-reviews-card">
           <h3>📝 Case conceptualization reviews <span class="tag gold">Admin only</span> <span class="tag" id="rev-count"></span></h3>
-          <p class="view-lead" style="margin-bottom:10px;font-size:.85rem;">Level 1 and Level 2 attendees submit their case conceptualization through the portal. <strong>Pass</strong> a submission to credit the level, or <strong>ask the member to retry</strong> with feedback — they resubmit in the portal.</p>
+          <p class="view-lead" style="margin-bottom:10px;font-size:.85rem;">Level 1, 2 and 3 members submit their case conceptualization through the portal. <strong>Pass</strong> a submission, or <strong>ask the member to retry</strong> with feedback. You can <strong>upload a graded / commented PDF or Word copy</strong> with your decision; the member is emailed the result.</p>
           <div id="admin-reviews"></div>
+        </div>
+
+
+        <div class="card" id="admin-letters-card">
+          <h3>📜 Scholar letters (farḍ al-ʿayn) <span class="tag gold">Admin only</span></h3>
+          <p class="view-lead" style="margin-bottom:10px;font-size:.85rem;">Level 3 members upload a letter from a scholar confirming their farḍ al-ʿayn knowledge. Verify it, or ask for a replacement.</p>
+          <div class="rows" id="admin-letters"></div>
+        </div>
+        </div>
+
+        <div class="admin-pane" data-pane="trainings">
+        <div class="card" id="admin-training-card">
+          <h3>📣 Post an upcoming training <span class="tag gold">Admin only</span></h3>
+          <p class="view-lead" style="margin-bottom:12px;font-size:.85rem;">Posting a Level 1 or Level 2 training opens registration in members' journeys and <strong>emails everyone eligible</strong> — for example, members who completed Level 1 are notified when a Level 2 training is posted.</p>
+          <form id="cohort-form">
+            <div class="field-row">
+              <div class="field"><label>Level</label><select id="co-level"><option value="1">Level 1 · Foundations</option><option value="2">Level 2 · Intermediate</option></select></div>
+              <div class="field"><label>Start date</label><input type="date" id="co-date" required /></div>
+              <div class="field"><label>Location</label><input type="text" id="co-loc" required placeholder="e.g., Chicago, US — or Online" /></div>
+              <div class="field"><label>Format</label><select id="co-mode"><option>In person</option><option>Online</option><option>Hybrid</option></select></div>
+            </div>
+            <button class="btn btn-gold btn-xs" type="submit">Post training &amp; notify eligible members</button>
+          </form>
+          <div id="cohort-note"></div>
+          <div class="admin-subhead">Upcoming trainings</div>
+          <div class="rows" id="cohort-rows"></div>
+        </div>
+
+        <div class="card" id="admin-attend-card">
+          <h3>✅ Training attendance <span class="tag gold">Admin only</span></h3>
+          <p class="view-lead" style="margin-bottom:10px;font-size:.85rem;">Confirm who attended. Attendance is one of the checkboxes on each member's certification journey.</p>
+          <div class="rows" id="attend-rows"></div>
         </div>
 
         <div class="card" id="admin-registry-card">
@@ -142,6 +175,25 @@
           <div id="reg-note"></div>
         </div>
 
+        </div>
+
+        <div class="admin-pane" data-pane="directory">
+          <div class="card" id="admin-listings-card">
+            <h3>🗺 Public directory listing requests <span class="tag gold">Admin only</span></h3>
+            <p class="view-lead" style="margin-bottom:10px;font-size:.85rem;">Level 2+ members can request a profile on the public directory. Review exactly what they chose to show, then approve, ask for changes, or decline. Approved profiles appear on the main site's directory; edits by the member require re-approval.</p>
+            <div id="admin-listings"></div>
+          </div>
+        </div>
+
+        <div class="admin-pane" data-pane="panels">
+          <div class="card" id="admin-panels-card">
+            <h3>🎤 Level 3 panel presentations <span class="tag gold">Admin only</span></h3>
+            <p class="view-lead" style="margin-bottom:10px;font-size:.85rem;">Members who completed every Level 3 requirement request a presentation to a panel of <strong>at least 3 supervisors</strong>. Schedule it, record the outcome, and the member is emailed at each step.</p>
+            <div id="admin-panels"></div>
+          </div>
+        </div>
+
+        <div class="admin-pane" data-pane="members">
         <div class="grid-2" style="align-items:start;">
           <div class="card">
             <h3>🔁 Level-change requests <span class="tag gold">Admin only</span></h3>
@@ -155,6 +207,15 @@
             </div>
             <div class="rows" id="admin-users"></div>
             <div id="admin-no-match" style="display:none;"></div>
+          </div>
+        </div>
+        </div>
+
+        <div class="admin-pane" data-pane="emails">
+          <div class="card">
+            <h3>✉ Email log <span class="tag gold">Admin only</span> <span class="tag" id="email-count"></span></h3>
+            <p class="view-lead" style="margin-bottom:10px;font-size:.85rem;">Every notification the platform sends (demo — nothing is actually emailed). In production these go out through a transactional email service.</p>
+            <div class="rows" id="admin-emails"></div>
           </div>
         </div>
       </section>
@@ -186,7 +247,7 @@
         <div class="card" id="l1-formulation-card" style="display:none;"></div>
 
         <!-- Level 2 — case conceptualization submission (Level 2 members only). -->
-        <div class="card" id="l2-card" style="display:none;"></div>
+        <div id="sub-cards"></div>
 
         <div class="card" id="l1-admin-card" style="display:none;">
           <h3>🔐 Level 1 access approvals <span class="tag gold">Admin only</span></h3>
@@ -197,7 +258,8 @@
 
       <!-- ==== DIRECTORY ==== -->
       <section class="view" data-view="directory">
-        <p class="view-lead">Peer-to-peer networking and patient referrals across the global TIIP network. Unlike the public directory, this members-only directory includes clinicians at <strong>every level, including Levels 1 and 2</strong>. Filter by TIIP level, language, timezone, clinical focus, and licensing boundaries (PSYPACT and international equivalents).</p>
+        <p class="view-lead">The members-only directory. Anyone who has <strong>completed Level 1 or beyond</strong> can list themselves here, visible only to other TIIP members. Level 2 and above can also <strong>accept referrals</strong> and request a <strong>public profile</strong> on the main site.</p>
+        <div id="dir-cta"></div>
         <div class="filters">
           <div class="field wide"><label>Search</label><input type="search" id="dir-q" placeholder="Name, focus, city…" /></div>
           <div class="field"><label>TIIP level</label><select id="dir-level"><option value="">Any level</option><option value="supervisor">Supervisor</option><option value="certified">Fully certified</option><option value="level3">Level 3</option><option value="level2">Level 2</option><option value="level1">Level 1</option></select></div>
@@ -205,52 +267,76 @@
           <div class="field"><label>Timezone region</label><select id="dir-tz"><option value="">Any</option><option>Americas</option><option>Europe / Africa</option><option>Middle East</option><option>South Asia</option><option>SE Asia / Pacific</option></select></div>
           <div class="field"><label>Clinical focus</label><select id="dir-focus"><option value="">Any</option><option>Anxiety &amp; mood</option><option>Marital &amp; family</option><option>Trauma</option><option>OCD / Waswasah</option><option>Youth &amp; identity</option><option>Addictions</option></select></div>
           <div class="field"><label>Licensure</label><select id="dir-lic"><option value="">Any</option><option>PSYPACT</option><option>US state-specific</option><option>Canada</option><option>UK / EU</option><option>International</option></select></div>
+          <div class="field"><label>Referrals</label><select id="dir-ref"><option value="">Any</option><option value="yes">Accepting referrals</option></select></div>
+        </div>
+        <div class="card" id="referral-card" style="display:none; margin-bottom:16px;">
+          <h3>📨 Send a referral <span class="tag" id="ref-to"></span></h3>
+          <p class="view-lead" style="margin-bottom:10px;font-size:.85rem;">Describe the referral in general terms. <strong>Do not include names or identifying details</strong> — the provider will follow up with you directly.</p>
+          <form id="referral-form">
+            <div class="field-row">
+              <div class="field"><label>Client's preferred language</label><select id="rf2-lang"><option>English</option><option>Arabic</option><option>Urdu</option><option>Turkish</option><option>Other</option></select></div>
+              <div class="field"><label>Urgency</label><select id="rf2-urg"><option>Routine</option><option>Within two weeks</option><option>Urgent</option></select></div>
+            </div>
+            <div class="field"><label>General reason for referral (no identifying details)</label><textarea id="rf2-note" required></textarea></div>
+            <button class="btn btn-gold btn-xs" type="submit">Send referral</button>
+            <button class="btn btn-ghost btn-xs" type="button" id="ref-cancel">Cancel</button>
+          </form>
         </div>
         <div class="dir-grid" id="dir-grid"></div>
         <div class="empty" id="dir-empty" style="display:none;">No practitioners match those filters.</div>
       </section>
 
-      <!-- ==== CERTIFICATION PATHWAY ==== -->
+      <!-- ==== MY PROFILE & LISTING ==== -->
+      <section class="view" data-view="profile">
+        <p class="view-lead" id="prof-lead"></p>
+        <div class="locked-note" id="prof-locked" style="display:none;"></div>
+        <div id="prof-body" style="display:none;">
+          <div class="grid-2" style="grid-template-columns:1.7fr 1fr; align-items:start;">
+            <form class="card" id="prof-form" style="margin-top:0;">
+              <h3>🪪 Listing information</h3>
+              <p class="view-lead" style="margin-bottom:12px;font-size:.85rem;">Every section is optional. Fill in what you like and <strong>tick “Show” on the sections you want others to see</strong> — your name and TIIP level are always shown.</p>
+              <div id="prof-sections"></div>
+              <div class="admin-subhead">Where to appear</div>
+              <label class="check"><input type="checkbox" id="pf-internal" /> <span><b>List me in the members-only directory</b> — visible only to other TIIP members.</span></label>
+              <label class="check" id="pf-ref-wrap"><input type="checkbox" id="pf-referrals" /> <span><b>Accept referrals</b> from other members through the directory <em>(Level 2 and above)</em>.</span></label>
+              <button class="btn btn-gold" type="submit">Save my listing</button>
+              <span class="tag ok" id="prof-saved" style="display:none;margin-left:8px;">Saved</span>
+            </form>
+            <div>
+              <div class="card" id="prof-status-card" style="margin-top:0;"></div>
+              <div class="card"><h3>👁 What others see</h3><div id="prof-preview"></div></div>
+              <div class="card" id="prof-referrals-card"><h3>📨 Referrals received</h3><div class="rows" id="prof-referrals"></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==== NOTIFICATIONS ==== -->
+      <section class="view" data-view="notifications">
+        <p class="view-lead">Important updates are sent to you by email — new trainings, case-conceptualization results, listing decisions, panel scheduling, and more. This inbox shows the emails you would receive <em>(demo — no real email is sent)</em>.</p>
+        <div class="grid-2" style="grid-template-columns:1.7fr 1fr; align-items:start;">
+          <div class="card" style="margin-top:0;">
+            <h3>✉ Your emails <button class="btn btn-ghost btn-xs" id="notif-readall" style="margin-left:auto;">Mark all read</button></h3>
+            <div id="notif-list"></div>
+          </div>
+          <div class="card" style="margin-top:0;">
+            <h3>⚙ Email preferences</h3>
+            <p class="view-lead" style="margin-bottom:10px;font-size:.82rem;">Account and review-result emails are always sent.</p>
+            <div id="notif-prefs"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==== CERTIFICATION JOURNEY ==== -->
       <section class="view" data-view="certification">
-        <p class="view-lead">The complete TIIP pathway — from open registration at Level 0 through full certification. The tracker below shows every stage and highlights where you are right now.</p>
-        <div class="card">
-          <h3>🧭 Your pathway <span class="tag gold" id="pw-where"></span></h3>
-          <div class="pathway" id="pathway-steps"></div>
-        </div>
+        <p class="view-lead" id="jr-lead">Your path from open registration to full certification — what is done, what is next, and the training materials each level unlocks.</p>
+        <div id="jr-summary"></div>
+        <div class="journey" id="journey"></div>
 
-        <div id="cert-explorer" style="display:none;">
-          <div class="grid-2">
+        <div id="hours-section" style="display:none;">
+          <div class="grid-2" style="margin-top:16px;">
             <div class="card">
-              <h3>🎬 Six-part series <span class="tag" id="mod-sum"></span></h3>
-              <p class="view-lead" style="margin-bottom:10px;font-size:.85rem;">Level 0 centers on the six-part introductory series — watch it in Resources &amp; Modules, then enroll in Level 1 when you're ready to begin formal training.</p>
-              <div class="rows" id="mod-rows"></div>
-            </div>
-            <div class="card">
-              <h3>🔓 What unlocks next</h3>
-              <div class="rows">
-                <div class="row"><span class="grow"><b>Level 1 — Foundations</b><small>Coursework &amp; assessment · directory listing begins</small></span><span class="tag warn">Enroll to unlock</span></div>
-                <div class="row"><span class="grow"><b>Case consultation &amp; Scholar Desk</b><small>Clinical features open as you advance</small></span><span class="tag dim">🔒 Locked at Level 0</span></div>
-                <div class="row"><span class="grow"><b>Provider directory listing</b><small>Level 0 members are not listed in the public directory</small></span><span class="tag dim">🔒 Locked at Level 0</span></div>
-              </div>
-              <p class="note"><b>Level 0 is for engagement.</b> You can watch starter modules, attend open events, and join the forums — consultations and clinical tools require Level 1 and above.</p>
-            </div>
-          </div>
-        </div>
-
-        <div id="cert-certified" style="display:none;">
-          <div class="card">
-            <h3>🎉 Pathway complete</h3>
-            <p class="view-lead" style="margin-bottom:0;">You hold full TIIP certification — every stage of the pathway is complete. Full clinical and consultation privileges are active, and the TIIP Supervisor track is open to you.</p>
-          </div>
-        </div>
-
-        <div id="cert-early" style="display:none;"><div class="card" id="cert-early-card"></div></div>
-
-        <div id="cert-trainee">
-          <p class="view-lead">You are at <strong>Level 3 — supervised practice</strong>: the final stage before full certification. It requires <strong>200 supervised practice hours</strong> and <strong>10 completed cases</strong>. Logged hours are routed to your assigned supervisor for approval.</p>
-          <div class="grid-2">
-            <div class="card">
-              <h3>⏱ Supervised hours</h3>
+              <h3>⏱ Supervised hours &amp; cases</h3>
               <div class="prog"><div class="prog-head"><b id="hours-label">0 / 200 hours approved</b><span id="hours-pct">0%</span></div><div class="bar"><i id="hours-bar"></i></div></div>
               <div class="prog"><div class="prog-head"><b id="cases-label">0 / 10 cases completed</b><span id="cases-pct">0%</span></div><div class="bar"><i id="cases-bar"></i></div></div>
               <p class="view-lead" style="margin:12px 0 0;font-size:.8rem;" id="cert-eta"></p>
@@ -268,20 +354,19 @@
               </form>
             </div>
           </div>
-          <div class="card">
-            <h3>🧾 Logged entries</h3>
-            <div class="rows" id="hours-rows"></div>
-          </div>
+          <div class="card"><h3>🧾 Logged entries</h3><div class="rows" id="hours-rows"></div></div>
         </div>
-        <div id="cert-supervisor" style="display:none;">
-          <p class="view-lead">Approval queue for your assigned trainees. Approving an entry credits it toward the trainee's 200-hour requirement.</p>
-          <div class="card"><h3>✅ Pending approvals</h3><div class="rows" id="approve-rows"></div></div>
-        </div>
-      </section>
 
-      <!-- ==== COMPLIANCE VAULT ==== -->
-      <section class="view" data-view="vault">
-        <p class="view-lead">Dual-compliance tracking: state-mandated <strong>CEUs</strong> and religious education (<strong>farḍ al-ʿayn</strong>) certificates, with automated expiration reminders 60 days out.</p>
+        <div id="cert-supervisor" style="display:none;">
+          <div class="card"><h3>✅ Pending hour approvals <span class="tag gold">Supervisor</span></h3><p class="view-lead" style="margin-bottom:10px;font-size:.85rem;">Approval queue for your assigned trainees. Approving an entry credits it toward the trainee's 200-hour requirement.</p><div class="rows" id="approve-rows"></div></div>
+        </div>
+        <div id="panel-assigned" style="display:none;">
+          <div class="card"><h3>🎤 Level 3 panels you're assigned to <span class="tag gold">Supervisor</span></h3><div class="rows" id="panel-assigned-rows"></div></div>
+        </div>
+
+        <div class="card" id="compliance-card" style="margin-top:16px;">
+          <h3>🗄 Compliance records <span class="tag">CEUs &amp; farḍ al-ʿayn</span></h3>
+          <p class="view-lead" style="margin-bottom:12px;font-size:.85rem;">Track state-mandated <strong>CEUs</strong> and religious-education (<strong>farḍ al-ʿayn</strong>) certificates, with expiry reminders 60 days out.</p>
         <div class="grid-2">
           <div class="card">
             <h3>📤 Add a certificate</h3>
@@ -304,6 +389,7 @@
             <div class="card"><h3>🏛 State CEUs <span class="tag" id="ceu-sum"></span></h3><div class="rows" id="ceu-rows"></div></div>
             <div class="card"><h3>🕌 Farḍ al-ʿAyn <span class="tag gold" id="fard-sum"></span></h3><div class="rows" id="fard-rows"></div></div>
           </div>
+        </div>
         </div>
       </section>
 
@@ -365,14 +451,37 @@
 
       <!-- ==== INTERVENTION VAULT ==== -->
       <section class="view" data-view="resources">
-        <p class="view-lead">Clinical worksheets, intake forms, and murāqabah exercises — categorized by language, tagged with metadata, and version-controlled.</p>
+        <p class="view-lead">Clinical worksheets, intake forms, and murāqabah exercises, in two sections: <strong>Signature TIIP</strong> interventions from the TIIP creators, and <strong>Supervisor-approved</strong> interventions uploaded by fully certified clinicians. Only fully certified clinicians can upload.</p>
+        <div class="chip-wrap" id="vault-tabs" style="margin-bottom:14px;">
+          <button type="button" class="cat-chip sel" data-vtab="signature">✦ Signature TIIP <i id="vt-sig"></i></button>
+          <button type="button" class="cat-chip" data-vtab="community">✔ Supervisor-approved <i id="vt-com"></i></button>
+        </div>
         <div class="filters">
           <div class="field wide"><label>Search</label><input type="search" id="res-q" placeholder="Title, tag, author…" /></div>
           <div class="field"><label>Language</label><select id="res-lang"><option value="">Any</option><option>English</option><option>Arabic</option><option>Urdu</option><option>Turkish</option></select></div>
-          <div class="field"><label>Type</label><select id="res-type"><option value="">Any</option><option>Worksheet</option><option>Intake form</option><option>Murāqabah audio script</option><option>Psychoeducation</option></select></div>
+          <div class="field"><label>Type</label><select id="res-type"><option value="">Any</option><option>Worksheet</option><option>Intake form</option><option>Murāqabah audio script</option><option>Psychoeducation</option><option>Protocol</option></select></div>
         </div>
+        <p class="view-lead" id="vault-blurb" style="margin-bottom:10px;font-size:.85rem;"></p>
         <div class="card"><div class="rows" id="res-rows"></div><div class="empty" id="res-empty" style="display:none;">No resources match.</div></div>
-        <p class="note" id="res-upload-note"><b>Uploads:</b> new assets are contributed by supervisors/admins with required metadata (language, type, tags, version notes). Every revision is retained in version history.</p>
+        <div class="grid-2" style="margin-top:16px; align-items:start;">
+          <div class="card" id="vault-upload-card" style="margin-top:0;">
+            <h3>⬆ Upload an intervention <span class="tag gold">Fully certified</span></h3>
+            <form id="vault-up-form">
+              <div class="field"><label>Title</label><input type="text" id="vu-title" required /></div>
+              <div class="field-row">
+                <div class="field"><label>Type</label><select id="vu-type"><option>Worksheet</option><option>Intake form</option><option>Murāqabah audio script</option><option>Psychoeducation</option><option>Protocol</option></select></div>
+                <div class="field"><label>Language</label><select id="vu-lang"><option>English</option><option>Arabic</option><option>Urdu</option><option>Turkish</option></select></div>
+              </div>
+              <div class="field"><label>Tags (comma-separated)</label><input type="text" id="vu-tags" placeholder="e.g., anxiety, dhikr" /></div>
+              <div class="field"><label>Description &amp; how to use it</label><textarea id="vu-desc" required></textarea></div>
+              <div class="field"><label>File <span style="text-transform:none;letter-spacing:0;font-weight:500;">(PDF or Word)</span></label><input type="file" id="vu-file" accept=".pdf,.doc,.docx" /></div>
+              <div class="check"><input type="checkbox" id="vu-ok" required /> <span>This contains no patient information <em>(required)</em></span></div>
+              <button class="btn btn-gold" type="submit">Submit for supervisor approval</button>
+            </form>
+          </div>
+          <div class="card" id="vault-queue-card" style="margin-top:0;"></div>
+        </div>
+        <div class="locked-note" id="vault-locked" style="display:none;margin-top:16px;">Uploading interventions is limited to <strong>fully certified</strong> clinicians. Every upload is reviewed and approved by a TIIP supervisor before it appears in the vault.</div>
       </section>
 
       <!-- ==== RESEARCH LIBRARY ==== -->
@@ -483,6 +592,6 @@
   </div>
 </div>
 
-<script src="assets/js/portal.js?v=3"></script>
+<script src="assets/js/portal.js?v=4"></script>
 </body>
 </html>

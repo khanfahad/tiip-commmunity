@@ -28,7 +28,9 @@
     return;
   }
 
-  var lv = TIIP.LEVELS[p.level];
+  /* member-published profiles may omit sections they chose not to show */
+  ["specialties", "languages", "populations", "formats", "education", "offerings"].forEach(function (k) { p[k] = p[k] || []; });
+  var lv = TIIP.LEVELS[p.level] || { label: "TIIP Member", cls: "lv-3" };
   var location_ = [p.city, p.state, p.country].filter(Boolean).join(", ");
   document.title = p.name + " — TIIP Provider Profile";
 
@@ -48,8 +50,8 @@
     return '<option value="' + i + '">' + esc(o.title) + " (" + esc(o.type) + ")</option>";
   }).join("");
 
-  var formatOptions = p.formats.map(function (f) { return "<option>" + esc(f) + "</option>"; }).join("");
-  var langOptions = p.languages.map(function (l) { return "<option>" + esc(l) + "</option>"; }).join("");
+  var formatOptions = (p.formats.length ? p.formats : ["No preference"]).map(function (f) { return "<option>" + esc(f) + "</option>"; }).join("");
+  var langOptions = (p.languages.length ? p.languages : ["English"]).map(function (l) { return "<option>" + esc(l) + "</option>"; }).join("");
 
   root.innerHTML =
     /* hero */
@@ -63,7 +65,7 @@
     '<span class="pf-badge ' + lv.cls + '">' + esc(lv.label) + "</span>" +
     "<h1>" + esc(p.name) + "</h1>" +
     '<p class="pf-cred">' + esc(p.credentials) + "</p>" +
-    '<p class="pf-loc">📍 ' + esc(location_) + ' · <span class="pf-status">' + esc(p.accepting) + "</span></p>" +
+    '<p class="pf-loc">📍 ' + esc(location_) + (p.accepting ? ' · <span class="pf-status">' + esc(p.accepting) + "</span>" : "") + "</p>" +
     '<div class="pf-cta">' +
     '<a class="btn btn-gold" href="#request" data-mode-link="provider">Request as my provider</a>' +
     '<a class="btn btn-ghost" href="#request" data-mode-link="event">Request for an event</a>' +
@@ -75,23 +77,23 @@
     '<section class="bg-white"><div class="container"><div class="pf-layout">' +
     '<div class="pf-main">' +
 
-    '<div class="pf-section"><h2>About</h2><p>' + esc(p.bio) + "</p><p>" + esc(p.about) + "</p></div>" +
+    (p.bio || p.about ? '<div class="pf-section"><h2>About</h2>' + (p.bio ? "<p>" + esc(p.bio) + "</p>" : "") + (p.about ? "<p>" + esc(p.about) + "</p>" : "") + "</div>" : "") +
 
-    '<div class="pf-section"><h2>Specialties &amp; approach</h2>' +
-    '<div class="pc-specs" style="justify-content:flex-start;">' +
-    p.specialties.map(function (s) { return '<span class="pc-spec" style="cursor:default;">' + esc(s) + "</span>"; }).join("") + "</div>" +
-    '<p><strong>Approach.</strong> ' + esc(p.approach) + "</p>" +
-    '<p><strong>Populations served.</strong> ' + list(p.populations) + ".</p></div>" +
+    (p.specialties.length || p.approach || p.populations.length ? '<div class="pf-section"><h2>Specialties &amp; approach</h2>' +
+    (p.specialties.length ? '<div class="pc-specs" style="justify-content:flex-start;">' +
+      p.specialties.map(function (s) { return '<span class="pc-spec" style="cursor:default;">' + esc(s) + "</span>"; }).join("") + "</div>" : "") +
+    (p.approach ? '<p><strong>Approach.</strong> ' + esc(p.approach) + "</p>" : "") +
+    (p.populations.length ? '<p><strong>Populations served.</strong> ' + list(p.populations) + ".</p>" : "") + "</div>" : "") +
 
     '<div class="pf-section"><h2>Training &amp; credentials</h2><ul class="pf-list">' +
-    "<li><b>Licensure</b> — " + esc(p.license) + "</li>" +
+    (p.license ? "<li><b>Licensure</b> — " + esc(p.license) + "</li>" : "") +
     p.education.map(function (e) { return "<li><b>Education</b> — " + esc(e) + "</li>"; }).join("") +
     "<li><b>TIIP standing</b> — " + esc(lv.label) + "</li>" +
-    "<li><b>Experience</b> — " + esc(p.years) + " years in practice</li></ul></div>" +
+    (p.years ? "<li><b>Experience</b> — " + esc(p.years) + " years in practice</li>" : "") + "</ul></div>" +
 
-    '<div class="pf-section" id="offerings"><h2>Workshops, seminars &amp; events I can offer</h2>' +
+    (p.offerings.length ? '<div class="pf-section" id="offerings"><h2>Workshops, seminars &amp; events I can offer</h2>' +
     '<p class="muted">Available for organizations, masjids, clinics, schools, and training bodies. Choose one to start a request.</p>' +
-    '<div class="pf-offers">' + offerCards + "</div></div>" +
+    '<div class="pf-offers">' + offerCards + "</div></div>" : "") +
 
     /* request form */
     '<div class="pf-section" id="request"><h2>Make a request</h2>' +
@@ -134,11 +136,12 @@
     "<h3>Quick facts</h3>" +
     '<dl class="pf-facts">' +
     "<dt>Location</dt><dd>" + esc(location_) + "</dd>" +
-    "<dt>Languages</dt><dd>" + list(p.languages) + "</dd>" +
-    "<dt>Session formats</dt><dd>" + list(p.formats) + "</dd>" +
-    "<dt>Availability</dt><dd>" + esc(p.accepting) + "</dd>" +
-    "<dt>Experience</dt><dd>" + esc(p.years) + " years</dd>" +
-    "<dt>Licensure</dt><dd>" + esc(p.license) + "</dd>" +
+    (p.languages.length ? "<dt>Languages</dt><dd>" + list(p.languages) + "</dd>" : "") +
+    (p.formats.length ? "<dt>Session formats</dt><dd>" + list(p.formats) + "</dd>" : "") +
+    (p.accepting ? "<dt>Availability</dt><dd>" + esc(p.accepting) + "</dd>" : "") +
+    (p.years ? "<dt>Experience</dt><dd>" + esc(p.years) + " years</dd>" : "") +
+    (p.license ? "<dt>Licensure</dt><dd>" + esc(p.license) + "</dd>" : "") +
+    (p.contactEmail ? "<dt>Contact</dt><dd><a href=\"mailto:" + esc(p.contactEmail) + "\">" + esc(p.contactEmail) + "</a></dd>" : "") +
     "</dl>" +
     '<a class="btn btn-primary" style="width:100%;justify-content:center;margin-top:6px;" href="#request" data-mode-link="provider">Request as my provider</a>' +
     '<a class="btn btn-outline" style="width:100%;justify-content:center;margin-top:10px;" href="#request" data-mode-link="event">Request for an event</a>' +

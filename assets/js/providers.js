@@ -13,7 +13,8 @@
   T.LEVELS = {
     supervisor: { label: "TIIP Supervisor", cls: "lv-supervisor" },
     certified:  { label: "Fully Certified", cls: "lv-certified" },
-    level3:     { label: "Level 3 Trainee", cls: "lv-3" }
+    level3:     { label: "Level 3 Trainee", cls: "lv-3" },
+    level2:     { label: "Level 2 Trainee", cls: "lv-2" }
   };
 
   /* offering helper: events / workshops / seminars a provider can conduct */
@@ -248,13 +249,31 @@
     }
   ];
 
+  /* Member-published profiles. Level 2+ members request a public profile in the
+     portal; once an admin approves it, a snapshot of exactly the sections the
+     member chose to show is stored with the listing and appears here. (Demo:
+     the portal and this site share the browser's localStorage; in production
+     this would be an API.) */
+  T.LS_KEY = "tiip-portal-demo-v2";
+  function memberProfiles() {
+    try {
+      var st = JSON.parse(localStorage.getItem(T.LS_KEY) || "null");
+      if (!st || !st.listings) return [];
+      return Object.keys(st.listings).map(function (k) {
+        var l = st.listings[k];
+        return l && l.published && (l.publishedLive || l.publicStatus === "approved") ? l.published : null;
+      }).filter(Boolean);
+    } catch (e) { return []; }
+  }
+  T.PROVIDERS = T.PROVIDERS.concat(memberProfiles());
+
   /* ---- shared helpers ---- */
   T.bySlug = function (slug) {
     for (var i = 0; i < T.PROVIDERS.length; i++) if (T.PROVIDERS[i].slug === slug) return T.PROVIDERS[i];
     return null;
   };
   T.profileUrl = function (p) { return "provider.html?p=" + encodeURIComponent(p.slug); };
-  T.gender = function (p) { return p.photo.g === "women" ? "Female" : "Male"; };
+  T.gender = function (p) { return p.gender || (p.photo ? (p.photo.g === "women" ? "Female" : "Male") : ""); };
   T.PROVIDERS.forEach(function (p) { p.gender = T.gender(p); });
 
   function initials(name) {
@@ -274,7 +293,8 @@
   };
   /* Sets a provider's portrait on <img>, falling back to an initials avatar. */
   T.setPhoto = function (img, p) {
-    var i = T.PROVIDERS.indexOf(p);
+    var i = Math.max(0, T.PROVIDERS.indexOf(p));
+    if (!p.photo) { img.src = T.avatarDataUri(p.name, i); return; }
     img.src = "https://randomuser.me/api/portraits/" + p.photo.g + "/" + p.photo.id + ".jpg";
     img.addEventListener("error", function () { img.src = T.avatarDataUri(p.name, i); }, { once: true });
   };

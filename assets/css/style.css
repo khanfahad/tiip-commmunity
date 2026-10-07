@@ -944,3 +944,6 @@ a.hero-badge:hover { color: #fff; border-color: rgba(255,255,255,.34); backgroun
   .js .reveal { opacity: 1; transform: none; transition: none; }
   .hero::before, .hero-orb::before, .hero-orb::after, .float-card { animation: none; }
 }
+
+/* Level 2 profiles (published only after admin approval) */
+.pf-badge.lv-2 { background: rgba(255,255,255,.88); color: var(--ink-700); }

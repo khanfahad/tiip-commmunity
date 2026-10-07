@@ -42,8 +42,6 @@
     { num: "3", name: "Level 3", title: "Supervised Practice", desc: "200 supervised hours · 10 completed cases." },
     { num: "✓", name: "Certified", title: "Full Certification", desc: "Full clinical & consultation privileges · supervisor track." }
   ];
-  /* index into PATHWAY for each demo role (4 = fully certified) */
-  var ROLE_STAGE = { explorer: 0, level1: 1, level2: 2, trainee: 3, practitioner: 4, supervisor: 4, admin: 3 };
 
   /* ---------------------------------------------------------
      Level 1 capstone — the Khalil Center "TIIP Case
@@ -198,7 +196,9 @@
         { name: "Dr. Bilal Rahman", role: "Certified Practitioner" },
         { name: "Sarah Abdullah", role: "Certified Practitioner" },
         { name: "Dr. Hana Qadri", role: "Supervisor / Scholar" },
-        { name: "Shaykh Idris Kamal", role: "Supervisor / Scholar" }
+        { name: "Shaykh Idris Kamal", role: "Supervisor / Scholar" },
+        { name: "Dr. Omar Farouk", role: "Supervisor / Scholar", city: "Cairo, EG" },
+        { name: "Dr. Kemal Demir", role: "Supervisor / Scholar", city: "Ankara, TR" }
       ],
       levelRequests: [
         { name: "Hafsa Karim", from: "TIIP Trainee (Level 0)", to: "Trainee (Level I)", note: "Completed Foundations of TIIP", cert: "Hafsa_Karim_Level1_certificate.pdf" },
@@ -244,6 +244,58 @@
           summary: "Single-case designs as a feasible way for clinicians to build evidence for murāqabah and dhikr protocols.", link: "", file: "SCED-dhikr-design.pdf",
           likes: ["Dr. Hana Qadri"], comments: [] }
       ],
+      /* ---- Certification journey: per-member checklist flags ----
+         l1_reg/l2_reg hold a training (cohort) id; done1/done2/done3 mark a
+         level whose requirements are all complete; certified = panel passed. */
+      journey: {
+        "Zaid Mahmood": { flags: {}, notified: {} },
+        "Hafsa Karim": { flags: {}, notified: {} },
+        "Imran Baig": { flags: { l1_reg: "co-l1-chi", l1_att: true, l1_mod: true }, notified: {} },
+        "Nadia Bouchard": { flags: { l1_reg: "co-l1-chi", l1_att: true, l1_mod: true, done1: true }, notified: { done1: true } },
+        "Zayd Ibrahim": { flags: { l1_reg: "co-l1-onl", done1: true, l2_reg: "co-l2-tor", l2_att: true }, notified: { done1: true } },
+        "Yusuf Chaudhry": { flags: { l1_reg: "co-l1-hou", done1: true, l2_reg: "co-l2-tor", l2_att: true }, notified: { done1: true } },
+        "Amina Yusuf": { flags: { l1_reg: "co-l1-hou", done1: true, l2_reg: "co-l2-onl", done2: true }, notified: { done1: true, done2: true } },
+        "Dr. Bilal Rahman": { flags: { done1: true, done2: true, done3: true, certified: true }, notified: { done1: true, done2: true, done3: true } },
+        "Sarah Abdullah": { flags: { done1: true, done2: true, done3: true, certified: true }, notified: { done1: true, done2: true, done3: true } },
+        "Dr. Hana Qadri": { flags: { done1: true, done2: true, done3: true, certified: true }, notified: { done1: true, done2: true, done3: true } },
+        "Shaykh Idris Kamal": { flags: { done1: true, done2: true, done3: true, certified: true }, notified: { done1: true, done2: true, done3: true } },
+        "Dr. Omar Farouk": { flags: { done1: true, done2: true, done3: true, certified: true }, notified: { done1: true, done2: true, done3: true } },
+        "Dr. Kemal Demir": { flags: { done1: true, done2: true, done3: true, certified: true }, notified: { done1: true, done2: true, done3: true } }
+      },
+      /* Upcoming trainings (cohorts) members can register for */
+      cohorts: [
+        { id: "co-l1-onl", level: 1, title: "Level 1 · Foundations", date: iso(today(28)), loc: "Online", mode: "Online" },
+        { id: "co-l1-chi", level: 1, title: "Level 1 · Foundations", date: iso(today(42)), loc: "Chicago, US", mode: "In person" },
+        { id: "co-l1-hou", level: 1, title: "Level 1 · Foundations", date: iso(today(63)), loc: "Houston, US", mode: "In person" },
+        { id: "co-l2-onl", level: 2, title: "Level 2 · Intermediate", date: iso(today(49)), loc: "Online", mode: "Online" },
+        { id: "co-l2-tor", level: 2, title: "Level 2 · Intermediate", date: iso(today(70)), loc: "Toronto, CA", mode: "In person" }
+      ],
+      /* Email notifications (demo outbox): { id, to, cat, subject, body, at, read } */
+      outbox: [
+        { id: "em-seed1", to: "Nadia Bouchard", cat: "training", subject: "Level 2 training posted — Toronto, CA", body: "A new Level 2 · Intermediate training is open for registration (Toronto, CA).\nYou completed Level 1, so you can register from your Certification Journey.\n\nOpen the portal: portal.html#certification", at: iso(today(-3)) + " 09:00", read: false },
+        { id: "em-seed2", to: "Musa Adem", cat: "review", subject: "Case conceptualization awaiting review — Imran Baig (Level 1)", body: "Imran Baig submitted a Level 1 case conceptualization.\n\nReview it in Administration → Reviews & letters.", at: iso(today(-3)) + " 14:20", read: false }
+      ],
+      prefs: {},
+      /* Member directory / public profile listings, keyed by member name.
+         publicStatus: none | pending | approved | changes | declined */
+      listings: {
+        "Yusuf Chaudhry": {
+          internal: true, referrals: true, publicStatus: "pending", publicNote: "", updated: iso(today(-2)),
+          data: { bio: "Counselor working with young adults and families in Lahore on anxiety, identity, and the pressures of study and work.", credentials: "MS, LPC · Counselor", license: "", education: "MS Counseling Psychology — Lahore", years: "6", city: "Lahore", state: "Punjab", country: "Pakistan", languages: "Urdu, English", specialties: "Anxiety, Youth & Adolescents", approach: "CBT-informed counseling with TIIP formulation", populations: "Young adults, Families", formats: "In person, Telehealth", accepting: "Accepting new clients", gender: "Male", contactEmail: "", off1_title: "Exam stress and the anxious student", off1_type: "Workshop", off1_desc: "Practical tools for students and parents.", off2_title: "", off2_type: "Workshop", off2_desc: "", off3_title: "", off3_type: "Workshop", off3_desc: "" },
+          show: { about: true, credentials: true, location: true, languages: true, focus: true, services: true, gender: true, contact: false, offerings: true }
+        }
+      },
+      /* Referrals sent through the internal directory */
+      referrals: [],
+      /* Level 3 panel presentation requests (scheduled with >= 3 supervisors) */
+      panels: [],
+      /* Intervention vault — community section (uploaded by fully certified
+         clinicians, approved by a TIIP supervisor). status: pending | approved | declined */
+      vault: [
+        { id: "vt1", title: "Behavioural activation with a worship-anchored activity schedule", type: "Worksheet", lang: "English", tags: ["depression", "activation"], desc: "A weekly planner pairing graded activities with fixed points of worship to rebuild routine in depressive episodes.", file: "BA-worship-schedule.pdf", by: "Dr. Bilal Rahman", at: iso(today(-18)), status: "approved", approvedBy: "Dr. Hana Qadri", note: "" },
+        { id: "vt2", title: "Grounding with dhikr — acute anxiety protocol (Urdu)", type: "Protocol", lang: "Urdu", tags: ["anxiety", "dhikr", "grounding"], desc: "A five-minute protocol for panic and acute anxiety using paced dhikr and sensory grounding; includes a client handout in Urdu.", file: "dhikr-grounding-ur.pdf", by: "Sarah Abdullah", at: iso(today(-30)), status: "approved", approvedBy: "Shaykh Idris Kamal", note: "" },
+        { id: "vt3", title: "Two-chair dialogue adaptation for guilt and shame", type: "Protocol", lang: "English", tags: ["ihsas", "shame", "two-chair"], desc: "An adaptation of two-chair work for spiritual guilt, with safety framing and a closing murāqabah.", file: "two-chair-guilt.docx", by: "Dr. Bilal Rahman", at: iso(today(-2)), status: "pending", approvedBy: "", note: "" }
+      ],
       forum: [
         {
           id: 1, name: "Tazkiyah & wellbeing", desc: "The practitioner's own heart",
@@ -278,10 +330,14 @@
   if (!state.learning.l1Formulation) state.learning.l1Formulation = seedFormulation(); /* migrate pre-formulation saves */
   if (!state.memberEvents) state.memberEvents = seedState().memberEvents; /* migrate pre-member-events saves */
   var _seed = null; /* lazily-built defaults for migrating older saved states */
-  ["users", "levelRequests", "registry", "submissions", "library"].forEach(function (k) {
+  ["users", "levelRequests", "registry", "submissions", "library", "journey", "cohorts", "outbox", "prefs", "listings", "referrals", "panels", "vault"].forEach(function (k) {
     if (!state[k]) { _seed = _seed || seedState(); state[k] = _seed[k]; }
   });
   delete state.pubs; /* the Publication Incubator was replaced by the Research Library */
+  Object.keys(state.listings).forEach(function (n) { var l = state.listings[n]; if (l.publicStatus === "approved" && l.published && l.publishedLive == null) l.publishedLive = true; });
+  ["Dr. Omar Farouk", "Dr. Kemal Demir"].forEach(function (n) { /* panels need 3+ supervisors */
+    if (!state.users.some(function (u) { return u.name === n; })) state.users.push({ name: n, role: "Supervisor / Scholar" });
+  });
   if (!ROLES[state.role]) state.role = "trainee";
   function save() { try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) {} }
 
@@ -296,13 +352,11 @@
     { name: "Maryam Siddiqui", cred: "MSc, HCPC · Certified", city: "London, UK", region: "Europe / Africa", tz: "Europe/London", langs: ["English", "Urdu"], focus: ["Trauma", "Youth & identity"], lic: "UK / EU", accepting: true },
     { name: "Dr. Omar Farouk", cred: "MD Psychiatry · Supervisor", city: "Cairo, EG", region: "Middle East", tz: "Africa/Cairo", langs: ["Arabic", "English"], focus: ["OCD / Waswasah", "Anxiety & mood"], lic: "International", accepting: true },
     { name: "Dr. Layla Nasser", cred: "PhD · Certified", city: "Dubai, AE", region: "Middle East", tz: "Asia/Dubai", langs: ["Arabic", "English"], focus: ["Addictions", "Trauma"], lic: "International", accepting: true },
-    { name: "Yusuf Chaudhry", cred: "MS, LPC · Trainee III", city: "Lahore, PK", region: "South Asia", tz: "Asia/Karachi", langs: ["Urdu", "English"], focus: ["Anxiety & mood"], lic: "International", accepting: false },
     { name: "Dr. Fatima Malik", cred: "PhD · Certified", city: "Karachi, PK", region: "South Asia", tz: "Asia/Karachi", langs: ["Urdu", "English"], focus: ["Marital & family", "Addictions"], lic: "International", accepting: true },
     { name: "Nur Aisyah Binti Ahmad", cred: "MClinPsy · Certified", city: "Kuala Lumpur, MY", region: "SE Asia / Pacific", tz: "Asia/Kuala_Lumpur", langs: ["English"], focus: ["Youth & identity", "Anxiety & mood"], lic: "International", accepting: true },
     { name: "Dr. Kemal Demir", cred: "Clin. Psych · Supervisor", city: "Ankara, TR", region: "Europe / Africa", tz: "Europe/Istanbul", langs: ["Turkish"], focus: ["Trauma", "Marital & family"], lic: "International", accepting: true },
-    { name: "Sarah Abdullah", cred: "LCSW · Certified", city: "New Jersey, US", region: "Americas", tz: "America/New_York", langs: ["English", "Arabic"], focus: ["OCD / Waswasah", "Youth & identity"], lic: "US state-specific", accepting: true },
-    { name: "Nadia Bouchard", cred: "RP (Qualifying) · Trainee I", city: "Montreal, CA", region: "Americas", tz: "America/Toronto", langs: ["English", "French"], focus: ["Youth & identity", "Anxiety & mood"], lic: "Canada", accepting: true, level: "level1" },
-    { name: "Zayd Ibrahim", cred: "Provisional Psychologist · Trainee II", city: "Melbourne, AU", region: "SE Asia / Pacific", tz: "Australia/Melbourne", langs: ["English", "Arabic"], focus: ["Anxiety & mood", "Youth & identity"], lic: "International", accepting: false, level: "level2" }
+    { name: "Sarah Abdullah", cred: "LCSW · Certified", city: "New Jersey, US", region: "Americas", tz: "America/New_York", langs: ["English", "Arabic"], focus: ["OCD / Waswasah", "Youth & identity"], lic: "US state-specific", accepting: true }
+  
   ];
 
   /* TIIP level per listing — inferred from the credential line unless set.
@@ -353,8 +407,8 @@
   var roleSelect = document.getElementById("role-select");
 
   var VIEW_TITLES = {
-    dashboard: "Dashboard", admin: "Administration", learning: "Resources & Modules", directory: "Global Referral Directory", certification: "Certification Pathway",
-    vault: "Dual-Compliance Vault", sandbox: "TIIP Conceptualization Sandbox", fatwa: "Scholarly Consultation Desk",
+    dashboard: "Dashboard", admin: "Administration", notifications: "Notifications", learning: "Resources & Modules", directory: "Member Directory", profile: "My Profile & Listing", certification: "Certification Journey",
+    sandbox: "TIIP Conceptualization Sandbox", fatwa: "Scholarly Consultation Desk",
     resources: "Multilingual Intervention Vault", library: "Islamic Psychology Research Library", events: "Events & Training Calendar",
     forums: "Tazkiyah & Peer Forums"
   };
@@ -370,6 +424,7 @@
     document.getElementById("user-role").textContent = r.label;
     document.getElementById("user-avatar").textContent = initials(r.name);
     roleSelect.value = state.role;
+    updateBadge();
     navBtns.forEach(function (btn) {
       var ok = roleAllows(btn);
       btn.classList.toggle("locked", !ok);
@@ -379,7 +434,10 @@
     });
   }
 
+  var VIEW_ALIAS = { vault: "certification", incubator: "library" };
   function show(view) {
+    if (VIEW_ALIAS[view]) view = VIEW_ALIAS[view];
+    if (!VIEW_TITLES[view]) view = "dashboard";
     var btn = document.querySelector('.p-nav button[data-view="' + view + '"]');
     if (btn && !roleAllows(btn)) view = "dashboard";
     navBtns.forEach(function (b) { b.classList.toggle("active", b.getAttribute("data-view") === view); });
@@ -438,8 +496,9 @@
     if (view === "dashboard") renderDashboard();
     if (view === "learning") renderLearning();
     if (view === "directory") renderDirectory();
-    if (view === "certification") renderCert();
-    if (view === "vault") renderVault();
+    if (view === "certification") renderJourney();
+    if (view === "profile") renderProfile();
+    if (view === "notifications") renderNotifications();
     if (view === "sandbox") renderSandbox();
     if (view === "fatwa") renderFatwa();
     if (view === "resources") renderResources();
@@ -463,8 +522,8 @@
     var expiring = state.certs.filter(function (c) { return certStatus(c) !== "ok"; }).length;
     var leads = {
       explorer: "As-salāmu ʿalaykum, Zaid. Welcome — you're a TIIP Trainee at Level 0. Watch the starter modules and follow the community; the full pathway to certification starts whenever you're ready.",
-      level1: "As-salāmu ʿalaykum, Nadia. You're in Level 1 — work through the modules, then submit your case conceptualization through the portal for review.",
-      level2: "As-salāmu ʿalaykum, Zayd. You're in Level 2 — submit your case conceptualization through the portal; an admin will pass it or ask you to retry.",
+      level1: "As-salāmu ʿalaykum, Nadia. You're at Level 1 — track your checklist in the Certification Journey, and register for the next training when you're ready.",
+      level2: "As-salāmu ʿalaykum, Zayd. You're at Level 2 — submit your case conceptualization; an admin will pass it or ask you to retry, and you'll be emailed the result.",
       trainee: "As-salāmu ʿalaykum, Amina. Your Level III pathway, compliance items, and cohort activity at a glance.",
       practitioner: "As-salāmu ʿalaykum, Dr. Rahman. Referrals, compliance, and consultation activity at a glance.",
       supervisor: "As-salāmu ʿalaykum, Dr. Qadri. Trainee approvals and scholar-desk queries awaiting you.",
@@ -478,22 +537,20 @@
     if (state.role === "explorer") {
       var watched = state.learning.l0.filter(function (m) { return m.done; }).length;
       tiles = [
-        { n: "L0", l: "Current level" },
+        { n: "L" + standing(viewerName()), l: "Current level" },
         { n: watched + "<i>/" + state.learning.l0.length + "</i>", l: "Parts watched" },
-        { n: EVENTS.length, l: "Upcoming events" },
-        { n: 4, l: "Stages to certification" }
+        { n: state.outbox.filter(function (e) { return e.to === viewerName() && !e.read; }).length, l: "Unread emails" },
+        { n: EVENTS.length, l: "Upcoming events" }
       ];
     } else if (state.role === "level1" || state.role === "level2") {
-      var lvN = state.role === "level1" ? 1 : 2;
-      var mySb = mySub(lvN);
-      var sbWord = mySb ? { pending: "Under review", passed: "Passed", retry: "Retry" }[mySb.status] : "Not started";
-      var sbTile = { n: '<span style="font-size:1.15rem;">' + sbWord + "</span>", l: "Case conceptualization" };
-      tiles = lvN === 1
-        ? [{ n: "L1", l: "Current level" },
-           { n: state.learning.l1.filter(function (m) { return m.done; }).length + "<i>/" + state.learning.l1.length + "</i>", l: "Modules complete" },
-           sbTile, { n: allEvents().length, l: "Upcoming events" }]
-        : [{ n: "L2", l: "Current level" }, sbTile,
-           { n: expiring, l: "Compliance alerts" }, { n: allEvents().length, l: "Upcoming events" }];
+      var jn = viewerName(), jlv = standing(jn), jt = jlv >= 2 ? 2 : 1;
+      var jr = reqs(jn, jt), jd = jr.filter(function (r) { return r.done; }).length;
+      tiles = [
+        { n: "L" + jlv, l: "Current level" },
+        { n: jd + "<i>/" + jr.length + "</i>", l: "Level " + jt + " checklist" },
+        { n: state.outbox.filter(function (e) { return e.to === jn && !e.read; }).length, l: "Unread emails" },
+        { n: allEvents().length, l: "Upcoming events" }
+      ];
     } else if (state.role === "supervisor") {
       tiles = [
         { n: pendingEntries().length, l: "Hours awaiting approval" },
@@ -521,12 +578,12 @@
     }).join("");
 
     var actions = {
-      explorer: [["learning", "Watch the six-part series"], ["certification", "View my pathway"], ["events", "Browse events"], ["forums", "Join the forums"]],
-      level1: [["learning", "Open Level 1 modules"], ["library", "Browse the research library"], ["directory", "Referral directory"], ["events", "Browse events"]],
-      level2: [["learning", "Submit case conceptualization"], ["sandbox", "Draft a conceptualization"], ["library", "Research library"], ["fatwa", "Ask a scholar"]],
-      trainee: [["learning", "Open resources & modules"], ["certification", "Log supervised hours"], ["sandbox", "Draft a conceptualization"], ["fatwa", "Ask a scholar"]],
-      practitioner: [["directory", "Find a referral"], ["vault", "Update CE records"], ["library", "Browse the research library"], ["fatwa", "Ask a scholar"]],
-      supervisor: [["certification", "Review pending hours"], ["sandbox", "Review shared cases"], ["fatwa", "Answer scholar queries"], ["events", "Schedule a clinic"]],
+      explorer: [["certification", "Register for Level 1"], ["learning", "Watch the six-part series"], ["events", "Browse events"], ["notifications", "My emails"]],
+      level1: [["certification", "My certification journey"], ["profile", "Create my directory listing"], ["directory", "Member directory"], ["library", "Research library"]],
+      level2: [["learning", "Submit case conceptualization"], ["certification", "My certification journey"], ["profile", "My profile & public listing"], ["directory", "Member directory"]],
+      trainee: [["certification", "Log hours & track Level 3"], ["learning", "Written case conceptualization"], ["profile", "My profile & listing"], ["fatwa", "Ask a scholar"]],
+      practitioner: [["directory", "Find a referral"], ["profile", "My profile & listing"], ["resources", "Upload an intervention"], ["certification", "Update CE records"]],
+      supervisor: [["certification", "Review hours & panels"], ["resources", "Approve interventions"], ["sandbox", "Review shared cases"], ["fatwa", "Answer scholar queries"]],
       admin: [["admin", "Administration & invitations"], ["events", "Approve events"], ["library", "Moderate the library"], ["resources", "Publish a resource"]]
     };
     document.getElementById("dash-actions").innerHTML = actions[state.role].map(function (a) {
@@ -541,55 +598,86 @@
     }).join("");
   }
 
-  /* ---- Case-conceptualization submissions (Level 1 & 2) ---- */
+  /* ---- Case-conceptualization submissions (Levels 1–3) ---- */
   var SUB_LABEL = { pending: "Awaiting admin review", passed: "Passed", retry: "Retry requested" };
   function findSubmission(member, level) {
     return state.submissions.find(function (x) { return x.member === member && x.level === level; }) || null;
   }
-  function mySub(level) { return findSubmission(ROLES[state.role].name, level); }
+  function mySub(level) { return findSubmission(viewerName(), level); }
   function subTags(sb) {
     var cls = sb.status === "passed" ? "ok" : sb.status === "retry" ? "retry" : "warn";
     var txt = sb.status === "passed" ? "Passed · Level " + sb.level + " credited" : SUB_LABEL[sb.status];
     return '<span class="tag ' + cls + '">' + txt + '</span><span class="tag dim">Attempt ' + (sb.attempts || 1) + " · " + esc(sb.at) + "</span>";
   }
   function feedbackNote(sb) {
-    if (sb.status === "retry") return '<div class="fb-note retry"><b>Admin feedback — please revise and resubmit:</b> ' + esc(sb.feedback) + "</div>";
-    if (sb.status === "passed" && sb.feedback) return '<div class="fb-note passed"><b>Admin feedback:</b> ' + esc(sb.feedback) + "</div>";
+    var graded = sb.gradedFile ? '<div style="margin-top:4px;">' + fileLink(sb.gradedFile) + " <small>(graded copy)</small></div>" : "";
+    if (sb.status === "retry") return '<div class="fb-note retry"><b>Admin feedback — please revise and resubmit:</b> ' + esc(sb.feedback) + graded + "</div>";
+    if (sb.status === "passed" && (sb.feedback || sb.gradedFile)) return '<div class="fb-note passed"><b>Admin feedback:</b> ' + esc(sb.feedback || "Passed.") + graded + "</div>";
     return "";
   }
-  /* create or update (resubmit) the member's submission for a level */
-  function submitConceptualization(level, alias, summary, file) {
-    var member = ROLES[state.role].name;
+  /* create or update (resubmit) the viewer's submission for a level */
+  function submitConceptualization(level, alias, summary, info) {
+    var member = viewerName();
     var sb = findSubmission(member, level);
     if (sb) {
-      sb.alias = alias; sb.summary = summary; sb.file = file || sb.file || "";
-      sb.at = iso(new Date()); sb.status = "pending"; sb.attempts = (sb.attempts || 1) + 1; sb.feedback = "";
+      sb.alias = alias; sb.summary = summary; sb.file = info ? info.name : (sb.file || ""); sb.fileInfo = info || sb.fileInfo || null;
+      sb.at = iso(new Date()); sb.status = "pending"; sb.attempts = (sb.attempts || 1) + 1; sb.feedback = ""; sb.gradedFile = null;
     } else {
-      state.submissions.push({ id: "sb" + Date.now(), member: member, level: level, alias: alias, file: file || "", at: iso(new Date()),
+      state.submissions.push({ id: "sb" + Date.now(), member: member, level: level, alias: alias, file: info ? info.name : "", fileInfo: info || null, at: iso(new Date()),
         status: "pending", attempts: 1, feedback: "", history: [], summary: summary });
     }
     save();
+    notify(ADMIN_NAME, "review", "Case conceptualization awaiting review — " + member + " (Level " + level + ")", member + " submitted a Level " + level + " case conceptualization (" + (alias || "untitled case") + ").\n\nReview it in Administration → Reviews & letters.");
+    notify(member, "review", "We received your Level " + level + " case conceptualization", "Your submission is with the admin team. You'll be emailed the result — passed, or a request to revise and retry with feedback.");
+    checkProgress(member);
   }
 
   /* ---- Administration ---- */
   var ROLE_OPTIONS = ["TIIP Trainee (Level 0)", "Trainee (Level I)", "Trainee (Level II)", "Trainee (Level III)", "Certified Practitioner", "Supervisor / Scholar", "Admin"];
+  var adminTab = "reviews";
+
+  function pendingListings() { return Object.keys(state.listings).filter(function (n) { return state.listings[n].publicStatus === "pending"; }); }
+  function pendingLetters() {
+    return Object.keys(state.journey).filter(function (n) { var L = state.journey[n].letter; return L && L.status === "pending"; });
+  }
+  function unattended() {
+    var out = [];
+    ADMIN_USERS.forEach(function (u) {
+      [1, 2].forEach(function (n) {
+        if (fl(u.name, "l" + n + "_reg") && !fl(u.name, "l" + n + "_att") && !fl(u.name, "done" + n)) out.push({ name: u.name, level: n });
+      });
+    });
+    return out;
+  }
 
   function renderAdmin() {
-    renderReviews();
-    syncRegForm();
-    renderRegistry();
-    renderRequests();
-    renderAdminUsers(document.getElementById("admin-user-search").value || "");
+    var counts = {
+      reviews: state.submissions.filter(function (x) { return x.status === "pending"; }).length + pendingLetters().length,
+      trainings: unattended().length,
+      directory: pendingListings().length,
+      panels: state.panels.filter(function (x) { return x.status === "requested"; }).length,
+      members: LEVEL_REQUESTS.length,
+      emails: 0
+    };
+    var TABS = [["reviews", "Reviews & letters"], ["trainings", "Trainings & registry"], ["directory", "Directory requests"], ["panels", "Level 3 panels"], ["members", "Members"], ["emails", "Email log"]];
+    document.getElementById("admin-tabs").innerHTML = TABS.map(function (t) {
+      return '<button type="button" class="cat-chip' + (adminTab === t[0] ? " sel" : "") + '" data-admin-tab="' + t[0] + '">' + t[1] + (counts[t[0]] ? '<span class="tab-count">' + counts[t[0]] + "</span>" : "") + "</button>";
+    }).join("");
+    document.querySelectorAll(".admin-pane").forEach(function (p) { p.classList.toggle("active", p.getAttribute("data-pane") === adminTab); });
+    renderReviews(); renderLetters();
+    renderCohorts(); renderAttendance(); syncRegForm(); renderRegistry();
+    renderListingRequests();
+    renderPanels();
+    renderRequests(); renderAdminUsers(document.getElementById("admin-user-search").value || "");
+    renderEmailLog();
   }
+  document.getElementById("admin-tabs").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-admin-tab]");
+    if (!b) return;
+    adminTab = b.getAttribute("data-admin-tab"); renderAdmin();
+  });
 
-  /* credited level moves the member up to that level (never down) */
-  function creditLevel(name, level) {
-    var u = ADMIN_USERS.find(function (x) { return x.name === name; });
-    if (!u) { ADMIN_USERS.push({ name: name, role: ROLE_OPTIONS[level] }); return; }
-    if (ROLE_OPTIONS.indexOf(u.role) < level) u.role = ROLE_OPTIONS[level];
-  }
-
-  /* -- case conceptualization reviews -- */
+  /* -- case conceptualization reviews (with graded-file upload) -- */
   var SUMMARY_LABELS = [["presenting", "Presenting problem"], ["dominant", "Dominant area of dysfunction"], ["narrative", "Conceptualization (narrative)"], ["plan", "Therapy plan"], ["prognosis", "Prognosis"]];
   function renderReviews() {
     var el = document.getElementById("admin-reviews");
@@ -603,37 +691,119 @@
       var body = SUMMARY_LABELS.filter(function (l) { return filled(sb.summary && sb.summary[l[0]]); }).map(function (l) {
         return "<p><strong>" + l[1] + ":</strong> " + esc(sb.summary[l[0]]) + "</p>";
       }).join("") || "<p>No written summary attached.</p>";
+      var attach = sb.fileInfo ? "<p><strong>Attachment:</strong> " + fileLink(sb.fileInfo) + "</p>" : sb.file ? "<p><strong>Attachment:</strong> 📎 " + esc(sb.file) + "</p>" : "";
       var hist = (sb.history || []).map(function (h) {
-        return '<div class="fb-note ' + (h.status === "retry" ? "retry" : "passed") + '"><b>' + esc(h.at) + " · " + (h.status === "retry" ? "Retry requested" : "Passed") + ":</b> " + esc(h.feedback || "—") + "</div>";
+        return '<div class="fb-note ' + (h.status === "retry" ? "retry" : "passed") + '"><b>' + esc(h.at) + " · " + (h.status === "retry" ? "Retry requested" : "Passed") + ":</b> " + esc(h.feedback || "—") + (h.gradedName ? " · 📎 " + esc(h.gradedName) : "") + "</div>";
       }).join("");
       var decide = sb.status === "pending"
         ? '<div class="rv-form"><div class="field"><label>Feedback to the member</label><textarea data-fb="' + sb.id + '" placeholder="Required if you ask for a retry — say what to revise"></textarea></div>' +
+          '<div class="field"><label>Graded / commented copy <span style="text-transform:none;letter-spacing:0;font-weight:500;">(optional · PDF or Word)</span></label><input type="file" data-gf="' + sb.id + '" accept=".pdf,.doc,.docx" /></div>' +
           '<div class="rv-btns"><button class="btn btn-gold btn-xs" data-pass="' + sb.id + '">Pass — credit Level ' + sb.level + '</button>' +
           '<button class="btn btn-ghost btn-xs" data-retry="' + sb.id + '">Ask to retry</button></div></div>'
-        : "";
+        : (sb.gradedFile ? '<p class="view-lead" style="margin:10px 0 0;font-size:.8rem;">Graded copy sent: ' + fileLink(sb.gradedFile) + "</p>" : "");
       return '<div class="review-item"><div class="rv-head"><span class="grow"><b>' + esc(sb.member) + " — Level " + sb.level + " case conceptualization</b><small>" +
-        esc(sb.alias || "Untitled case") + " · submitted " + esc(sb.at) + (sb.file ? " · 📎 " + esc(sb.file) : "") + "</small></span>" + subTags(sb) + "</div>" +
-        "<details" + (sb.status === "pending" ? "" : "") + "><summary>View submission &amp; history</summary><div class='rv-body'>" + body + hist + "</div></details>" + decide + "</div>";
+        esc(sb.alias || "Untitled case") + " · submitted " + esc(sb.at) + "</small></span>" + subTags(sb) + "</div>" +
+        "<details><summary>View submission &amp; history</summary><div class='rv-body'>" + body + attach + hist + "</div></details>" + decide + "</div>";
     }).join("") : '<div class="empty">No case conceptualizations have been submitted yet.</div>';
 
     function decideOn(id, status) {
       var sb = state.submissions.find(function (x) { return x.id === id; });
       var ta = el.querySelector('[data-fb="' + id + '"]');
+      var gf = el.querySelector('[data-gf="' + id + '"]');
       var fb = ta ? ta.value.trim() : "";
       if (!sb) return;
       if (status === "retry" && !fb) {
         ta.focus(); ta.style.borderColor = "#b64d4d"; ta.placeholder = "Please add feedback so the member knows what to revise";
         return;
       }
-      sb.history = sb.history || [];
-      sb.history.push({ at: iso(new Date()), status: status, feedback: fb });
-      sb.status = status; sb.feedback = fb;
-      if (status === "passed") creditLevel(sb.member, sb.level);
-      save(); renderAdmin();
+      readFileInfo(gf && gf.files[0], function (info) {
+        sb.history = sb.history || [];
+        sb.history.push({ at: iso(new Date()), status: status, feedback: fb, gradedName: info ? info.name : "" });
+        sb.status = status; sb.feedback = fb; sb.gradedFile = info;
+        var lead = status === "passed" ? "Your Level " + sb.level + " case conceptualization (" + (sb.alias || "untitled") + ") was PASSED." : "Your Level " + sb.level + " case conceptualization (" + (sb.alias || "untitled") + ") needs revision — please retry.";
+        notify(sb.member, "review", (status === "passed" ? "Passed — " : "Please revise and resubmit — ") + "Level " + sb.level + " case conceptualization",
+          lead + (fb ? "\n\nFeedback: " + fb : "") + (info ? "\n\nA graded / commented copy is attached: " + info.name + " (open it in the portal)." : "") + "\n\nOpen your journey: portal.html#certification");
+        checkProgress(sb.member);
+        save(); renderAdmin();
+      });
     }
     el.querySelectorAll("[data-pass]").forEach(function (b) { b.addEventListener("click", function () { decideOn(b.getAttribute("data-pass"), "passed"); }); });
     el.querySelectorAll("[data-retry]").forEach(function (b) { b.addEventListener("click", function () { decideOn(b.getAttribute("data-retry"), "retry"); }); });
   }
+
+  /* -- scholar letters -- */
+  function renderLetters() {
+    var el = document.getElementById("admin-letters");
+    var names = Object.keys(state.journey).filter(function (n) { return state.journey[n].letter; })
+      .sort(function (a, b) { return (state.journey[a].letter.status === "pending" ? 0 : 1) - (state.journey[b].letter.status === "pending" ? 0 : 1); });
+    el.innerHTML = names.length ? names.map(function (n) {
+      var L = state.journey[n].letter;
+      var tag = L.status === "verified" ? '<span class="tag ok">Verified</span>' : L.status === "replace" ? '<span class="tag retry">Replacement requested</span>' : '<span class="tag warn">Awaiting verification</span>';
+      return '<div class="review-item"><div class="rv-head"><span class="grow"><b>' + esc(n) + " — letter from " + esc(L.scholar) + "</b><small>Uploaded " + esc(L.at) + " · " + fileLink(L.info) + "</small></span>" + tag + "</div>" +
+        (L.status === "pending" ? '<div class="rv-form"><div class="field"><label>Note to the member <span style="text-transform:none;letter-spacing:0;font-weight:500;">(required if asking for a replacement)</span></label><input type="text" data-ln="' + esc(n) + '" /></div>' +
+          '<div class="rv-btns"><button class="btn btn-gold btn-xs" data-letter-ok="' + esc(n) + '">Verify letter</button><button class="btn btn-ghost btn-xs" data-letter-no="' + esc(n) + '">Ask for a replacement</button></div></div>' : "") + "</div>";
+    }).join("") : '<div class="empty">No scholar letters uploaded yet.</div>';
+  }
+  document.getElementById("admin-letters").addEventListener("click", function (e) {
+    var b = e.target.closest("button");
+    if (!b) return;
+    var n = b.getAttribute("data-letter-ok") || b.getAttribute("data-letter-no");
+    if (!n) return;
+    var L = state.journey[n] && state.journey[n].letter;
+    var inp = this.querySelector('[data-ln="' + n + '"]');
+    var note = inp ? inp.value.trim() : "";
+    if (!L) return;
+    if (b.hasAttribute("data-letter-ok")) {
+      L.status = "verified"; L.note = note;
+      notify(n, "review", "Your scholar letter was verified", "Your farḍ al-ʿayn letter from " + L.scholar + " has been verified.\n\nOpen your journey: portal.html#certification");
+      checkProgress(n);
+    } else {
+      if (!note) { inp.focus(); inp.style.borderColor = "#b64d4d"; return; }
+      L.status = "replace"; L.note = note;
+      notify(n, "review", "Please upload a replacement scholar letter", "We could not verify your letter from " + L.scholar + ".\nReason: " + note + "\n\nUpload a replacement in your Certification Journey.");
+    }
+    save(); renderAdmin();
+  });
+
+  /* -- trainings: post, attendance -- */
+  function renderCohorts() {
+    var cs = state.cohorts.slice().sort(function (a, b) { return a.date < b.date ? -1 : 1; });
+    document.getElementById("cohort-rows").innerHTML = cs.map(function (c) {
+      var regs = ADMIN_USERS.filter(function (u) { return fl(u.name, "l" + c.level + "_reg") === c.id; }).length;
+      return '<div class="row"><span class="grow"><b>' + esc(c.title) + " · " + esc(c.loc) + "</b><small>" + fmtDate(c.date) + " · " + esc(c.mode) + " · " + regs + " registered</small></span></div>";
+    }).join("") || '<div class="empty">No trainings posted.</div>';
+  }
+  document.getElementById("cohort-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var level = Number(document.getElementById("co-level").value);
+    var c = { id: "co" + Date.now(), level: level, title: level === 1 ? "Level 1 · Foundations" : "Level 2 · Intermediate", date: document.getElementById("co-date").value, loc: document.getElementById("co-loc").value.trim(), mode: document.getElementById("co-mode").value };
+    state.cohorts.push(c);
+    /* notify eligible members: L1 → Level 0 members not yet registered; L2 → members who completed Level 1 */
+    var eligible = ADMIN_USERS.filter(function (u) {
+      if (!isClinicalMember(u.name)) return false;
+      if (level === 1) return standing(u.name) === 0 && !fl(u.name, "l1_reg");
+      return levelComplete(u.name, 1) && !fl(u.name, "l2_reg") && !levelComplete(u.name, 2);
+    });
+    eligible.forEach(function (u) {
+      notify(u.name, "training", "New Level " + level + " training posted — " + c.loc, "A new " + cohortLabel(c) + " (" + c.mode + ") is open for registration.\n" + (level === 2 ? "You completed Level 1, so you can register now from your Certification Journey." : "Register from your Certification Journey to begin Level 1.") + "\n\nOpen the portal: portal.html#certification");
+    });
+    save(); e.target.reset(); renderAdmin();
+    document.getElementById("cohort-note").innerHTML = '<p class="invite-sent">✓ Training posted. Emailed ' + eligible.length + " eligible member" + (eligible.length === 1 ? "" : "s") + (level === 2 ? " who completed Level 1" : " at Level 0") + " (demo).</p>";
+  });
+  function renderAttendance() {
+    var list = unattended();
+    document.getElementById("attend-rows").innerHTML = list.length ? list.map(function (x) {
+      return '<div class="row"><span class="grow"><b>' + esc(x.name) + "</b><small>Level " + x.level + " · " + esc(cohortLabel(cohortById(fl(x.name, "l" + x.level + "_reg")))) + '</small></span><button class="btn btn-gold btn-xs" data-att-name="' + esc(x.name) + '" data-att-level="' + x.level + '">Mark attended</button></div>';
+    }).join("") : '<div class="empty">Everyone registered has been confirmed. 🌙</div>';
+  }
+  document.getElementById("attend-rows").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-att-name]");
+    if (!b) return;
+    var name = b.getAttribute("data-att-name"), n = Number(b.getAttribute("data-att-level"));
+    setFl(name, "l" + n + "_att", true);
+    notify(name, "training", "Attendance confirmed — Level " + n + " training", "Your attendance at the Level " + n + " training was confirmed. One more checkbox is ticked on your journey.\n\nOpen your journey: portal.html#certification");
+    checkProgress(name); renderAdmin();
+  });
 
   /* -- training registry & invitations -- */
   function levelText(n) { return n ? "Level " + n : "No level yet"; }
@@ -655,6 +825,11 @@
       if (inv && r.inv !== inv) return false;
       return true;
     });
+  }
+  function sendInvite(r) {
+    r.inv = "invited"; r.invitedAt = iso(new Date());
+    notify(r.email, "account", "You're invited to join the TIIP Community portal",
+      "Salaam " + r.name + ",\n\nYou're invited to join the TIIP Community member portal" + (r.level ? " — our records show you " + (r.status === "Completed" ? "completed" : "are registered for") + " Level " + r.level + (r.loc ? " (" + r.loc + (r.year ? ", " + r.year : "") + ")" : "") + "." : ".") + "\nCreate your account here: join.html");
   }
   function renderRegistry() {
     var years = [], locs = [];
@@ -682,7 +857,7 @@
     document.querySelectorAll("#reg-rows [data-inv]").forEach(function (b) {
       b.addEventListener("click", function () {
         var r = state.registry.find(function (x) { return x.id === b.getAttribute("data-inv"); });
-        if (r) { r.inv = "invited"; r.invitedAt = iso(new Date()); save(); renderRegistry(); }
+        if (r) { sendInvite(r); save(); renderAdmin(); }
       });
     });
   }
@@ -690,9 +865,9 @@
     var eligible = filteredRegistry().filter(function (r) { return r.inv === "none"; });
     if (!eligible.length) return;
     if (!confirm("Send portal invitations to " + eligible.length + " " + (eligible.length === 1 ? "person" : "people") + "?")) return;
-    eligible.forEach(function (r) { r.inv = "invited"; r.invitedAt = iso(new Date()); });
-    save(); renderRegistry();
-    document.getElementById("reg-note").innerHTML = '<p class="invite-sent">✓ ' + eligible.length + " invitation" + (eligible.length === 1 ? "" : "s") + " sent (demo — no email is actually sent).</p>";
+    eligible.forEach(sendInvite);
+    save(); renderAdmin();
+    document.getElementById("reg-note").innerHTML = '<p class="invite-sent">✓ ' + eligible.length + " invitation" + (eligible.length === 1 ? "" : "s") + " emailed (demo — see the Email log).</p>";
   }
   /* level 0 has no status / year / location requirement */
   function syncRegForm() {
@@ -711,15 +886,119 @@
       return;
     }
     var lvl = Number(document.getElementById("rg-level").value);
-    state.registry.unshift({
+    var rec = {
       id: "rg" + Date.now(), name: document.getElementById("rg-name").value.trim(), email: email, level: lvl,
       status: lvl ? document.getElementById("rg-status").value : "—",
       year: lvl ? Number(document.getElementById("rg-year").value) : (Number(document.getElementById("rg-year").value) || null),
-      loc: document.getElementById("rg-loc").value.trim(),
-      inv: invite ? "invited" : "none", invitedAt: invite ? iso(new Date()) : ""
-    });
-    save(); form.reset(); syncRegForm(); renderRegistry();
-    note.innerHTML = '<p class="invite-sent">✓ Added to the registry' + (invite ? " and invitation sent (demo — no email is actually sent)." : ".") + "</p>";
+      loc: document.getElementById("rg-loc").value.trim(), inv: "none", invitedAt: ""
+    };
+    state.registry.unshift(rec);
+    if (invite) sendInvite(rec);
+    save(); form.reset(); renderAdmin();
+    document.getElementById("reg-note").innerHTML = '<p class="invite-sent">✓ Added to the registry' + (invite ? " and invitation emailed (demo — see the Email log)." : ".") + "</p>";
+  }
+
+  /* -- public directory listing requests -- */
+  function renderListingRequests() {
+    var el = document.getElementById("admin-listings");
+    var names = Object.keys(state.listings);
+    var pend = names.filter(function (n) { return state.listings[n].publicStatus === "pending"; });
+    var live = names.filter(function (n) { return state.listings[n].publishedLive && state.listings[n].published; });
+    var html = '<div class="admin-subhead" style="margin-top:0;">Awaiting review (' + pend.length + ")</div>" + (pend.length ? pend.map(function (n) {
+      var L = state.listings[n];
+      return '<div class="review-item"><div class="rv-head"><span class="grow"><b>' + esc(n) + '</b><small>' + esc(DIR_LEVELS[levelKeyFor(n)] || "") + " · requested " + esc(L.updated || "") + '</small></span><span class="tag warn">Pending</span></div>' +
+        "<details open><summary>What the member chose to show</summary><div class='rv-body'>" + previewHtml(listingView(n)) + "</div></details>" +
+        '<div class="rv-form"><div class="field"><label>Note to the member <span style="text-transform:none;letter-spacing:0;font-weight:500;">(required to request changes or decline)</span></label><input type="text" data-lnote="' + esc(n) + '" /></div>' +
+        '<div class="rv-btns"><button class="btn btn-gold btn-xs" data-lst-ok="' + esc(n) + '">Approve &amp; publish</button><button class="btn btn-ghost btn-xs" data-lst-changes="' + esc(n) + '">Request changes</button><button class="btn btn-ghost btn-xs" data-lst-no="' + esc(n) + '">Decline</button></div></div></div>';
+    }).join("") : '<div class="empty">No public-profile requests waiting.</div>') +
+      '<div class="admin-subhead">Live on the public directory (' + live.length + ")</div>" + (live.length ? live.map(function (n) {
+        var v = state.listings[n].published || {};
+        return '<div class="row"><span class="grow"><b>' + esc(n) + '</b><small>Published ' + esc(state.listings[n].updated || "") + ' · <a href="provider.html?p=' + encodeURIComponent(v.slug || "") + '" target="_blank" rel="noopener">View public profile ↗</a></small></span><span class="tag ok">Live</span><button class="btn btn-ghost btn-xs" data-lst-unpub="' + esc(n) + '">Unpublish</button></div>';
+      }).join("") : '<div class="empty">Nothing published from member requests yet.</div>');
+    el.innerHTML = html;
+  }
+  document.getElementById("admin-listings").addEventListener("click", function (e) {
+    var b = e.target.closest("button");
+    if (!b) return;
+    var n = b.getAttribute("data-lst-ok") || b.getAttribute("data-lst-changes") || b.getAttribute("data-lst-no") || b.getAttribute("data-lst-unpub");
+    var L = n && state.listings[n];
+    if (!L) return;
+    var inp = this.querySelector('[data-lnote="' + n + '"]'), note = inp ? inp.value.trim() : "";
+    if (b.hasAttribute("data-lst-ok")) {
+      var v = listingView(n); v.level = levelKeyFor(n);
+      L.published = v; L.publishedLive = true; L.publicStatus = "approved"; L.publicNote = note; L.updated = iso(new Date());
+      notify(n, "review", "Your public directory profile was approved", "Your profile is now live on the public TIIP directory." + (note ? "\n\nNote: " + note : "") + "\n\nView it: provider.html?p=" + v.slug);
+    } else if (b.hasAttribute("data-lst-unpub")) {
+      L.publicStatus = "none"; L.publishedLive = false; delete L.published;
+      notify(n, "review", "Your public directory profile was unpublished", "An admin removed your profile from the public directory. You can update it and request publication again from My Profile & Listing.");
+    } else {
+      if (!note) { inp.focus(); inp.style.borderColor = "#b64d4d"; return; }
+      L.publicStatus = b.hasAttribute("data-lst-changes") ? "changes" : "declined"; L.publicNote = note;
+      notify(n, "review", b.hasAttribute("data-lst-changes") ? "Changes requested for your public profile" : "Your public profile request was declined", note + "\n\nOpen My Profile & Listing: portal.html#profile");
+    }
+    save(); renderAdmin();
+  });
+
+  /* -- Level 3 panels -- */
+  function renderPanels() {
+    var el = document.getElementById("admin-panels");
+    var sups = supervisorNames();
+    var open = state.panels.filter(function (x) { return x.status === "requested" || x.status === "scheduled"; });
+    var closed = state.panels.filter(function (x) { return x.status === "passed" || x.status === "notyet"; });
+    el.innerHTML = (open.length ? open.map(function (x) {
+      if (x.status === "requested") {
+        return '<div class="review-item"><div class="rv-head"><span class="grow"><b>' + esc(x.member) + '</b><small>Requested ' + esc(x.requestedAt) + " · availability: " + esc(x.availability) + '</small></span><span class="tag warn">Needs scheduling</span></div>' +
+          '<div class="rv-form"><div class="field-row"><div class="field"><label>Date &amp; time</label><input type="datetime-local" data-pn-when="' + x.id + '" /></div><div class="field"><label>Meeting link</label><input type="url" data-pn-link="' + x.id + '" placeholder="https://…" /></div></div>' +
+          '<label class="flabel" style="margin-top:0;">Panel — choose at least 3 supervisors</label><div class="sup-pick">' + sups.map(function (s) { return '<label><input type="checkbox" data-pn-sup="' + x.id + '" value="' + esc(s) + '" /> ' + esc(s) + "</label>"; }).join("") + "</div>" +
+          '<div class="rv-btns"><button class="btn btn-gold btn-xs" data-pn-sched="' + x.id + '">Schedule panel &amp; notify</button></div><p class="invite-sent" style="color:var(--red-400);display:none;" data-pn-err="' + x.id + '"></p></div></div>';
+      }
+      return '<div class="review-item"><div class="rv-head"><span class="grow"><b>' + esc(x.member) + '</b><small>' + esc(x.when.replace("T", " ")) + " · panel: " + x.members.map(esc).join(", ") + (x.link ? ' · <a href="' + esc(x.link) + '" target="_blank" rel="noopener noreferrer">link</a>' : "") + '</small></span><span class="tag ok">Scheduled</span></div>' +
+        '<div class="rv-form"><div class="field"><label>Outcome note <span style="text-transform:none;letter-spacing:0;font-weight:500;">(required if not yet)</span></label><input type="text" data-pn-note="' + x.id + '" /></div>' +
+        '<div class="rv-btns"><button class="btn btn-gold btn-xs" data-pn-pass="' + x.id + '">Passed — certify</button><button class="btn btn-ghost btn-xs" data-pn-not="' + x.id + '">Not yet</button></div></div></div>';
+    }).join("") : '<div class="empty">No panel requests waiting. 🌙</div>') +
+      (closed.length ? '<div class="admin-subhead">Completed</div>' + closed.map(function (x) {
+        return '<div class="row"><span class="grow"><b>' + esc(x.member) + "</b><small>" + esc(x.when.replace("T", " ")) + (x.note ? " · " + esc(x.note) : "") + '</small></span><span class="tag ' + (x.status === "passed" ? "ok" : "retry") + '">' + (x.status === "passed" ? "Passed" : "Not yet") + "</span></div>";
+      }).join("") : "");
+  }
+  document.getElementById("admin-panels").addEventListener("click", function (e) {
+    var b = e.target.closest("button");
+    if (!b) return;
+    var id = b.getAttribute("data-pn-sched") || b.getAttribute("data-pn-pass") || b.getAttribute("data-pn-not");
+    var x = state.panels.find(function (p) { return p.id === id; });
+    if (!x) return;
+    if (b.hasAttribute("data-pn-sched")) {
+      var when = this.querySelector('[data-pn-when="' + id + '"]').value, link = this.querySelector('[data-pn-link="' + id + '"]').value.trim();
+      var picks = Array.prototype.map.call(this.querySelectorAll('[data-pn-sup="' + id + '"]:checked'), function (c) { return c.value; });
+      var err = this.querySelector('[data-pn-err="' + id + '"]');
+      if (!when || picks.length < 3) { err.style.display = "block"; err.textContent = !when ? "Choose a date and time." : "A panel needs at least 3 supervisors (" + picks.length + " selected)."; return; }
+      x.status = "scheduled"; x.when = when; x.link = link; x.members = picks;
+      var whenTxt = when.replace("T", " ");
+      notify(x.member, "review", "Your Level 3 panel presentation is scheduled — " + whenTxt, "Your panel presentation is on " + whenTxt + ".\nPanel: " + picks.join(", ") + (link ? "\nJoin: " + link : "") + "\n\nOpen your journey: portal.html#certification");
+      picks.forEach(function (s) { notify(s, "review", "You're on a Level 3 panel — " + x.member, "You are assigned to the Level 3 panel for " + x.member + " on " + whenTxt + (link ? "\nJoin: " + link : "") + "."); });
+    } else {
+      var inp = this.querySelector('[data-pn-note="' + id + '"]'), note = inp ? inp.value.trim() : "";
+      if (b.hasAttribute("data-pn-pass")) {
+        x.status = "passed"; x.note = note;
+        setFl(x.member, "certified", true);
+        var u = ADMIN_USERS.find(function (q) { return q.name === x.member; });
+        if (u && u.role !== "Supervisor / Scholar") u.role = "Certified Practitioner";
+        notify(x.member, "review", "Congratulations — you are fully certified", "The panel passed your Level 3 presentation. You are now a fully certified TIIP practitioner." + (note ? "\n\nNote: " + note : "") + "\n\nYou can now post interventions in the vault and request a public profile.");
+      } else {
+        if (!note) { inp.focus(); inp.style.borderColor = "#b64d4d"; return; }
+        x.status = "notyet"; x.note = note;
+        notify(x.member, "review", "Level 3 panel outcome — not yet", "The panel was not able to pass your presentation this time.\nFeedback: " + note + "\n\nYou can request another presentation from your Certification Journey.");
+      }
+    }
+    save(); renderAdmin();
+  });
+
+  /* -- email log -- */
+  function renderEmailLog() {
+    var all = state.outbox;
+    document.getElementById("email-count").textContent = all.length + " sent";
+    document.getElementById("admin-emails").innerHTML = all.slice(0, 80).map(function (e) {
+      return '<div class="row"><span class="grow"><b>' + esc(e.subject) + "</b><small>To " + esc(e.to) + " · " + esc((NOTIF_CATS[e.cat] || {}).label || e.cat) + " · " + esc(e.at) + '</small><details><summary style="font-size:.74rem;cursor:pointer;color:var(--gold-400);">View email</summary><div class="m-body" style="white-space:pre-line;font-size:.82rem;color:var(--cream-dim);margin-top:6px;">' + esc(e.body) + "</div></details></span></div>";
+    }).join("") || '<div class="empty">No emails sent yet.</div>';
   }
 
   /* -- level-change requests -- */
@@ -736,11 +1015,16 @@
         var i = Number(b.getAttribute("data-req-ok")), r = LEVEL_REQUESTS[i];
         var u = ADMIN_USERS.find(function (x) { return x.name === r.name; });
         if (u) u.role = r.to; else ADMIN_USERS.push({ name: r.name, role: r.to });
+        notify(r.name, "account", "Your level change was approved", "Your request to move from " + r.from + " to " + r.to + " was approved.");
         LEVEL_REQUESTS.splice(i, 1); save(); renderAdmin();
       });
     });
     reqEl.querySelectorAll("[data-req-no]").forEach(function (b) {
-      b.addEventListener("click", function () { LEVEL_REQUESTS.splice(Number(b.getAttribute("data-req-no")), 1); save(); renderAdmin(); });
+      b.addEventListener("click", function () {
+        var i = Number(b.getAttribute("data-req-no")), r = LEVEL_REQUESTS[i];
+        notify(r.name, "account", "Your level-change request was not approved", "Your request to move to " + r.to + " was not approved at this time. Contact an admin for details.");
+        LEVEL_REQUESTS.splice(i, 1); save(); renderAdmin();
+      });
     });
   }
 
@@ -764,7 +1048,7 @@
     var noMatch = document.getElementById("admin-no-match");
     if (q && !matched.length) {
       noMatch.style.display = "block";
-      noMatch.innerHTML = '<div class="empty">No member matches “' + esc(filter.trim()) + '”. They may not be registered yet — add them to the registry above and send an invitation.</div>';
+      noMatch.innerHTML = '<div class="empty">No member matches “' + esc(filter.trim()) + '”. They may not be registered yet — add them in Trainings &amp; registry and send an invitation.</div>';
     } else {
       noMatch.style.display = "none";
       noMatch.innerHTML = "";
@@ -794,16 +1078,16 @@
     /* Level 1 — invisible to everyone except trainees an admin has
        approved and members already at Level 2 and beyond. Nobody else
        even sees that the card exists. */
-    var stage = ROLE_STAGE[state.role] != null ? ROLE_STAGE[state.role] : 0;
-    var approved = l1EnabledFor(ROLES[state.role].name) || state.role === "level1";
+    var vname = viewerName();
+    var approved = l1EnabledFor(vname) || !!fl(vname, "l1_reg");
     var isAdmin = state.role === "admin";
-    var showTrack = !isAdmin && (approved || stage >= 2);
-    var takingL1 = showTrack && stage < 2; /* actually working through it */
+    var showTrack = !isAdmin && (approved || standing(vname) >= 2);
+    var takingL1 = showTrack && !levelComplete(vname, 1); /* actually working through it */
     document.getElementById("l1-online-card").style.display = showTrack ? "block" : "none";
     if (showTrack) {
-      document.getElementById("l1-why").textContent = approved && stage < 2
-        ? "Approved — enabled for you by an admin"
-        : "Visible from Level 2 upward";
+      document.getElementById("l1-why").textContent = takingL1
+        ? (fl(vname, "l1_reg") ? "Unlocked when you registered for Level 1" : "Approved — enabled for you by an admin")
+        : "Level 1 — completed";
       var l1 = state.learning.l1;
       document.getElementById("l1-rows").innerHTML = l1.map(function (m, i) {
         return '<div class="row"><span class="grow"><b>' + esc(m.title) + "</b><small>" + m.mins + " min · online module</small></span>" +
@@ -813,7 +1097,7 @@
       document.querySelectorAll("[data-l1-watch]").forEach(function (b) {
         b.addEventListener("click", function () {
           state.learning.l1[Number(b.getAttribute("data-l1-watch"))].done = true;
-          save(); renderLearning();
+          save(); checkProgress(viewerName()); renderLearning();
         });
       });
       /* The capstone formulation only applies to members actually taking
@@ -845,7 +1129,7 @@
       hideFormulationCard();
     }
 
-    renderLevel2Card();
+    renderSubCards();
 
     /* Admin — approve Level 1 access per registered Level 0 trainee */
     document.getElementById("l1-admin-card").style.display = isAdmin ? "block" : "none";
@@ -1075,7 +1359,7 @@
         submitConceptualization(1, f.alias, {
           presenting: f.presenting, dominant: f.dominant, narrative: f.narrative, prognosis: f.prognosis,
           plan: f.plan.map(function (r) { return r.domain + " — " + r.goal + " (" + r.intervention + ")"; }).join("; ")
-        }, fname);
+        }, { name: fname + ".txt", size: 0, dataUrl: "" });
         renderLearning();
       }
       if (id === "l1f-download") downloadFormulation(f);
@@ -1125,180 +1409,840 @@
     a.click(); URL.revokeObjectURL(a.href);
   }
 
-  /* ---- Directory ---- */
+  /* =========================================================
+     Member listings: profile sections → internal directory card /
+     public profile snapshot
+  ========================================================= */
+  var OFFER_TYPES = ["Workshop", "Seminar", "Training", "Community talk", "Webinar"];
+  var PROFILE_SECTIONS = [
+    { id: "about", title: "About me", fields: [["bio", "Short bio", "textarea", "A few sentences about you and how you work."], ["about", "Longer description (optional)", "textarea", ""]] },
+    { id: "credentials", title: "Credentials & licensure", fields: [["credentials", "Credentials (shown under your name)", "text", "e.g., LPC · Licensed Professional Counselor"], ["license", "Licensure / registration", "text", ""], ["education", "Education (one per line)", "textarea", ""], ["years", "Years in practice", "number", ""]] },
+    { id: "location", title: "Location", fields: [["city", "City", "text", ""], ["state", "State / province", "text", ""], ["country", "Country", "text", ""]] },
+    { id: "languages", title: "Languages", fields: [["languages", "Languages (comma-separated)", "text", "e.g., English, Urdu"]] },
+    { id: "focus", title: "Specialties & approach", fields: [["specialties", "Specialties (comma-separated)", "text", "e.g., Anxiety, Trauma & PTSD"], ["approach", "Approach", "text", ""], ["populations", "Populations served (comma-separated)", "text", ""]] },
+    { id: "services", title: "Session formats & availability", fields: [["formats", "Session formats (comma-separated)", "text", "e.g., In person, Telehealth"], ["accepting", "Availability", "select", ["", "Accepting new clients", "Waitlist", "Not accepting"]]] },
+    { id: "gender", title: "Gender (for the public directory's Male / Female filter)", fields: [["gender", "Gender", "select", ["", "Male", "Female"]]] },
+    { id: "contact", title: "Contact email", fields: [["contactEmail", "Email others can use", "email", ""]] },
+    { id: "offerings", title: "Workshops, seminars & events I can offer", offerings: true, fields: [] }
+  ];
+  PROFILE_SECTIONS.forEach(function (sec) {
+    if (sec.offerings) for (var i = 1; i <= 3; i++) {
+      sec.fields.push(["off" + i + "_title", "Offering " + i + " — title", "text", ""], ["off" + i + "_type", "Type", "select", OFFER_TYPES], ["off" + i + "_desc", "Short description", "text", ""]);
+    }
+  });
+  var PROFILE_KEYS = [];
+  PROFILE_SECTIONS.forEach(function (sec) { sec.fields.forEach(function (f) { PROFILE_KEYS.push(f[0]); }); });
+
+  function listingOf(name) { return state.listings[name] || null; }
+  function ensureListing(name) {
+    if (!state.listings[name]) state.listings[name] = { internal: false, referrals: false, publicStatus: "none", publicNote: "", updated: "", data: {}, show: {} };
+    return state.listings[name];
+  }
+  /* exactly what a member chose to show (the rest stays empty) */
+  function listingView(name) {
+    var L = listingOf(name) || { data: {}, show: {} }, d = L.data || {}, sh = L.show || {};
+    var v = { slug: "m-" + slugify(name), name: name, level: levelKeyFor(name), credentials: "", license: "", education: [], years: "", bio: "", about: "",
+      city: "", state: "", country: "", languages: [], specialties: [], approach: "", populations: [], formats: [], accepting: "", gender: "", contactEmail: "", offerings: [], photo: null };
+    if (sh.about) { v.bio = d.bio || ""; v.about = d.about || ""; }
+    if (sh.credentials) { v.credentials = d.credentials || ""; v.license = d.license || ""; v.education = lines(d.education); v.years = d.years || ""; }
+    if (sh.location) { v.city = d.city || ""; v.state = d.state || ""; v.country = d.country || ""; }
+    if (sh.languages) v.languages = csv(d.languages);
+    if (sh.focus) { v.specialties = csv(d.specialties); v.approach = d.approach || ""; v.populations = csv(d.populations); }
+    if (sh.services) { v.formats = csv(d.formats); v.accepting = d.accepting || ""; }
+    if (sh.gender) v.gender = d.gender || "";
+    if (sh.contact) v.contactEmail = d.contactEmail || "";
+    if (sh.offerings) for (var i = 1; i <= 3; i++) {
+      if (d["off" + i + "_title"]) v.offerings.push({ title: d["off" + i + "_title"], type: d["off" + i + "_type"] || "Workshop", format: "In person · Online", duration: "Flexible", audience: "Organizations & community groups", desc: d["off" + i + "_desc"] || "" });
+    }
+    return v;
+  }
+  function previewHtml(v) {
+    if (!v) return '<div class="empty">Nothing saved yet.</div>';
+    var p = ['<h4>' + esc(v.name) + '</h4><p><span class="tag warn">' + esc(DIR_LEVELS[v.level] || "") + "</span> " + esc(v.credentials) + "</p>"];
+    var loc = [v.city, v.state, v.country].filter(Boolean).join(", ");
+    if (loc) p.push("<p>📍 " + esc(loc) + "</p>");
+    if (v.bio) p.push("<p>" + esc(v.bio) + "</p>");
+    if (v.about) p.push("<p>" + esc(v.about) + "</p>");
+    if (v.specialties.length) p.push("<p><b>Specialties:</b> " + v.specialties.map(esc).join(", ") + "</p>");
+    if (v.approach) p.push("<p><b>Approach:</b> " + esc(v.approach) + "</p>");
+    if (v.populations.length) p.push("<p><b>Populations:</b> " + v.populations.map(esc).join(", ") + "</p>");
+    if (v.languages.length) p.push("<p><b>Languages:</b> " + v.languages.map(esc).join(", ") + "</p>");
+    if (v.formats.length) p.push("<p><b>Formats:</b> " + v.formats.map(esc).join(", ") + (v.accepting ? " · " + esc(v.accepting) : "") + "</p>");
+    else if (v.accepting) p.push("<p><b>Availability:</b> " + esc(v.accepting) + "</p>");
+    if (v.license) p.push("<p><b>Licensure:</b> " + esc(v.license) + "</p>");
+    if (v.education.length) p.push("<p><b>Education:</b> " + v.education.map(esc).join("; ") + "</p>");
+    if (v.years) p.push("<p><b>Experience:</b> " + esc(v.years) + " years</p>");
+    if (v.gender) p.push("<p><b>Gender:</b> " + esc(v.gender) + "</p>");
+    if (v.contactEmail) p.push("<p><b>Contact:</b> " + esc(v.contactEmail) + "</p>");
+    if (v.offerings.length) p.push("<p><b>Can offer:</b> " + v.offerings.map(function (o) { return esc(o.title) + " (" + esc(o.type) + ")"; }).join("; ") + "</p>");
+    if (p.length === 1) p.push('<p class="hidden-note">No sections are set to show yet — tick “Show” on the sections you want others to see.</p>');
+    return '<div class="prev-card">' + p.join("") + "</div>";
+  }
+
+  /* ---- directory (members-only) ---- */
+  var referralTarget = null;
+  function memberDirCards() {
+    var out = [];
+    Object.keys(state.listings).forEach(function (n) {
+      var L = state.listings[n];
+      if (!L.internal || !canInternal(n)) return;
+      var v = listingView(n);
+      out.push({ name: n, cred: v.credentials || DIR_LEVELS[v.level] || "", city: [v.city, v.country].filter(Boolean).join(", ") || "Location not shown", region: "", tz: "",
+        langs: v.languages, focus: v.specialties, lic: v.license || "", accepting: !!(L.referrals && standing(n) >= 2), level: v.level, member: true, bio: v.bio, email: v.contactEmail });
+    });
+    return out;
+  }
+  function renderDirCta() {
+    var name = viewerName(), el = document.getElementById("dir-cta");
+    if (state.role === "admin") { el.innerHTML = ""; return; }
+    if (canInternal(name)) {
+      var L = listingOf(name);
+      el.innerHTML = '<div class="jr-banner" style="margin-bottom:16px;"><span class="grow"><b>Your listing:</b> ' +
+        (L && L.internal ? '<span class="tag ok">Visible to members</span>' : '<span class="tag dim">Not listed yet</span>') +
+        (L && L.referrals ? ' <span class="tag gold">Accepting referrals</span>' : "") + "</span>" +
+        '<button class="btn btn-gold btn-xs" data-go="profile">' + (L && L.internal ? "Edit my listing" : "Create my listing") + "</button></div>";
+    } else {
+      el.innerHTML = '<div class="jr-banner" style="margin-bottom:16px;"><span class="grow"><b>Want to be listed?</b> Members who complete Level 1 can list themselves in this directory.</span><button class="btn btn-ghost btn-xs" data-go="certification">See my journey</button></div>';
+    }
+  }
   function renderDirectory() {
+    renderDirCta();
     var q = (document.getElementById("dir-q").value || "").toLowerCase();
     var lvl = document.getElementById("dir-level").value;
     var lang = document.getElementById("dir-lang").value;
     var tz = document.getElementById("dir-tz").value;
     var focus = document.getElementById("dir-focus").value;
     var lic = document.getElementById("dir-lic").value;
-    var list = DIRECTORY.filter(function (d) {
+    var ref = document.getElementById("dir-ref").value;
+    var me = viewerName();
+    var members = memberDirCards(), mine = {};
+    members.forEach(function (m) { mine[m.name] = true; });
+    var list = DIRECTORY.filter(function (d) { return !mine[d.name]; }).concat(members).filter(function (d) {
       if (q && (d.name + " " + d.city + " " + d.focus.join(" ") + " " + d.cred).toLowerCase().indexOf(q) === -1) return false;
       if (lvl && d.level !== lvl) return false;
       if (lang && d.langs.indexOf(lang) === -1) return false;
       if (tz && d.region !== tz) return false;
-      if (focus && d.focus.indexOf(focus) === -1) return false;
+      if (focus && d.focus.join("|").toLowerCase().indexOf(focus.split(" ")[0].toLowerCase()) === -1) return false;
       if (lic && d.lic !== lic) return false;
+      if (ref === "yes" && !d.accepting) return false;
       return true;
     });
     document.getElementById("dir-empty").style.display = list.length ? "none" : "block";
     document.getElementById("dir-grid").innerHTML = list.map(function (d) {
-      var localTime = new Intl.DateTimeFormat([], { hour: "numeric", minute: "2-digit", timeZone: d.tz }).format(new Date());
+      var localTime = d.tz ? new Intl.DateTimeFormat([], { hour: "numeric", minute: "2-digit", timeZone: d.tz }).format(new Date()) : "";
       return '<div class="dir-card"><div class="head"><span class="avatar">' + initials(d.name) + '</span><span><b>' + esc(d.name) + "</b><small>" + esc(d.cred) + " · " + esc(d.city) + '</small></span></div>' +
-        '<div class="tags"><span class="tag warn">' + DIR_LEVELS[d.level] + "</span>" +
-        d.langs.map(function (l) { return '<span class="tag">' + l + "</span>"; }).join("") +
-        d.focus.map(function (f) { return '<span class="tag gold">' + f + "</span>"; }).join("") +
-        '<span class="tag dim">' + d.lic + "</span></div>" +
-        '<div class="foot"><span>🕐 ' + localTime + " local</span>" +
-        (d.accepting ? '<span class="tag ok">Accepting referrals</span>' : '<span class="tag dim">Waitlist</span>') + "</div></div>";
+        '<div class="tags"><span class="tag warn">' + esc(DIR_LEVELS[d.level] || "") + "</span>" +
+        d.langs.map(function (l) { return '<span class="tag">' + esc(l) + "</span>"; }).join("") +
+        d.focus.map(function (f) { return '<span class="tag gold">' + esc(f) + "</span>"; }).join("") +
+        (d.lic ? '<span class="tag dim">' + esc(d.lic) + "</span>" : "") + "</div>" +
+        (d.bio ? '<p style="font-size:.8rem;color:var(--muted);margin:6px 0 0;">' + esc(d.bio) + "</p>" : "") +
+        (d.email ? '<p style="font-size:.78rem;margin:6px 0 0;">✉ <a href="mailto:' + esc(d.email) + '">' + esc(d.email) + "</a></p>" : "") +
+        '<div class="foot"><span>' + (localTime ? "🕐 " + localTime + " local" : "") + "</span>" +
+        (d.accepting ? '<span class="tag ok">Accepting referrals</span>' : '<span class="tag dim">' + (d.member ? "Not taking referrals" : "Waitlist") + "</span>") +
+        (d.accepting && d.name !== me ? '<button class="btn btn-gold btn-xs" data-ref-to="' + esc(d.name) + '">Send referral</button>' : "") + "</div></div>";
     }).join("");
   }
-  ["dir-q", "dir-level", "dir-lang", "dir-tz", "dir-focus", "dir-lic"].forEach(function (id) {
+  ["dir-q", "dir-level", "dir-lang", "dir-tz", "dir-focus", "dir-lic", "dir-ref"].forEach(function (id) {
     document.getElementById(id).addEventListener("input", renderDirectory);
   });
+  document.getElementById("dir-cta").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-go]"); if (b) show(b.getAttribute("data-go"));
+  });
+  document.getElementById("dir-grid").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-ref-to]");
+    if (!b) return;
+    referralTarget = b.getAttribute("data-ref-to");
+    document.getElementById("ref-to").textContent = "To " + referralTarget;
+    var card = document.getElementById("referral-card");
+    card.style.display = "block"; card.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
+  document.getElementById("ref-cancel").addEventListener("click", function () { document.getElementById("referral-card").style.display = "none"; referralTarget = null; });
+  document.getElementById("referral-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!referralTarget) return;
+    var from = viewerName(), lang = document.getElementById("rf2-lang").value, urg = document.getElementById("rf2-urg").value, note = document.getElementById("rf2-note").value.trim();
+    state.referrals.unshift({ id: "rf" + Date.now(), to: referralTarget, from: from, lang: lang, urgency: urg, note: note, at: stamp(), status: "new" });
+    notify(referralTarget, "community", "New referral from " + from + " (" + urg + ")", from + " referred a client to you through the TIIP directory.\nClient's language: " + lang + "\nUrgency: " + urg + "\nReason: " + note + "\n\nRespond in My Profile & Listing → Referrals received: portal.html#profile");
+    notify(from, "community", "Referral sent to " + referralTarget, "Your referral was sent to " + referralTarget + ". They'll follow up with you directly.");
+    save(); e.target.reset();
+    document.getElementById("referral-card").style.display = "none";
+    document.getElementById("dir-cta").insertAdjacentHTML("afterbegin", '<div class="invite-sent" style="margin-bottom:10px;">✓ Referral sent to ' + esc(referralTarget) + " (demo email — see Notifications).</div>");
+    referralTarget = null;
+  });
 
-  /* ---- Level 2: case conceptualization submission ---- */
-  function renderLevel2Card() {
-    var card = document.getElementById("l2-card");
-    if (state.role !== "level2") { card.style.display = "none"; card.innerHTML = ""; return; }
-    card.style.display = "block";
-    var sb = mySub(2), sm = (sb && sb.summary) || {};
-    var passed = sb && sb.status === "passed";
+  /* ---- My Profile & Listing ---- */
+  function renderProfile() {
+    var name = viewerName(), allowed = canInternal(name);
+    var locked = document.getElementById("prof-locked"), body = document.getElementById("prof-body");
+    document.getElementById("prof-lead").textContent = "Build your listing for the member directory and — from Level 2 — a public profile on the main site. Every section is optional, and you choose exactly what is shown.";
+    if (!allowed) {
+      locked.style.display = "block"; body.style.display = "none";
+      locked.innerHTML = 'Your listing unlocks when you <strong>complete Level 1</strong> — finish the Level 1 checklist in your Certification Journey. <button class="btn btn-gold btn-xs" data-go="certification" style="margin-left:8px;">Open my journey</button>';
+      return;
+    }
+    locked.style.display = "none"; body.style.display = "block";
+    var L = listingOf(name) || { data: {}, show: {}, internal: false, referrals: false, publicStatus: "none", publicNote: "" };
+    document.getElementById("prof-sections").innerHTML = PROFILE_SECTIONS.map(function (sec) {
+      var fields = sec.offerings
+        ? [1, 2, 3].map(function (i) {
+            return '<div class="field-row">' + sec.fields.slice((i - 1) * 3, i * 3).map(function (f) { return fieldHtml(f, L.data[f[0]]); }).join("") + "</div>";
+          }).join("")
+        : sec.fields.map(function (f) { return fieldHtml(f, L.data[f[0]]); }).join("");
+      return '<div class="prof-sec"><div class="prof-head"><b>' + sec.title + '</b><label class="show-toggle"><input type="checkbox" data-show="' + sec.id + '"' + (L.show[sec.id] ? " checked" : "") + " /> Show</label></div><div class=\"prof-body\">" + fields + "</div></div>";
+    }).join("");
+    document.getElementById("pf-internal").checked = !!L.internal;
+    var refOk = standing(name) >= 2;
+    document.getElementById("pf-referrals").checked = refOk && !!L.referrals;
+    document.getElementById("pf-referrals").disabled = !refOk;
+    document.getElementById("pf-ref-wrap").style.opacity = refOk ? "1" : ".55";
+    renderProfSide(name, L);
+  }
+  function fieldHtml(f, val) {
+    var key = f[0], label = f[1], type = f[2], extra = f[3], v = val == null ? "" : val;
+    if (type === "textarea") return '<div class="field"><label>' + label + '</label><textarea id="pf-' + key + '" placeholder="' + esc(extra) + '">' + esc(v) + "</textarea></div>";
+    if (type === "select") return '<div class="field"><label>' + label + '</label><select id="pf-' + key + '">' + extra.map(function (o) { return "<option" + (o === v ? " selected" : "") + ">" + esc(o) + "</option>"; }).join("") + "</select></div>";
+    return '<div class="field"><label>' + label + '</label><input type="' + type + '" id="pf-' + key + '" value="' + esc(v) + '" placeholder="' + esc(extra) + '" /></div>';
+  }
+  function renderProfSide(name, L) {
+    var pubOK = canPublic(name), st = L.publicStatus || "none", slug = "m-" + slugify(name);
+    var h = "<h3>📍 Where you appear</h3>" +
+      '<div class="rows"><div class="row"><span class="grow"><b>Members-only directory</b><small>Visible to other TIIP members</small></span>' + (L.internal ? '<span class="tag ok">Listed</span>' : '<span class="tag dim">Not listed</span>') + "</div>" +
+      '<div class="row"><span class="grow"><b>Referrals</b><small>From other members, via the directory</small></span>' + (L.referrals && standing(name) >= 2 ? '<span class="tag ok">Accepting</span>' : '<span class="tag dim">' + (standing(name) >= 2 ? "Off" : "Level 2+") + "</span>") + "</div>" +
+      '<div class="row"><span class="grow"><b>Public directory</b><small>On the main site — admin approval required</small></span>' +
+      (!pubOK ? '<span class="tag dim">🔒 Level 2+</span>' : st === "approved" ? '<span class="tag ok">Live</span>' : st === "pending" ? (L.publishedLive ? '<span class="tag ok">Live</span> <span class="tag warn">Edits pending review</span>' : '<span class="tag warn">Pending review</span>') : st === "changes" ? '<span class="tag retry">Changes requested</span>' : st === "declined" ? '<span class="tag bad">Declined</span>' : '<span class="tag dim">Not requested</span>') + "</div></div>";
+    if (pubOK) {
+      if (L.publicNote && (st === "changes" || st === "declined" || st === "approved")) h += '<div class="fb-note ' + (st === "approved" ? "passed" : "retry") + '"><b>Admin note:</b> ' + esc(L.publicNote) + "</div>";
+      h += '<p style="margin:12px 0 0;">' +
+        (st === "none" || st === "declined" ? '<button class="btn btn-gold btn-xs" data-pub="request">Request a public profile</button>' :
+         st === "changes" ? '<button class="btn btn-gold btn-xs" data-pub="request">Resubmit for approval</button>' :
+         st === "pending" ? '<button class="btn btn-ghost btn-xs" data-pub="withdraw">Withdraw request</button>' :
+         '<a class="btn btn-ghost btn-xs" href="provider.html?p=' + encodeURIComponent(slug) + '" target="_blank" rel="noopener">View my public profile ↗</a>') + "</p>" +
+        (st === "approved" ? '<p class="note">Editing your listing sends it back for re-approval before changes go live.</p>' : "") +
+        '<div id="prof-msg"></div>';
+    }
+    document.getElementById("prof-status-card").innerHTML = h;
+    document.getElementById("prof-preview").innerHTML = previewHtml(listingView(name));
+    var refs = state.referrals.filter(function (r) { return r.to === name; });
+    document.getElementById("prof-referrals-card").style.display = (refs.length || (L.referrals && standing(name) >= 2)) ? "block" : "none";
+    document.getElementById("prof-referrals").innerHTML = refs.length ? refs.map(function (r) {
+      var tag = r.status === "accepted" ? '<span class="tag ok">Accepted</span>' : r.status === "declined" ? '<span class="tag dim">Declined</span>' : '<span class="tag warn">New</span>';
+      return '<div class="row"><span class="grow"><b>From ' + esc(r.from) + " · " + esc(r.urgency) + "</b><small>" + esc(r.lang) + " · " + esc(r.at) + " — " + esc(r.note) + "</small></span>" + tag +
+        (r.status === "new" ? '<button class="btn btn-gold btn-xs" data-rf-ok="' + r.id + '">Accept</button><button class="btn btn-ghost btn-xs" data-rf-no="' + r.id + '">Decline</button>' : "") + "</div>";
+    }).join("") : '<div class="empty">No referrals yet.</div>';
+  }
+  document.getElementById("prof-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var name = viewerName(), L = ensureListing(name);
+    PROFILE_KEYS.forEach(function (k) { L.data[k] = document.getElementById("pf-" + k).value.trim(); });
+    PROFILE_SECTIONS.forEach(function (sec) { L.show[sec.id] = document.querySelector('[data-show="' + sec.id + '"]').checked; });
+    L.internal = document.getElementById("pf-internal").checked;
+    L.referrals = standing(name) >= 2 && document.getElementById("pf-referrals").checked;
+    L.updated = iso(new Date());
+    if (L.publicStatus === "approved") {
+      L.publicStatus = "pending";
+      notify(ADMIN_NAME, "review", "Updated public profile needs re-approval — " + name, name + " edited an approved public profile. Review it in Administration → Directory requests.");
+    }
+    save(); renderProfile();
+    var t = document.getElementById("prof-saved"); t.style.display = "inline-flex"; setTimeout(function () { t.style.display = "none"; }, 2500);
+  });
+  document.getElementById("prof-body").addEventListener("click", function (e) {
+    var b = e.target.closest("button");
+    if (!b) return;
+    var name = viewerName(), L = ensureListing(name);
+    if (b.getAttribute("data-pub") === "request") {
+      var v = listingView(name), missing = [];
+      if (!v.bio) missing.push("a bio (About me — tick Show)");
+      if (!v.city || !v.country) missing.push("your city and country (Location — tick Show)");
+      if (!v.specialties.length) missing.push("at least one specialty (Specialties — tick Show)");
+      if (missing.length) { document.getElementById("prof-msg").innerHTML = '<p class="invite-sent" style="color:var(--red-400);">Save your listing first with ' + missing.join(", ") + ".</p>"; return; }
+      L.publicStatus = "pending"; L.publicNote = ""; L.updated = iso(new Date());
+      notify(ADMIN_NAME, "review", "Public directory profile requested — " + name, name + " requested a public profile (" + (DIR_LEVELS[levelKeyFor(name)] || "") + ").\n\nReview it in Administration → Directory requests.");
+      notify(name, "review", "We received your public profile request", "An admin will review exactly the sections you chose to show, and you'll be emailed the decision.");
+      save(); renderProfile();
+    } else if (b.getAttribute("data-pub") === "withdraw") {
+      L.publicStatus = L.publishedLive ? "approved" : "none"; save(); renderProfile();
+    } else if (b.hasAttribute("data-rf-ok") || b.hasAttribute("data-rf-no")) {
+      var id = b.getAttribute("data-rf-ok") || b.getAttribute("data-rf-no");
+      var r = state.referrals.find(function (x) { return x.id === id; });
+      if (!r) return;
+      r.status = b.hasAttribute("data-rf-ok") ? "accepted" : "declined";
+      notify(r.from, "community", "Your referral to " + r.to + " was " + r.status, r.to + " " + r.status + " your referral (" + r.note + ")." + (r.status === "declined" ? " Consider another provider in the directory." : ""));
+      save(); renderProfile();
+    } else if (b.hasAttribute("data-go")) show(b.getAttribute("data-go"));
+  });
+  document.getElementById("prof-locked").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-go]"); if (b) show(b.getAttribute("data-go"));
+  });
+
+  /* ---- Level 2 & 3: case conceptualization submissions (Resources & Modules) ---- */
+  function subCardHtml(name, n) {
+    var sb = findSubmission(name, n), sm = (sb && sb.summary) || {}, passed = sb && sb.status === "passed";
     var DOMAINS = ["Iḥsās", "ʿAql", "Nafs", "Rūḥ"];
-    card.innerHTML = '<h3>📝 Level 2 — Case Conceptualization ' + (sb ? subTags(sb) : '<span class="tag dim">Not submitted</span>') + "</h3>" +
-      '<p class="view-lead" style="margin-bottom:12px;font-size:.85rem;">Submit a de-identified case conceptualization through the portal. An admin will <strong>pass</strong> it to credit Level 2, or <strong>ask you to retry</strong> with feedback — you can then revise and resubmit here.</p>' +
+    return '<div class="card" style="margin-top:16px;"><h3>📝 Level ' + n + " — " + (n === 3 ? "Written Case Conceptualization " : "Case Conceptualization ") + (sb ? subTags(sb) : '<span class="tag dim">Not submitted</span>') + "</h3>" +
+      '<p class="view-lead" style="margin-bottom:12px;font-size:.85rem;">Submit a de-identified case conceptualization through the portal. An admin will <strong>pass</strong> it, or <strong>ask you to retry</strong> with feedback (and sometimes a graded copy) — you are emailed the result and can revise and resubmit here.' +
+      (n === 3 ? " This is one of the Level 3 requirements before you can request your panel presentation." : "") + "</p>" +
       (sb ? feedbackNote(sb) : "") +
-      (passed
-        ? '<p class="note"><b>Level 2 credited.</b> Your conceptualization was passed — well done.</p>'
-        : '<form id="l2-form" style="margin-top:14px;">' +
-          '<div class="field-row"><div class="field"><label>Case alias (never real names)</label><input type="text" id="l2-alias" required value="' + esc(sb ? sb.alias : "") + '" placeholder="e.g., Case K-14" /></div>' +
-          '<div class="field"><label>Dominant area of dysfunction</label><select id="l2-dom">' + DOMAINS.map(function (d) { return "<option" + (sm.dominant === d ? " selected" : "") + ">" + d + "</option>"; }).join("") + "</select></div></div>" +
-          '<div class="field"><label>Presenting problem</label><textarea id="l2-pres" required>' + esc(sm.presenting || "") + "</textarea></div>" +
-          '<div class="field"><label>Conceptualization (narrative)</label><textarea id="l2-narr" required placeholder="How do ʿaql, nafs, iḥsās and rūḥ interlock to maintain the problem?">' + esc(sm.narrative || "") + "</textarea></div>" +
-          '<div class="field"><label>Therapy plan</label><textarea id="l2-plan">' + esc(sm.plan || "") + "</textarea></div>" +
-          '<div class="field-row"><div class="field"><label>Prognosis</label><input type="text" id="l2-prog" value="' + esc(sm.prognosis || "") + '" /></div>' +
-          '<div class="field"><label>Attach a document <span style="text-transform:none;letter-spacing:0;font-weight:500;">(optional)</span></label><input type="file" id="l2-file" accept=".pdf,.doc,.docx" /></div></div>' +
-          '<div class="check"><input type="checkbox" id="l2-anon" required /> <span>This case is fully de-identified <em>(required)</em></span></div>' +
-          '<button class="btn btn-gold" type="submit">' + (sb ? "Resubmit for review" : "Submit for admin review") + "</button></form>");
-    var form = document.getElementById("l2-form");
-    if (form) form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      var file = document.getElementById("l2-file").files[0];
-      submitConceptualization(2, document.getElementById("l2-alias").value.trim(), {
-        presenting: document.getElementById("l2-pres").value, dominant: document.getElementById("l2-dom").value,
-        narrative: document.getElementById("l2-narr").value, plan: document.getElementById("l2-plan").value, prognosis: document.getElementById("l2-prog").value
-      }, file ? file.name : "");
+      (passed ? '<p class="note"><b>Passed.</b> This requirement is complete — well done.</p>'
+        : '<form data-sc-form="' + n + '" style="margin-top:14px;">' +
+          '<div class="field-row"><div class="field"><label>Case alias (never real names)</label><input type="text" id="sc' + n + '-alias" required value="' + esc(sb ? sb.alias : "") + '" placeholder="e.g., Case K-14" /></div>' +
+          '<div class="field"><label>Dominant area of dysfunction</label><select id="sc' + n + '-dom">' + DOMAINS.map(function (d) { return "<option" + (sm.dominant === d ? " selected" : "") + ">" + d + "</option>"; }).join("") + "</select></div></div>" +
+          '<div class="field"><label>Presenting problem</label><textarea id="sc' + n + '-pres" required>' + esc(sm.presenting || "") + "</textarea></div>" +
+          '<div class="field"><label>Conceptualization (narrative)</label><textarea id="sc' + n + '-narr" required placeholder="How do ʿaql, nafs, iḥsās and rūḥ interlock to maintain the problem?">' + esc(sm.narrative || "") + "</textarea></div>" +
+          '<div class="field"><label>Therapy plan</label><textarea id="sc' + n + '-plan">' + esc(sm.plan || "") + "</textarea></div>" +
+          '<div class="field-row"><div class="field"><label>Prognosis</label><input type="text" id="sc' + n + '-prog" value="' + esc(sm.prognosis || "") + '" /></div>' +
+          '<div class="field"><label>Attach your write-up <span style="text-transform:none;letter-spacing:0;font-weight:500;">(optional · PDF or Word)</span></label><input type="file" id="sc' + n + '-file" accept=".pdf,.doc,.docx" /></div></div>' +
+          '<div class="check"><input type="checkbox" id="sc' + n + '-anon" required /> <span>This case is fully de-identified <em>(required)</em></span></div>' +
+          '<button class="btn btn-gold" type="submit">' + (sb ? "Resubmit for review" : "Submit for admin review") + "</button></form>") + "</div>";
+  }
+  function renderSubCards() {
+    var box = document.getElementById("sub-cards"), name = viewerName();
+    if (state.role === "admin") { box.innerHTML = ""; return; }
+    var html = "";
+    if (fl(name, "l2_reg")) html += subCardHtml(name, 2);
+    if (standing(name) === 3) html += subCardHtml(name, 3);
+    box.innerHTML = html;
+  }
+  document.getElementById("sub-cards").addEventListener("submit", function (e) {
+    var n = Number(e.target.getAttribute("data-sc-form"));
+    if (!n) return;
+    e.preventDefault();
+    var g = function (id) { return document.getElementById("sc" + n + "-" + id); };
+    readFileInfo(g("file").files[0], function (info) {
+      submitConceptualization(n, g("alias").value.trim(), {
+        presenting: g("pres").value, dominant: g("dom").value, narrative: g("narr").value, plan: g("plan").value, prognosis: g("prog").value
+      }, info);
       renderLearning();
     });
-  }
+  });
 
-  /* ---- Certification pathway: Level 1 / Level 2 members ---- */
-  function renderEarlyCert() {
-    var lvl = state.role === "level1" ? 1 : 2;
-    var sb = mySub(lvl);
-    var done = state.learning.l1.filter(function (m) { return m.done; }).length;
-    var rows = lvl === 1
-      ? '<div class="row"><span class="grow"><b>Foundations modules</b><small>Eight online modules</small></span><span class="tag ' + (done === state.learning.l1.length ? "ok" : "warn") + '">' + done + " / " + state.learning.l1.length + " complete</span></div>"
-      : '<div class="row"><span class="grow"><b>Applied-skills seminars &amp; practicum entry</b><small>Attend the Level 2 seminars and begin practicum work</small></span><span class="tag warn">In progress</span></div>';
-    rows += '<div class="row"><span class="grow"><b>Case conceptualization</b><small>Submitted through the portal and reviewed by an admin</small></span>' +
-      (sb ? subTags(sb) : '<span class="tag dim">Not submitted</span>') + "</div>" +
-      '<div class="row"><span class="grow"><b>Next: ' + (lvl === 1 ? "Level 2 — Intermediate" : "Level 3 — Supervised Practice") + '</b><small>Unlocks once Level ' + lvl + " is credited</small></span><span class=\"tag dim\">🔒 Locked</span></div>";
-    document.getElementById("cert-early-card").innerHTML = '<h3>' + (lvl === 1 ? "📘 Level 1 — Foundations" : "📗 Level 2 — Intermediate") + ' <span class="tag gold">In progress</span></h3>' +
-      '<div class="rows">' + rows + "</div>" + (sb ? feedbackNote(sb) : "") +
-      '<p style="margin:14px 0 0;"><button class="btn btn-gold btn-xs" id="early-go">' + (lvl === 1 ? "Open Level 1 modules" : "Submit case conceptualization") + "</button></p>";
-    document.getElementById("early-go").addEventListener("click", function () { show("learning"); });
-  }
-
-  /* ---- Certification pathway ---- */
-  function renderPathway() {
-    var stage = ROLE_STAGE[state.role] != null ? ROLE_STAGE[state.role] : 0;
-    var certified = stage >= PATHWAY.length - 1;
-    document.getElementById("pw-where").textContent = certified
-      ? (state.role === "supervisor" ? "Fully certified · TIIP Supervisor" : "Fully certified")
-      : "You are at " + PATHWAY[stage].name;
-    document.getElementById("pathway-steps").innerHTML = PATHWAY.map(function (p, i) {
-      var cls = i < stage ? "done" : i === stage ? (certified ? "done current" : "current") : "";
-      return '<div class="pw-step ' + cls + '">' +
-        '<span class="pw-dot">' + (i < stage ? "✓" : p.num) + "</span>" +
-        "<div>" +
-        '<span class="pw-name">' + p.name + "</span>" +
-        '<span class="pw-title">' + p.title + "</span>" +
-        '<span class="pw-desc">' + p.desc + "</span>" +
-        (i === stage ? '<span class="pw-here">You are here</span>' : "") +
-        "</div></div>";
-    }).join("");
-  }
-
-  function renderModules() {
-    var series = state.learning.l0;
-    var doneCount = series.filter(function (m) { return m.done; }).length;
-    document.getElementById("mod-sum").textContent = doneCount + " / " + series.length + " watched";
-    document.getElementById("mod-rows").innerHTML = series.map(function (m, i) {
-      return '<div class="row"><span class="grow"><b>' + esc(m.title) + "</b><small>" + m.mins + " min · video module</small></span>" +
-        (m.done ? '<span class="tag ok">Watched</span>' : '<button class="btn btn-gold btn-xs" data-watch="' + i + '">▶ Watch</button>') +
-        "</div>";
-    }).join("");
-    document.querySelectorAll("[data-watch]").forEach(function (b) {
-      b.addEventListener("click", function () {
-        state.learning.l0[Number(b.getAttribute("data-watch"))].done = true;
-        save(); renderModules();
+  /* ---- Intervention vault: Signature TIIP + Supervisor-approved ---- */
+  var vaultTab = "signature";
+  function canUploadVault() { return state.role === "practitioner" || state.role === "supervisor"; }
+  function renderResources() {
+    var q = (document.getElementById("res-q").value || "").toLowerCase();
+    var lang = document.getElementById("res-lang").value;
+    var type = document.getElementById("res-type").value;
+    var approved = state.vault.filter(function (x) { return x.status === "approved"; });
+    document.getElementById("vt-sig").textContent = RESOURCES.length;
+    document.getElementById("vt-com").textContent = approved.length;
+    document.querySelectorAll("[data-vtab]").forEach(function (b) { b.classList.toggle("sel", b.getAttribute("data-vtab") === vaultTab); });
+    document.getElementById("vault-blurb").innerHTML = vaultTab === "signature"
+      ? "<b>Signature TIIP interventions</b> — the reference set from the TIIP creators. Version-controlled and maintained by the core team."
+      : "<b>Supervisor-approved interventions</b> — uploaded by fully certified clinicians and approved by a TIIP supervisor before they appear here.";
+    var rows;
+    if (vaultTab === "signature") {
+      var list = RESOURCES.filter(function (r) {
+        if (q && (r.title + " " + r.tags.join(" ")).toLowerCase().indexOf(q) === -1) return false;
+        if (lang && r.lang !== lang) return false;
+        if (type && r.type !== type) return false;
+        return true;
       });
+      document.getElementById("res-empty").style.display = list.length ? "none" : "block";
+      rows = list.map(function (r) {
+        return '<div class="row"><span class="grow"><b>' + esc(r.title) + "</b><small>" + r.type + " · from the TIIP creators · updated " + r.updated + " · " + r.tags.map(function (t) { return "#" + t; }).join(" ") + "</small></span>" +
+          '<span class="tag">' + r.lang + '</span><span class="tag gold" title="' + esc(r.history) + '">v' + r.v + "</span>" +
+          '<button class="btn btn-ghost btn-xs" data-dl="' + RESOURCES.indexOf(r) + '">Download</button></div>';
+      }).join("");
+    } else {
+      var clist = approved.filter(function (r) {
+        if (q && (r.title + " " + r.tags.join(" ") + " " + r.by).toLowerCase().indexOf(q) === -1) return false;
+        if (lang && r.lang !== lang) return false;
+        if (type && r.type !== type) return false;
+        return true;
+      });
+      document.getElementById("res-empty").style.display = clist.length ? "none" : "block";
+      rows = clist.map(function (r) {
+        return '<div class="row"><span class="grow"><b>' + esc(r.title) + "</b><small>" + esc(r.type) + " · uploaded by " + esc(r.by) + " · approved by " + esc(r.approvedBy) + " · " + esc(r.at) + " · " + r.tags.map(function (t) { return "#" + esc(t); }).join(" ") + "</small><small style=\"display:block;margin-top:2px;\">" + esc(r.desc) + "</small></span>" +
+          '<span class="tag">' + esc(r.lang) + '</span><span class="tag ok">✔ Supervisor-approved</span>' +
+          '<button class="btn btn-ghost btn-xs" data-vdl="' + r.id + '">Download</button></div>';
+      }).join("");
+    }
+    document.getElementById("res-rows").innerHTML = rows;
+
+    /* upload + queue */
+    var can = canUploadVault(), me = viewerName();
+    document.getElementById("vault-upload-card").style.display = can ? "block" : "none";
+    document.getElementById("vault-locked").style.display = (can || state.role === "admin") ? "none" : "block";
+    var qc = document.getElementById("vault-queue-card");
+    if (state.role === "supervisor") {
+      var pend = state.vault.filter(function (x) { return x.status === "pending" && x.by !== me; });
+      qc.style.display = "block";
+      qc.innerHTML = '<h3>✅ Awaiting your approval <span class="tag gold">Supervisor</span></h3><p class="view-lead" style="font-size:.85rem;margin-bottom:10px;">Approve uploads from fully certified clinicians so they appear in the vault.</p><div class="rows">' + (pend.length ? pend.map(function (x) {
+        return '<div class="row"><span class="grow"><b>' + esc(x.title) + "</b><small>" + esc(x.type) + " · " + esc(x.lang) + " · by " + esc(x.by) + " · " + esc(x.at) + " " + (x.fileInfo ? fileLink(x.fileInfo) : x.file ? "· 📎 " + esc(x.file) : "") + "</small><small style=\"display:block;\">" + esc(x.desc) + '</small><input type="text" data-vnote="' + x.id + '" placeholder="Note (required to decline)" style="margin-top:6px;width:100%;padding:6px 10px;border:1px solid var(--line);border-radius:8px;font-size:.8rem;" /></span>' +
+          '<button class="btn btn-gold btn-xs" data-v-ok="' + x.id + '">Approve</button><button class="btn btn-ghost btn-xs" data-v-no="' + x.id + '">Decline</button></div>';
+      }).join("") : '<div class="empty">Nothing waiting for approval. 🌙</div>') + "</div>";
+    } else if (state.role === "practitioner") {
+      var mine = state.vault.filter(function (x) { return x.by === me; });
+      qc.style.display = "block";
+      qc.innerHTML = '<h3>📁 My uploads</h3><div class="rows">' + (mine.length ? mine.map(function (x) {
+        var tag = x.status === "approved" ? '<span class="tag ok">Approved by ' + esc(x.approvedBy) + "</span>" : x.status === "declined" ? '<span class="tag bad">Declined</span>' : '<span class="tag warn">Awaiting supervisor approval</span>';
+        return '<div class="row"><span class="grow"><b>' + esc(x.title) + "</b><small>" + esc(x.type) + " · " + esc(x.at) + (x.note ? " — " + esc(x.note) : "") + "</small></span>" + tag + "</div>";
+      }).join("") : '<div class="empty">You haven’t uploaded anything yet.</div>') + "</div>";
+    } else qc.style.display = "none";
+  }
+  ["res-q", "res-lang", "res-type"].forEach(function (id) {
+    document.getElementById(id).addEventListener("input", renderResources);
+  });
+  document.getElementById("vault-tabs").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-vtab]");
+    if (!b) return;
+    vaultTab = b.getAttribute("data-vtab"); renderResources();
+  });
+  document.getElementById("res-rows").addEventListener("click", function (e) {
+    var b = e.target.closest("button");
+    if (!b) return;
+    if (b.hasAttribute("data-dl")) {
+      var r = RESOURCES[Number(b.getAttribute("data-dl"))];
+      downloadText(r.title.replace(/[^\w؀-ۿ-]+/g, "_") + "_v" + r.v + ".txt", r.title + "\n" + "=".repeat(r.title.length) + "\n\nTIIP Community — Intervention Vault (demo placeholder)\nSignature TIIP intervention\nType: " + r.type + "\nLanguage: " + r.lang + "\nVersion: " + r.v + " (updated " + r.updated + ")\nTags: " + r.tags.join(", ") + "\n\nVersion history:\n" + r.history + "\n\nIn production this downloads the actual clinical asset (PDF/DOCX) from encrypted storage.");
+    } else if (b.hasAttribute("data-vdl")) {
+      var it = state.vault.find(function (x) { return x.id === b.getAttribute("data-vdl"); });
+      if (!it) return;
+      if (it.fileInfo && it.fileInfo.dataUrl) { var a = document.createElement("a"); a.href = it.fileInfo.dataUrl; a.download = it.fileInfo.name; a.click(); }
+      else downloadText(it.title.replace(/[^\w]+/g, "_") + ".txt", it.title + "\n\n" + it.desc + "\n\nUploaded by " + it.by + ", approved by " + it.approvedBy + ".\n(Demo placeholder — in production this downloads " + (it.file || "the uploaded file") + ".)");
+    }
+  });
+  document.getElementById("vault-queue-card").addEventListener("click", function (e) {
+    var b = e.target.closest("button");
+    if (!b) return;
+    var id = b.getAttribute("data-v-ok") || b.getAttribute("data-v-no");
+    var x = state.vault.find(function (v) { return v.id === id; });
+    if (!x) return;
+    var inp = this.querySelector('[data-vnote="' + id + '"]'), note = inp ? inp.value.trim() : "";
+    if (b.hasAttribute("data-v-ok")) {
+      x.status = "approved"; x.approvedBy = viewerName(); x.note = note;
+      notify(x.by, "review", "Your intervention was approved — " + x.title, "A TIIP supervisor approved your upload. It now appears in the Supervisor-approved section of the Intervention Vault." + (note ? "\n\nNote: " + note : ""));
+    } else {
+      if (!note) { inp.focus(); inp.style.borderColor = "#b64d4d"; return; }
+      x.status = "declined"; x.note = note;
+      notify(x.by, "review", "Your intervention was not approved — " + x.title, "A TIIP supervisor declined your upload.\nReason: " + note);
+    }
+    save(); renderResources();
+  });
+  document.getElementById("vault-up-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!canUploadVault()) return;
+    var me = viewerName(), isSup = state.role === "supervisor";
+    readFileInfo(document.getElementById("vu-file").files[0], function (info) {
+      var item = { id: "vt" + Date.now(), title: document.getElementById("vu-title").value.trim(), type: document.getElementById("vu-type").value, lang: document.getElementById("vu-lang").value,
+        tags: csv(document.getElementById("vu-tags").value), desc: document.getElementById("vu-desc").value.trim(), file: info ? info.name : "", fileInfo: info, by: me, at: iso(new Date()),
+        status: isSup ? "approved" : "pending", approvedBy: isSup ? me + " (self)" : "", note: "" };
+      state.vault.unshift(item);
+      if (!isSup) {
+        supervisorNames().forEach(function (s) { notify(s, "review", "Intervention awaiting your approval — " + item.title, me + " uploaded “" + item.title + "” to the Intervention Vault.\n\nReview it in the Intervention Vault → Supervisor-approved."); });
+        notify(me, "review", "Intervention submitted for approval", "“" + item.title + "” was sent to the TIIP supervisors. You'll be emailed their decision.");
+      }
+      save(); e.target.reset(); vaultTab = "community"; renderResources();
+    });
+  });
+
+  /* =========================================================
+     Shared helpers: viewer, dates, text, files
+  ========================================================= */
+  function viewerName() { return ROLES[state.role].name; }
+  function isViewer(name) { return name === viewerName(); }
+  function stamp() { return new Date().toISOString().slice(0, 16).replace("T", " "); }
+  function fmtDate(d) {
+    var dt = new Date(d + "T12:00:00");
+    return isNaN(dt) ? d : new Intl.DateTimeFormat([], { month: "short", day: "numeric", year: "numeric" }).format(dt);
+  }
+  function emailFor(name) { return name.toLowerCase().replace(/^dr\.\s+/, "").replace(/[^a-z]+/g, ".").replace(/^\.+|\.+$/g, "") + "@example.org"; }
+  function slugify(t) { return String(t).toLowerCase().replace(/^dr\.\s+/, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, ""); }
+  function csv(t) { return String(t || "").split(",").map(function (x) { return x.trim(); }).filter(Boolean); }
+  function lines(t) { return String(t || "").split(/\n+/).map(function (x) { return x.trim(); }).filter(Boolean); }
+
+  /* Small files are kept (as data URLs) so the other side can actually open
+     them in this demo; larger ones record the file name only. */
+  var MAX_FILE = 400 * 1024;
+  function readFileInfo(file, cb) {
+    if (!file) { cb(null); return; }
+    var info = { name: file.name, size: file.size, dataUrl: "" };
+    if (file.size > MAX_FILE) { cb(info); return; }
+    var fr = new FileReader();
+    fr.onload = function () { info.dataUrl = String(fr.result); cb(info); };
+    fr.onerror = function () { cb(info); };
+    fr.readAsDataURL(file);
+  }
+  function fileLink(info) {
+    if (!info) return "";
+    return info.dataUrl
+      ? '<a href="' + esc(info.dataUrl) + '" download="' + esc(info.name) + '">⬇ ' + esc(info.name) + "</a>"
+      : "📎 " + esc(info.name) + ' <small>(demo: name only)</small>';
+  }
+  function downloadText(filename, text) {
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([text], { type: "text/plain" }));
+    a.download = filename; a.click(); URL.revokeObjectURL(a.href);
+  }
+
+  /* =========================================================
+     Email notifications (demo outbox). Every important event calls
+     notify(); the Notifications view shows the viewer's emails and the
+     admin Email log shows everything sent. In production these go out via
+     a transactional email service.
+  ========================================================= */
+  var ADMIN_NAME = ROLES.admin.name;
+  var NOTIF_CATS = {
+    training:  { label: "Training announcements", desc: "New Level 1 / Level 2 trainings and registration confirmations", optional: true },
+    community: { label: "Community activity", desc: "Comments on your library posts, referrals, event decisions", optional: true },
+    review:    { label: "Reviews & approvals", desc: "Case-conceptualization results, listing, vault and panel decisions", optional: false },
+    account:   { label: "Account & journey", desc: "Invitations, level changes, journey milestones", optional: false }
+  };
+  function prefsOf(name) { return state.prefs[name] || (state.prefs[name] = {}); }
+  function supervisorNames() { return ADMIN_USERS.filter(function (u) { return u.role === "Supervisor / Scholar"; }).map(function (u) { return u.name; }); }
+  function notify(to, cat, subject, body) {
+    var member = !/@/.test(to);
+    if (member && NOTIF_CATS[cat] && NOTIF_CATS[cat].optional && prefsOf(to)[cat] === false) return;
+    state.outbox.unshift({ id: "em" + Date.now() + Math.random().toString(36).slice(2, 6), to: to, cat: cat, subject: subject, body: body + "\n\n— TIIP Community (demo email)", at: stamp(), read: false });
+    if (state.outbox.length > 250) state.outbox.length = 250;
+    save(); updateBadge();
+  }
+  function updateBadge() {
+    var b = document.getElementById("notif-badge");
+    if (!b) return;
+    var n = state.outbox.filter(function (e) { return e.to === viewerName() && !e.read; }).length;
+    b.style.display = n ? "inline-block" : "none";
+    b.textContent = n;
+  }
+  function renderNotifications() {
+    var name = viewerName();
+    var mine = state.outbox.filter(function (e) { return e.to === name; }).slice(0, 60);
+    document.getElementById("notif-list").innerHTML = mine.length ? mine.map(function (e) {
+      return '<div class="mail-item' + (e.read ? "" : " unread") + '"><div class="m-top"><b>' + esc(e.subject) + '</b><span class="m-meta">' + esc(e.at) + ' · ' + esc((NOTIF_CATS[e.cat] || {}).label || e.cat) + '</span></div><p class="m-body">' + esc(e.body) + "</p></div>";
+    }).join("") : '<div class="empty">No emails yet — updates will appear here.</div>';
+    var p = prefsOf(name);
+    document.getElementById("notif-prefs").innerHTML = Object.keys(NOTIF_CATS).map(function (k) {
+      var c = NOTIF_CATS[k];
+      return '<label class="pref-row"><input type="checkbox" data-pref="' + k + '"' + (c.optional ? (p[k] === false ? "" : " checked") : " checked disabled") + ' /> <span><b>' + c.label + (c.optional ? "" : ' <span class="tag dim">always on</span>') + "</b><small>" + c.desc + "</small></span></label>";
+    }).join("");
+    /* viewing the inbox marks it read (the highlight stays until the next render) */
+    var changed = false;
+    state.outbox.forEach(function (e) { if (e.to === name && !e.read) { e.read = true; changed = true; } });
+    if (changed) { save(); updateBadge(); }
+  }
+  document.getElementById("notif-prefs").addEventListener("change", function (e) {
+    var k = e.target.getAttribute("data-pref");
+    if (!k) return;
+    prefsOf(viewerName())[k] = e.target.checked; save();
+  });
+  document.getElementById("notif-readall").addEventListener("click", function () {
+    state.outbox.forEach(function (e) { if (e.to === viewerName()) e.read = true; });
+    save(); updateBadge(); renderNotifications();
+  });
+
+  /* =========================================================
+     Certification journey model
+     A member's standing is the stage they are at; each level has a
+     checklist. Level 1/2: register → attend → (modules) → submit case
+     conceptualization → passed. Level 3: 200 hours, 10 cases, written case
+     conceptualization (passed), scholar letter on farḍ al-ʿayn → request a
+     panel presentation to 3+ supervisors → fully certified.
+  ========================================================= */
+  function J(name) {
+    if (!state.journey[name]) state.journey[name] = { flags: {}, notified: {} };
+    var j = state.journey[name];
+    j.flags = j.flags || {}; j.notified = j.notified || {};
+    return j;
+  }
+  function fl(name, k) { return J(name).flags[k]; }
+  function setFl(name, k, v) { J(name).flags[k] = v; save(); }
+  function subPassed(name, lvl) { var x = findSubmission(name, lvl); return !!(x && x.status === "passed"); }
+  function hoursFor(name) {
+    if (name === ROLES.trainee.name) return { hours: approvedHours(), cases: state.casesDone };
+    return { hours: fl(name, "l3_hours") ? 200 : 0, cases: fl(name, "l3_cases") ? 10 : 0 };
+  }
+  function cohortById(id) { return state.cohorts.find(function (c) { return c.id === id; }) || null; }
+  function cohortLabel(c) { return c ? c.title + " · " + c.loc + " · " + fmtDate(c.date) : ""; }
+
+  /* requirement checklist for level n (1–3) */
+  function reqs(name, n) {
+    var f = J(name).flags, ov = !!f["done" + n], out = [];
+    function it(key, label, done, extra) { out.push({ key: key, label: label, done: ov || !!done, extra: extra || "" }); }
+    var sb = findSubmission(name, n);
+    if (n === 1) {
+      it("l1_reg", "Register for a Level 1 training", f.l1_reg, cohortLabel(cohortById(f.l1_reg)));
+      it("l1_att", "Attend the Level 1 training", f.l1_att, "Confirmed by an admin after the training");
+      var modsOk = f.l1_mod || (isViewer(name) && state.learning.l1.every(function (m) { return m.done; }));
+      it("l1_mod", "Complete the Level 1 online modules", modsOk, modsOk ? "All modules complete" : isViewer(name) ? state.learning.l1.filter(function (m) { return m.done; }).length + " of " + state.learning.l1.length + " complete" : "");
+    } else if (n === 2) {
+      it("l2_reg", "Register for a Level 2 training", f.l2_reg, cohortLabel(cohortById(f.l2_reg)));
+      it("l2_att", "Attend the Level 2 training", f.l2_att, "Confirmed by an admin after the training");
+    } else {
+      var h = hoursFor(name);
+      it("l3_hours", "Complete 200 supervised practice hours", h.hours >= 200, Math.round(h.hours) + " / 200 hours approved by your supervisor");
+      it("l3_cases", "Complete 10 supervised cases", h.cases >= 10, h.cases + " / 10 cases");
+    }
+    it("l" + n + "_sub", "Submit your written case conceptualization", sb, sb ? "Attempt " + (sb.attempts || 1) + " · " + sb.at : "Submitted in the portal and reviewed by an admin");
+    it("l" + n + "_pass", "Case conceptualization passed by an admin", subPassed(name, n),
+       sb && sb.status === "retry" ? "Retry requested — see feedback below" : sb && sb.status === "pending" ? "Awaiting admin review" : "");
+    if (n === 3) {
+      var L = J(name).letter;
+      it("l3_letter", "Letter from a scholar on farḍ al-ʿayn", L && L.status === "verified",
+         !L ? "Upload a letter from a scholar confirming your farḍ al-ʿayn knowledge" : L.status === "verified" ? "Verified by an admin" : L.status === "replace" ? "Replacement requested — " + (L.note || "") : "Uploaded — awaiting admin verification");
+    }
+    return out;
+  }
+  function levelComplete(name, n) { return reqs(name, n).every(function (r) { return r.done; }); }
+  function isCertified(name) { return !!fl(name, "certified"); }
+  function standing(name) {
+    if (isCertified(name)) return 4;
+    if (levelComplete(name, 2)) return 3;
+    if (fl(name, "l2_reg")) return 2;
+    if (levelComplete(name, 1) || fl(name, "l1_reg")) return 1;
+    return 0;
+  }
+  function memberKind(name) { var u = ADMIN_USERS.find(function (x) { return x.name === name; }); return u ? u.role : ""; }
+  function isClinicalMember(name) { return name !== ADMIN_NAME; }
+  /* listing / profile permissions */
+  function canInternal(name) { return isClinicalMember(name) && (levelComplete(name, 1) || standing(name) >= 2); }
+  function canPublic(name) { return isClinicalMember(name) && standing(name) >= 2 && levelComplete(name, 1); }
+  function levelKeyFor(name) {
+    var st = standing(name);
+    if (st >= 4) return memberKind(name) === "Supervisor / Scholar" ? "supervisor" : "certified";
+    return st === 3 ? "level3" : st === 2 ? "level2" : "level1";
+  }
+  function syncRole(name, n) {
+    var u = ADMIN_USERS.find(function (x) { return x.name === name; });
+    if (!u) { ADMIN_USERS.push({ name: name, role: ROLE_OPTIONS[n] }); return; }
+    if (ROLE_OPTIONS.indexOf(u.role) < n) u.role = ROLE_OPTIONS[n];
+  }
+  /* run after anything that could complete a level: credits it and emails the member once */
+  function checkProgress(name) {
+    var j = J(name);
+    [1, 2, 3].forEach(function (n) {
+      var key = "done" + n;
+      if (j.flags[key] || j.notified[key] || !levelComplete(name, n)) return;
+      j.notified[key] = true;
+      if (n < 3) syncRole(name, n);
+      var nextText = n === 1 ? "register for an upcoming Level 2 training from your Certification Journey" : n === 2 ? "begin Level 3 supervised practice" : "request your Level 3 panel presentation";
+      notify(name, "account", "Level " + n + " complete — congratulations", "You have completed every Level " + n + " requirement.\nNext step: " + nextText + ".\n\nOpen your journey: portal.html#certification");
+    });
+    save();
+  }
+  function panelFor(name) {
+    var l = state.panels.filter(function (x) { return x.member === name; });
+    return l.length ? l[l.length - 1] : null;
+  }
+
+  /* ---- registering for a training ---- */
+  function registerForTraining(name, cohortId) {
+    var c = cohortById(cohortId);
+    if (!c) return;
+    setFl(name, "l" + c.level + "_reg", cohortId);
+    if (c.level === 1) state.learning.l1EnabledUsers[name] = true;
+    var email = emailFor(name);
+    if (!state.registry.some(function (r) { return r.email === email && r.level === c.level; })) {
+      state.registry.unshift({ id: "rg" + Date.now(), name: name, email: email, level: c.level, status: "Registered", year: Number(c.date.slice(0, 4)), loc: c.loc, inv: "joined" });
+    }
+    notify(name, "training", "You're registered — " + cohortLabel(c), "You are registered for " + cohortLabel(c) + " (" + c.mode + ").\nTraining materials unlock in your Certification Journey once you register.\n\nOpen your journey: portal.html#certification");
+    notify(ADMIN_NAME, "training", "New training registration — " + name, name + " registered for " + cohortLabel(c) + ".");
+    checkProgress(name);
+  }
+
+  /* ---- training materials (slides & readings) unlocked by registering ---- */
+  var TRAINING_MATERIALS = {
+    1: [["Slides", "Foundations of TIIP — session slides"], ["Slides", "The role of the TIIP clinician — session slides"], ["Slides", "Assessment & conceptualization — session slides"],
+        ["Reading", "The human psyche in the Islamic tradition — core reading"], ["Reading", "ʿAql, nafs, iḥsās, rūḥ — reading packet"], ["Reading", "Islamic virtues in the clinic — reading list"]],
+    2: [["Slides", "Advanced intervention seminars — slide deck"], ["Slides", "Applied skills lab — handouts"],
+        ["Reading", "The four-stage model of change — reading"], ["Reading", "Scrupulosity and waswasah — case readings"], ["Reading", "Families and the communal layer (ijtimāʿī) — reading"]]
+  };
+  function materialsHtml(n) {
+    return '<div class="jr-mat"><h4>📎 Level ' + n + " training materials — slides &amp; readings</h4><div class=\"rows\">" +
+      TRAINING_MATERIALS[n].map(function (m, i) {
+        return '<div class="row"><span class="grow"><b>' + esc(m[1]) + '</b><small>' + m[0] + ' · from the Level ' + n + ' training</small></span><button class="btn btn-ghost btn-xs" data-mat="' + n + ":" + i + '">Download</button></div>';
+      }).join("") + "</div></div>";
+  }
+
+  /* ---- journey rendering ---- */
+  function regControl(n) {
+    var cs = state.cohorts.filter(function (c) { return c.level === n; }).sort(function (a, b) { return a.date < b.date ? -1 : 1; });
+    if (!cs.length) return '<span class="tag dim">No upcoming Level ' + n + " trainings posted yet — you'll be emailed</span>";
+    return '<select aria-label="Choose a Level ' + n + ' training">' + cs.map(function (c) {
+      return '<option value="' + c.id + '">' + esc(c.loc + " · " + fmtDate(c.date) + " · " + c.mode) + "</option>";
+    }).join("") + '</select><button class="btn btn-gold btn-xs" data-reg-go="' + n + '">Register</button>';
+  }
+  function jrItem(r, act, below) {
+    return '<li class="jr-item' + (r.done ? " done" : "") + '"><span class="jr-box">' + (r.done ? "✓" : "") + '</span><span class="jr-text"><b>' + r.label + "</b>" +
+      (r.extra ? "<small>" + r.extra + "</small>" : "") + (below || "") + "</span>" + (act ? '<span class="jr-act">' + act + "</span>" : "") + "</li>";
+  }
+  function demoBtn(name, key, label) {
+    return isViewer(name) ? '<button class="btn btn-ghost btn-xs btn-demo" data-demo="' + key + '" title="Demo shortcut for something an admin or supervisor normally confirms">demo: ' + label + "</button>" : "";
+  }
+  function stageCard(num, title, sub, cls, tag, inner) {
+    return '<div class="jr-stage ' + cls + '" id="jr-stage-' + num + '"><span class="jr-dot">' + (cls.indexOf("done") !== -1 ? "✓" : num) + '</span><div class="jr-card"><div class="jr-head"><h3>' + title + "</h3>" + tag + "</div>" + (sub ? '<p class="jr-sub">' + sub + "</p>" : "") + inner + "</div></div>";
+  }
+  function statusTag(done, started, locked) {
+    return done ? '<span class="tag ok">✓ Complete</span>' : locked ? '<span class="tag dim">🔒 Locked</span>' : started ? '<span class="tag warn">In progress</span>' : '<span class="tag gold">Next step</span>';
+  }
+  function nextStep(name) {
+    if (isCertified(name)) return { text: "You are fully certified — every stage is complete.", stage: 4 };
+    if (!levelComplete(name, 1)) {
+      if (!fl(name, "l1_reg")) return { text: "Register for an upcoming Level 1 training.", stage: 1 };
+      var r1 = reqs(name, 1).find(function (r) { return !r.done; });
+      return { text: r1.label + ".", stage: 1 };
+    }
+    if (!levelComplete(name, 2)) {
+      if (!fl(name, "l2_reg")) return { text: "Level 1 is complete — register for an upcoming Level 2 training.", stage: 2 };
+      var r2 = reqs(name, 2).find(function (r) { return !r.done; });
+      return { text: r2.label + ".", stage: 2 };
+    }
+    if (!levelComplete(name, 3)) return { text: reqs(name, 3).find(function (r) { return !r.done; }).label + ".", stage: 3 };
+    var pn = panelFor(name);
+    if (!pn || pn.status === "notyet") return { text: "Every Level 3 requirement is done — request your panel presentation.", stage: 3 };
+    if (pn.status === "requested") return { text: "Your panel presentation is requested — waiting for the admin to schedule it.", stage: 3 };
+    return { text: "Present to your panel on " + esc(pn.when.replace("T", " ")) + ".", stage: 3 };
+  }
+  function panelItemHtml(name, ready) {
+    var pn = panelFor(name), done = isCertified(name), act = "", extra = "", below = "";
+    if (done) { extra = "Presentation passed"; }
+    else if (pn && pn.status === "requested") { extra = "Requested " + esc(pn.requestedAt) + " — the admin is scheduling a panel of at least 3 supervisors"; }
+    else if (pn && pn.status === "scheduled") {
+      extra = "Scheduled for <b>" + esc(pn.when.replace("T", " ")) + "</b> with " + pn.members.map(esc).join(", ") + (pn.link ? ' · <a href="' + esc(pn.link) + '" target="_blank" rel="noopener noreferrer">Join link</a>' : "");
+    } else {
+      if (pn && pn.status === "notyet") extra = "Last attempt: not yet — " + esc(pn.note || "see your email") + ". You can request another presentation.";
+      else extra = ready ? "Ready to request" : "Unlocks when every Level 3 requirement above is done";
+      if (ready) below = '<details class="prof-sec" style="margin-top:8px;"><summary><b>Request a panel presentation</b></summary><div class="prof-body">' +
+        '<div class="field"><label>Your availability (dates / times / time zone)</label><textarea id="panel-avail" placeholder="e.g., Weekday evenings after 6 pm EST, any time on the 12th–14th"></textarea></div>' +
+        '<button class="btn btn-gold btn-xs" data-panel-go="1">Send request</button></div></details>';
+    }
+    return jrItem({ done: done, label: "Present your case to a panel of at least 3 supervisors", extra: extra }, act, below);
+  }
+
+  function renderJourney() {
+    var name = viewerName(), root = document.getElementById("journey"), sum = document.getElementById("jr-summary");
+    var isAdmin = state.role === "admin";
+    var supView = state.role === "supervisor";
+    document.getElementById("hours-section").style.display = "none";
+    document.getElementById("cert-supervisor").style.display = "none";
+    document.getElementById("panel-assigned").style.display = "none";
+    document.getElementById("compliance-card").style.display = (isAdmin || state.role === "explorer") ? "none" : "block";
+
+    if (isAdmin) {
+      sum.innerHTML = '<div class="jr-banner"><span class="grow"><b>Admin view.</b> Admins do not hold a level. This is the pathway every member follows — manage individual journeys (attendance, reviews, letters, panels) in Administration.</span><button class="btn btn-gold btn-xs" data-go="admin">Open Administration</button></div>';
+      root.innerHTML = PATHWAY.map(function (p, i) {
+        return stageCard(p.num, p.name + " · " + p.title, esc(p.desc), "", "", "");
+      }).join("");
+      return;
+    }
+
+    var std = standing(name), cert = isCertified(name), nx = nextStep(name);
+    var stdLabel = cert ? (memberKind(name) === "Supervisor / Scholar" ? "TIIP Supervisor" : "Fully certified") : "Level " + std;
+    sum.innerHTML = '<div class="jr-banner"><span class="grow"><b>You are at ' + stdLabel + '.</b> <span style="color:var(--muted);">Next step — ' + nx.text + "</span></span>" +
+      (cert ? "" : '<button class="btn btn-gold btn-xs" data-jump="' + nx.stage + '">Go to this step</button>') + "</div>";
+
+    /* ----- Level 0 ----- */
+    var l0watched = std >= 1 || (isViewer(name) && state.learning.l0.every(function (m) { return m.done; }));
+    var s0 = jrItem({ done: true, label: "Create your free account", extra: "" }) +
+      jrItem({ done: l0watched, label: "Watch the six-part introductory series", extra: "Recommended before Level 1 — in Resources & Modules" }, l0watched ? "" : '<button class="btn btn-ghost btn-xs" data-go="learning">Open</button>');
+    var l0next = (!fl(name, "l1_reg") && !levelComplete(name, 1))
+      ? '<div class="jr-next"><b>Next step:</b> register for an upcoming <b>Level 1</b> training.<div class="jr-act">' + regControl(1) + "</div></div>" : "";
+    var html = stageCard(0, "Level 0 · TIIP Trainee", "Open to everyone — starter modules, events, and forums.", "done", statusTag(true), '<ul class="jr-list">' + s0 + "</ul>" + l0next);
+
+    /* ----- Levels 1 & 2 ----- */
+    [1, 2].forEach(function (n) {
+      var rs = reqs(name, n), complete = rs.every(function (r) { return r.done; });
+      var locked = n === 2 && !levelComplete(name, 1);
+      var started = rs.some(function (r) { return r.done; });
+      var list = rs.map(function (r) {
+        var act = "";
+        if (!locked && !r.done) {
+          if (r.key === "l" + n + "_reg") act = regControl(n);
+          else if (r.key === "l" + n + "_att") act = fl(name, "l" + n + "_reg") ? demoBtn(name, r.key, "mark attended") : "";
+          else if (r.key === "l1_mod") act = fl(name, "l1_reg") ? '<button class="btn btn-ghost btn-xs" data-go="learning">Open modules</button>' : "";
+          else if (r.key === "l" + n + "_sub") act = (n === 1 ? fl(name, "l1_reg") : fl(name, "l2_reg")) ? '<button class="btn btn-ghost btn-xs" data-go="learning">Open</button>' : "";
+        }
+        var sb = findSubmission(name, n), below = "";
+        if (r.key === "l" + n + "_pass" && sb) below = feedbackNote(sb);
+        return jrItem(r, act, below);
+      }).join("");
+      var done = complete ? '<div class="jr-done-banner">✓ Level ' + n + " complete</div>" : "";
+      var nextReg = "";
+      if (complete && n === 1 && !fl(name, "l2_reg") && !levelComplete(name, 2)) nextReg = '<div class="jr-next"><b>Next step:</b> register for an upcoming <b>Level 2</b> training.<div class="jr-act">' + regControl(2) + "</div></div>";
+      if (complete && n === 2) nextReg = '<div class="jr-next"><b>Next step:</b> Level 3 — supervised practice begins. Log hours, complete cases, and prepare your written case conceptualization and scholar letter.</div>';
+      var showMat = !locked && (fl(name, "l" + n + "_reg") || complete || std > n);
+      html += stageCard(n, "Level " + n + " · " + (n === 1 ? "Foundations" : "Intermediate"),
+        n === 1 ? "Foundations coursework, the online modules, and your first case conceptualization." : "Advanced seminars, applied skills, and your second case conceptualization.",
+        (complete ? "done" : locked ? "locked" : "current"), statusTag(complete, started, locked),
+        '<ul class="jr-list">' + list + "</ul>" + done + nextReg + (showMat ? materialsHtml(n) : ""));
+    });
+
+    /* ----- Level 3 ----- */
+    (function () {
+      var n = 3, rs = reqs(name, 3), complete = cert, locked = !levelComplete(name, 2);
+      var ready = rs.every(function (r) { return r.done; });
+      var list = rs.map(function (r) {
+        var act = "", below = "";
+        if (!locked && !r.done) {
+          if (r.key === "l3_hours" || r.key === "l3_cases") act = demoBtn(name, r.key, "mark complete") + (state.role === "trainee" && r.key === "l3_hours" ? '<button class="btn btn-ghost btn-xs" data-jump="hours">Log hours ↓</button>' : "");
+          else if (r.key === "l3_sub") act = '<button class="btn btn-ghost btn-xs" data-go="learning">Open</button>';
+          else if (r.key === "l3_letter") {
+            below = '<div class="field-row" style="margin-top:8px;align-items:flex-end;"><div class="field" style="margin:0;"><label>Scholar\'s name</label><input type="text" id="jr-letter-scholar" /></div>' +
+              '<div class="field" style="margin:0;"><label>Letter (PDF or Word)</label><input type="file" id="jr-letter-file" accept=".pdf,.doc,.docx" /></div>' +
+              '<button class="btn btn-gold btn-xs" data-letter-go="1">Upload letter</button></div>';
+          }
+        }
+        if (r.key === "l3_pass") { var sb3 = findSubmission(name, 3); if (sb3) below = feedbackNote(sb3); }
+        if (r.key === "l3_letter" && J(name).letter && J(name).letter.info) below = '<div style="margin-top:4px;font-size:.8rem;">' + fileLink(J(name).letter.info) + "</div>" + below;
+        return jrItem(r, act, below);
+      }).join("") + (locked ? "" : panelItemHtml(name, ready && !locked));
+      html += stageCard(3, "Level 3 · Supervised Practice", "200 supervised hours, 10 cases, a written case conceptualization, a scholar's letter, then a panel presentation.",
+        (complete ? "done" : locked ? "locked" : "current"), statusTag(complete, rs.some(function (r) { return r.done; }), locked),
+        '<ul class="jr-list">' + list + "</ul>" + (locked ? '<p class="jr-sub">Unlocks when Level 2 is complete.</p>' : ""));
+    })();
+
+    /* ----- Fully certified ----- */
+    html += stageCard("✓", "Fully certified", "Full clinical and consultation privileges, the ability to post interventions in the vault, and eligibility for the TIIP Supervisor track.",
+      cert ? "done" : "locked", statusTag(cert, false, !cert), "");
+    root.innerHTML = html;
+
+    /* ----- Level 3 tools ----- */
+    if (state.role === "trainee") { document.getElementById("hours-section").style.display = "block"; renderHours(); }
+    if (supView) { document.getElementById("cert-supervisor").style.display = "block"; renderSupervisorQueue(); renderAssignedPanels(); }
+    if (!isAdmin && state.role !== "explorer") renderVault();
+  }
+
+  function renderHours() {
+    var hrs = approvedHours();
+    var hp = Math.min(100, Math.round(hrs / 200 * 100));
+    var cp = Math.min(100, Math.round(state.casesDone / 10 * 100));
+    document.getElementById("hours-label").textContent = hrs + " / 200 hours approved";
+    document.getElementById("hours-pct").textContent = hp + "%";
+    document.getElementById("cases-label").textContent = state.casesDone + " / 10 cases completed";
+    document.getElementById("cases-pct").textContent = cp + "%";
+    requestAnimationFrame(function () {
+      document.getElementById("hours-bar").style.width = hp + "%";
+      document.getElementById("cases-bar").style.width = cp + "%";
+    });
+    var pend = pendingEntries().reduce(function (x, h) { return x + Number(h.hours); }, 0);
+    document.getElementById("cert-eta").textContent =
+      Math.max(0, 200 - hrs) + " hours remaining" + (pend ? " · " + pend + "h pending supervisor approval" : "") + " · " + Math.max(0, 10 - state.casesDone) + " cases to go.";
+    document.getElementById("hours-rows").innerHTML = state.hours.slice().reverse().map(function (h) {
+      var tag = h.status === "approved" ? '<span class="tag ok">Approved</span>' : h.status === "declined" ? '<span class="tag bad">Declined</span>' : '<span class="tag warn">Pending</span>';
+      return '<div class="row"><span class="grow"><b>' + h.hours + "h · " + esc(h.type) + "</b><small>" + h.date + (h.notes ? " — " + esc(h.notes) : "") + "</small></span>" + tag + "</div>";
+    }).join("") || '<div class="empty">No entries yet — log your first supervised hours.</div>';
+  }
+  function renderSupervisorQueue() {
+    var rows = pendingEntries();
+    document.getElementById("approve-rows").innerHTML = rows.length ? rows.map(function (h) {
+      var idx = state.hours.indexOf(h);
+      return '<div class="row"><span class="grow"><b>Amina Yusuf — ' + h.hours + "h · " + esc(h.type) + "</b><small>" + h.date + (h.notes ? " — " + esc(h.notes) : "") + "</small></span>" +
+        '<button class="btn btn-gold btn-xs" data-approve="' + idx + '">Approve</button>' +
+        '<button class="btn btn-ghost btn-xs" data-decline="' + idx + '">Decline</button></div>';
+    }).join("") : '<div class="empty">Queue clear — no hours awaiting approval. 🌙</div>';
+    document.querySelectorAll("[data-approve]").forEach(function (b) {
+      b.addEventListener("click", function () { state.hours[Number(b.getAttribute("data-approve"))].status = "approved"; save(); checkProgress(ROLES.trainee.name); renderJourney(); });
+    });
+    document.querySelectorAll("[data-decline]").forEach(function (b) {
+      b.addEventListener("click", function () { state.hours[Number(b.getAttribute("data-decline"))].status = "declined"; save(); renderJourney(); });
     });
   }
-
-  function renderCert() {
-    renderPathway();
-    var x = document.getElementById("cert-explorer");
-    var t = document.getElementById("cert-trainee");
-    var s = document.getElementById("cert-supervisor");
-    var c = document.getElementById("cert-certified");
-    x.style.display = t.style.display = s.style.display = c.style.display = "none";
-    document.getElementById("cert-early").style.display = "none";
-    if (state.role === "explorer") {
-      x.style.display = "block";
-      renderModules();
-    } else if (state.role === "level1" || state.role === "level2") {
-      document.getElementById("cert-early").style.display = "block";
-      renderEarlyCert();
-    } else if (state.role === "practitioner") {
-      c.style.display = "block";
-    } else if (state.role === "trainee" || state.role === "admin") {
-      t.style.display = "block";
-      var hrs = approvedHours();
-      var hp = Math.min(100, Math.round(hrs / 200 * 100));
-      var cp = Math.min(100, Math.round(state.casesDone / 10 * 100));
-      document.getElementById("hours-label").textContent = hrs + " / 200 hours approved";
-      document.getElementById("hours-pct").textContent = hp + "%";
-      document.getElementById("cases-label").textContent = state.casesDone + " / 10 cases completed";
-      document.getElementById("cases-pct").textContent = cp + "%";
-      requestAnimationFrame(function () {
-        document.getElementById("hours-bar").style.width = hp + "%";
-        document.getElementById("cases-bar").style.width = cp + "%";
-      });
-      var pend = pendingEntries().reduce(function (x, h) { return x + Number(h.hours); }, 0);
-      document.getElementById("cert-eta").textContent =
-        (200 - hrs) + " hours remaining" + (pend ? " · " + pend + "h pending supervisor approval" : "") + " · " + (10 - state.casesDone) + " cases to go.";
-      document.getElementById("hours-rows").innerHTML = state.hours.slice().reverse().map(function (h) {
-        var tag = h.status === "approved" ? '<span class="tag ok">Approved</span>' : h.status === "declined" ? '<span class="tag bad">Declined</span>' : '<span class="tag warn">Pending</span>';
-        return '<div class="row"><span class="grow"><b>' + h.hours + "h · " + esc(h.type) + "</b><small>" + h.date + (h.notes ? " — " + esc(h.notes) : "") + "</small></span>" + tag + "</div>";
-      }).join("") || '<div class="empty">No entries yet — log your first supervised hours.</div>';
-    } else if (state.role === "supervisor") {
-      s.style.display = "block";
-      var rows = pendingEntries();
-      document.getElementById("approve-rows").innerHTML = rows.length ? rows.map(function (h) {
-        var idx = state.hours.indexOf(h);
-        return '<div class="row"><span class="grow"><b>Amina Yusuf — ' + h.hours + "h · " + esc(h.type) + "</b><small>" + h.date + (h.notes ? " — " + esc(h.notes) : "") + "</small></span>" +
-          '<button class="btn btn-gold btn-xs" data-approve="' + idx + '">Approve</button>' +
-          '<button class="btn btn-ghost btn-xs" data-decline="' + idx + '">Decline</button></div>';
-      }).join("") : '<div class="empty">Queue clear — no hours awaiting approval. 🌙</div>';
-      document.querySelectorAll("[data-approve]").forEach(function (b) {
-        b.addEventListener("click", function () { state.hours[Number(b.getAttribute("data-approve"))].status = "approved"; save(); renderCert(); });
-      });
-      document.querySelectorAll("[data-decline]").forEach(function (b) {
-        b.addEventListener("click", function () { state.hours[Number(b.getAttribute("data-decline"))].status = "declined"; save(); renderCert(); });
-      });
-    }
+  function renderAssignedPanels() {
+    var me = viewerName();
+    var mine = state.panels.filter(function (x) { return x.status === "scheduled" && x.members.indexOf(me) !== -1; });
+    document.getElementById("panel-assigned").style.display = "block";
+    document.getElementById("panel-assigned-rows").innerHTML = mine.length ? mine.map(function (x) {
+      return '<div class="row"><span class="grow"><b>' + esc(x.member) + " — Level 3 presentation</b><small>" + esc(x.when.replace("T", " ")) + " · panel: " + x.members.map(esc).join(", ") + "</small></span>" +
+        (x.link ? '<a class="btn btn-ghost btn-xs" href="' + esc(x.link) + '" target="_blank" rel="noopener noreferrer">Join link</a>' : "") + "</div>";
+    }).join("") : '<div class="empty">No panel presentations assigned to you yet.</div>';
   }
   document.getElementById("hours-form").addEventListener("submit", function (e) {
     e.preventDefault();
@@ -1309,9 +2253,52 @@
       notes: document.getElementById("hf-notes").value,
       status: "pending"
     });
-    save(); e.target.reset(); renderCert();
+    save(); e.target.reset(); renderJourney();
   });
 
+  /* demo shortcuts for items an admin / supervisor would normally confirm */
+  function demoMark(key) {
+    var name = viewerName();
+    if (key === "l3_hours" && name === ROLES.trainee.name) state.approvedSeed += Math.max(0, 200 - approvedHours());
+    else if (key === "l3_cases" && name === ROLES.trainee.name) state.casesDone = 10;
+    else setFl(name, key, true);
+    save(); checkProgress(name); renderJourney();
+  }
+  document.querySelector('section[data-view="certification"]').addEventListener("click", function (e) {
+    var b = e.target.closest("button");
+    if (!b) return;
+    var name = viewerName();
+    if (b.hasAttribute("data-reg-go")) {
+      var sel = b.parentNode.querySelector("select");
+      if (sel && sel.value) { registerForTraining(name, sel.value); renderJourney(); }
+    } else if (b.hasAttribute("data-demo")) demoMark(b.getAttribute("data-demo"));
+    else if (b.hasAttribute("data-go")) show(b.getAttribute("data-go"));
+    else if (b.hasAttribute("data-jump")) {
+      var id = b.getAttribute("data-jump") === "hours" ? "hours-section" : "jr-stage-" + b.getAttribute("data-jump");
+      var el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else if (b.hasAttribute("data-mat")) {
+      var p = b.getAttribute("data-mat").split(":"), m = TRAINING_MATERIALS[p[0]][Number(p[1])];
+      downloadText(m[1].replace(/[^\w]+/g, "_") + ".txt", m[1] + "\n" + "=".repeat(m[1].length) + "\n\nTIIP Level " + p[0] + " training — " + m[0] + " (demo placeholder).\nIn production this downloads the actual " + m[0].toLowerCase() + " from the training.");
+    } else if (b.hasAttribute("data-letter-go")) {
+      var file = document.getElementById("jr-letter-file").files[0], who = document.getElementById("jr-letter-scholar").value.trim();
+      if (!file || !who) { alert("Please add the scholar's name and choose the letter file."); return; }
+      readFileInfo(file, function (info) {
+        J(name).letter = { scholar: who, info: info, at: stamp(), status: "pending", note: "" };
+        save();
+        notify(ADMIN_NAME, "review", "Scholar letter awaiting verification — " + name, name + " uploaded a farḍ al-ʿayn letter from " + who + ".\n\nVerify it in Administration → Reviews & letters.");
+        notify(name, "review", "We received your scholar letter", "Your letter from " + who + " was uploaded and is awaiting admin verification.");
+        renderJourney();
+      });
+    } else if (b.hasAttribute("data-panel-go")) {
+      var av = (document.getElementById("panel-avail").value || "").trim();
+      if (!av) { alert("Please add your availability so the panel can be scheduled."); return; }
+      state.panels.push({ id: "pn" + Date.now(), member: name, status: "requested", availability: av, requestedAt: stamp(), when: "", link: "", members: [], note: "" });
+      save();
+      notify(ADMIN_NAME, "review", "Level 3 panel presentation requested — " + name, name + " completed every Level 3 requirement and requests a panel presentation.\nAvailability: " + av + "\n\nSchedule it (3+ supervisors) in Administration → Level 3 panels.");
+      notify(name, "review", "Panel presentation request received", "Your request was received. An admin will schedule a panel of at least 3 supervisors and email you the date.");
+      renderJourney();
+    }
+  });
   /* ---- Compliance vault ---- */
   function certStatus(c) {
     var days = Math.floor((new Date(c.expires) - Date.now()) / DAY);
@@ -1438,40 +2425,6 @@
     save(); e.target.reset(); renderFatwa();
   });
 
-  /* ---- Intervention vault ---- */
-  function renderResources() {
-    var q = (document.getElementById("res-q").value || "").toLowerCase();
-    var lang = document.getElementById("res-lang").value;
-    var type = document.getElementById("res-type").value;
-    var list = RESOURCES.filter(function (r) {
-      if (q && (r.title + " " + r.tags.join(" ")).toLowerCase().indexOf(q) === -1) return false;
-      if (lang && r.lang !== lang) return false;
-      if (type && r.type !== type) return false;
-      return true;
-    });
-    document.getElementById("res-empty").style.display = list.length ? "none" : "block";
-    document.getElementById("res-rows").innerHTML = list.map(function (r, i) {
-      return '<div class="row"><span class="grow"><b>' + esc(r.title) + "</b><small>" + r.type + " · updated " + r.updated + " · " + r.tags.map(function (t) { return "#" + t; }).join(" ") + "</small></span>" +
-        '<span class="tag">' + r.lang + '</span><span class="tag gold" title="' + esc(r.history) + '">v' + r.v + "</span>" +
-        '<button class="btn btn-ghost btn-xs" data-dl="' + RESOURCES.indexOf(r) + '">Download</button></div>';
-    }).join("");
-    document.querySelectorAll("[data-dl]").forEach(function (b) {
-      b.addEventListener("click", function () {
-        var r = RESOURCES[Number(b.getAttribute("data-dl"))];
-        var body = r.title + "\n" + "=".repeat(r.title.length) + "\n\nTIIP Community — Intervention Vault (demo placeholder)\nType: " + r.type + "\nLanguage: " + r.lang + "\nVersion: " + r.v + " (updated " + r.updated + ")\nTags: " + r.tags.join(", ") + "\n\nVersion history:\n" + r.history + "\n\nIn production this downloads the actual clinical asset (PDF/DOCX) from encrypted storage.";
-        var a = document.createElement("a");
-        a.href = URL.createObjectURL(new Blob([body], { type: "text/plain" }));
-        a.download = r.title.replace(/[^\w؀-ۿ-]+/g, "_") + "_v" + r.v + ".txt";
-        a.click(); URL.revokeObjectURL(a.href);
-      });
-    });
-    document.getElementById("res-upload-note").style.display =
-      (state.role === "supervisor" || state.role === "admin") ? "block" : "none";
-  }
-  ["res-q", "res-lang", "res-type"].forEach(function (id) {
-    document.getElementById(id).addEventListener("input", renderResources);
-  });
-
   /* ---- Research library ---- */
   var LIB_CATS = ["Foundations & ontology", "Clinical interventions", "Spiritual care & tazkiyah", "Trauma & grief", "Family & marriage",
     "Youth & identity", "Fiqh & mental health", "Research & evidence", "Practitioner wellbeing", "Other"];
@@ -1563,6 +2516,7 @@
     var input = e.target.querySelector("input");
     if (!it || !input.value.trim() || !libCanInteract()) return;
     it.comments.push({ author: ROLES[state.role].name, role: ROLES[state.role].short, text: input.value.trim(), at: iso(new Date()) });
+    if (it.by !== ROLES[state.role].name) notify(it.by, "community", "New comment on your library post — " + it.title, ROLES[state.role].name + " commented: “" + input.value.trim() + "”\n\nOpen the library: portal.html#library");
     libOpen[id] = true; save(); renderLibrary();
   });
   document.getElementById("lib-cats").addEventListener("click", function (e) {
@@ -1681,13 +2635,13 @@
       document.querySelectorAll("[data-ev-ok]").forEach(function (b) {
         b.addEventListener("click", function () {
           var e = state.memberEvents.find(function (x) { return x.id === b.getAttribute("data-ev-ok"); });
-          if (e) { e.status = "approved"; save(); renderEvents(); }
+          if (e) { e.status = "approved"; save(); notify(e.by, "community", "Your event was approved — " + e.title, "Your event is now on the community calendar (" + e.date + ").\n\nOpen events: portal.html#events"); renderEvents(); }
         });
       });
       document.querySelectorAll("[data-ev-no]").forEach(function (b) {
         b.addEventListener("click", function () {
           var e = state.memberEvents.find(function (x) { return x.id === b.getAttribute("data-ev-no"); });
-          if (e) { e.status = "declined"; save(); renderEvents(); }
+          if (e) { e.status = "declined"; save(); notify(e.by, "community", "Your event was not approved — " + e.title, "An admin did not approve this event submission. You can edit and resubmit it from Events & Training."); renderEvents(); }
         });
       });
     }
@@ -1705,6 +2659,7 @@
       by: ROLES[state.role].name,
       status: "pending"
     });
+    notify(ADMIN_NAME, "review", "Event awaiting approval — " + document.getElementById("ef-title").value, ROLES[state.role].name + " submitted an event for approval.\n\nApprove it in Events & Training.");
     save(); e.target.reset(); renderEvents();
   });
 
